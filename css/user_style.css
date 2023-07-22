@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700&display=swap");
+
+.tittleOffer {
+  font-size: 4rem;
+  color: var(--black);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.total-score {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: red;
+}
+
+/* Add font-family to the body */
+body {
+  font-family: "Nunito", sans-serif;
+}
+
+/* Set font size and color for the table headers */
+th {
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+}
+
+/* Set font size and color for the table cells */
+td {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+}
+
+/* Add padding to the table cells */
+td,
+th {
+  padding: 12px;
+}
+
+/* Add a border to the table */
+table {
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  width: 100%;
+  margin: 20px 0;
+}
+
+/* Set background color and hover color for the table rows */
+tr {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:last-child {
+  border-bottom: none;
+}
+
+tr:hover {
+  background-color: #f2f2f2;
+}
+
+/* Add a scrollbar if there are more than 10 rows */
+tbody {
+  display: block;
+  max-height: 250px;
+  overflow-y: scroll;
+}
+
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* here is the style for the total score  */
+.score-section {
+  background-color: #f2f2f2;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.score-section table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.score-section th,
+.score-section td {
+  text-align: left;
+  padding: 8px;
+}
+
+.score-section th {
+  background-color: #ddd;
+}
+
+.score-section .total-score {
+  font-weight: bold;
+}
