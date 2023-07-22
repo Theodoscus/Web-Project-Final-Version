@@ -43,16 +43,20 @@ include 'components/like_dislike.php';
    <?php
          
          
-         
-         
+         if ($_SERVER["REQUEST_METHOD"] === "GET") {
+         if (isset($_GET["key1"])){
+            $x_coord = $_GET["key1"];
+            
+            echo $x_coord;
+         }
          
          
        
+         $response = "Data received successfully!";
          
-      if (isset($_GET["oid"]) & isset($_GET["key1"])){   
+       }    
+      if (isset($_GET["oid"])){   
       $oid = $_GET["oid"];
-      $x_coord = $_GET["x_coord"];
-      echo $x_coord;
       
       
       
