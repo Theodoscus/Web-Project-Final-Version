@@ -33,18 +33,19 @@ if ("geolocation" in navigator) {
             return response.json(); 
         })
         .then((data) => {
+        dynamicDataArray = [];
         for (var i = 0; i < data.length; i++)
         {
-            var x_coord = data[i].x_coord;
-            var y_coord = data[i].y_coord;
+            distance = calculateDistance(data[i].x_coord, data[i].y_coord, latitude, longitude);
+            if (distance>1000){
+            const newRow = [data[i].x_coord,data[i].y_coord];
+            dynamicDataArray.push(newRow);}
+        }
         
-        
-        distance = calculateDistance(x_coord, y_coord, latitude, longitude);
-        if (distance<1000){
             $.ajax({
                 type: "GET",
                 url: "quick_view.php",
-                data: {key1: x_coord, key2: y_coord},
+                data: {key1: dynamicDataArray},
                 success: function(response) {
                   // Process the response from the PHP script
                   console.log("Response from server: ", response);
@@ -54,10 +55,8 @@ if ("geolocation" in navigator) {
                   console.error("Error sending data: ", error);
                 }
               });
-        } else{
+              
         
-        }
-        }
         })
         },
         (error) => {

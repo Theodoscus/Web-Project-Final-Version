@@ -42,22 +42,24 @@ include 'components/like_dislike.php';
 
    <?php
          
-         
+         $x_coord=0;
+         $y_coord=0;
          if ($_SERVER["REQUEST_METHOD"] === "GET") {
          if (isset($_GET["key1"])){
             $x_coord = $_GET["key1"];
             
-            echo $x_coord;
+
+            
+            
          }
          
          
-       
-         $response = "Data received successfully!";
+         
          
        }    
-      if (isset($_GET["oid"])){   
-      $oid = $_GET["oid"];
-      
+         if (isset($_GET["oid"])){   
+         $oid = $_GET["oid"];}
+         
       
       
       $select_products = $conn->prepare("SELECT offers.offer_id, offers.note, offers.product_price, offers.creation_date, offers.total_likes, offers.total_dislikes, offers.out_of_stock, users.user_id, users.username, supermarket.supermarket_name,supermarket.supermarket_address, product.product_id, product.product_name, product.product_name, product.product_description, product.product_image, supermarket.x_coord, supermarket.y_coord from product,offers,users,supermarket  WHERE offers.offer_id=? AND offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id "); 
@@ -121,11 +123,9 @@ include 'components/like_dislike.php';
       </div>
    </form>
    <?php
-      echo "lololol";
-      echo $x_coord;
-      echo $x_coords!=$x_coord; }
+       }
       }
-   }else{
+   else{
       echo '<p class="Η προσφορά που ψάχνετε δεν υπάρχει. Δοκιμάστε ξανά.</p>';
    }
    ?>
