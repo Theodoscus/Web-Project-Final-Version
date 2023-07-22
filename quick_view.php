@@ -41,25 +41,27 @@ include 'components/like_dislike.php';
    <h1 class="heading">Επισκόπηση προσφοράς</h1>
 
    <?php
-      if ($_SERVER["REQUEST_METHOD"] === "GET") {
-         if (isset($_GET["key1"]) && isset($_GET["key2"])){
-         $x_coord = $_GET["key1"];
-         $y_coord = $_GET["key2"];
-         }
+         
+         
+         
+         
+         
          
        
-         $response = "Data received successfully!";
          
-       }    
-      if (isset($_GET["oid"])){   
+      if (isset($_GET["oid"]) & isset($_GET["key1"])){   
       $oid = $_GET["oid"];
+      $x_coord = $_GET["x_coord"];
+      echo $x_coord;
       
       
       
-      $select_products = $conn->prepare("SELECT offers.offer_id, offers.note, offers.product_price, offers.creation_date, offers.total_likes, offers.total_dislikes, offers.out_of_stock, users.user_id, users.username, supermarket.supermarket_name,supermarket.supermarket_address, product.product_id, product.product_name, product.product_name, product.product_description, product.product_image from product,offers,users,supermarket  WHERE offers.offer_id=? AND offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id "); 
+      $select_products = $conn->prepare("SELECT offers.offer_id, offers.note, offers.product_price, offers.creation_date, offers.total_likes, offers.total_dislikes, offers.out_of_stock, users.user_id, users.username, supermarket.supermarket_name,supermarket.supermarket_address, product.product_id, product.product_name, product.product_name, product.product_description, product.product_image, supermarket.x_coord, supermarket.y_coord from product,offers,users,supermarket  WHERE offers.offer_id=? AND offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id "); 
       $select_products->execute([$oid]);
       if($select_products->rowCount() > 0){
          while($fetch_product = $select_products->fetch(PDO::FETCH_ASSOC)){
+         $x_coords = $fetch_product['x_coord'];
+         $y_coords = $fetch_product['y_coord'];
    ?>
    <form action="" method="post" class="box">
       <input type="hidden" name="oid" value="<?= $fetch_product['offer_id']; ?>">
@@ -96,7 +98,7 @@ include 'components/like_dislike.php';
             </div>
             <div class="details"><?= $fetch_product['product_description']; ?></div>
             <div class="flex-btn">
-               <input class="option-btn" type="submit" name="out_of_stock" value="η προσφορα έχει εξαντληθεί">
+               <input class="option-btn" <?= (($x_coord==$x_coords)||($y_coord==$y_coords))?'':'disabled'; ?> type="submit" name="out_of_stock" value="η προσφορα έχει εξαντληθεί">
             </div>
             <div class="flex-btn">
                
@@ -104,18 +106,20 @@ include 'components/like_dislike.php';
                
             </div>
             <div class="like-dislike-btns">
-               <div class="like-btn">
-               <input class="option-btn" type="submit" name="like" value="Like (<?= $fetch_product['total_likes'];?>)">
+               <div class="like-btn" >
+               <input class="option-btn" <?= (($x_coord==$x_coords)||($y_coord==$y_coords))?'':'disabled'; ?> type="submit" name="like" value="Like (<?= $fetch_product['total_likes'];?>)">
                </div>
                <div class="dislike-btn">
-               <input class="option-btn" type="submit" name="dislike" value="Dislike (<?= $fetch_product['total_dislikes'];?>)">
+               <input class="option-btn" <?= (($x_coord==$x_coords)||($y_coord==$y_coords))?'':'disabled'; ?> type="submit" name="dislike" value="Dislike (<?= $fetch_product['total_dislikes'];?>)">
                </div>
             </div> 
          </div>
       </div>
    </form>
    <?php
-         }
+      echo "lololol";
+      echo $x_coord;
+      echo $x_coords!=$x_coord; }
       }
    }else{
       echo '<p class="Η προσφορά που ψάχνετε δεν υπάρχει. Δοκιμάστε ξανά.</p>';
