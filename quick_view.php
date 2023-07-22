@@ -46,8 +46,8 @@ include 'components/like_dislike.php';
          $y_coord=0;
          if ($_SERVER["REQUEST_METHOD"] === "GET") {
          if (isset($_GET["key1"])){
-            $x_coord = $_GET["key1"];
-            
+            $x_coord = array($_GET["key1"]);
+            print_r($x_coord);
 
             
             
@@ -58,7 +58,7 @@ include 'components/like_dislike.php';
          
        }    
          if (isset($_GET["oid"])){   
-         $oid = $_GET["oid"];}
+         $oid = $_GET["oid"];
          
       
       
@@ -123,6 +123,7 @@ include 'components/like_dislike.php';
       </div>
    </form>
    <?php
+         }
        }
       }
    else{

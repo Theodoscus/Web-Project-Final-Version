@@ -41,7 +41,7 @@ if ("geolocation" in navigator) {
             const newRow = [data[i].x_coord,data[i].y_coord];
             dynamicDataArray.push(newRow);}
         }
-        
+            console.log("HERE:"+dynamicDataArray);
             $.ajax({
                 type: "GET",
                 url: "quick_view.php",
@@ -65,3 +65,4 @@ if ("geolocation" in navigator) {
         }
         );
     }
+    
