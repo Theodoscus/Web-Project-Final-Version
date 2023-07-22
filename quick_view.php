@@ -41,16 +41,12 @@ include 'components/like_dislike.php';
    <h1 class="heading">Επισκόπηση προσφοράς</h1>
 
    <?php
-         
          $x_coord=0;
          $y_coord=0;
+         
          if ($_SERVER["REQUEST_METHOD"] === "GET") {
          if (isset($_GET["key1"])){
             $x_coord = array($_GET["key1"]);
-            print_r($x_coord);
-
-            
-            
          }
          
          
@@ -58,9 +54,9 @@ include 'components/like_dislike.php';
          
        }    
          if (isset($_GET["oid"])){   
-         $oid = $_GET["oid"];
+         $oid = $_GET["oid"];}
          
-      
+         
       
       $select_products = $conn->prepare("SELECT offers.offer_id, offers.note, offers.product_price, offers.creation_date, offers.total_likes, offers.total_dislikes, offers.out_of_stock, users.user_id, users.username, supermarket.supermarket_name,supermarket.supermarket_address, product.product_id, product.product_name, product.product_name, product.product_description, product.product_image, supermarket.x_coord, supermarket.y_coord from product,offers,users,supermarket  WHERE offers.offer_id=? AND offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id "); 
       $select_products->execute([$oid]);
@@ -76,7 +72,7 @@ include 'components/like_dislike.php';
       <input type="hidden" name="price" value="<?= $fetch_product['product_price']; ?>">
       <input type="hidden" name="image" value="<?= $fetch_product['product_image']; ?>">
       <input type="hidden" name="user_id" value="<?= $fetch_product['product_image']; ?>">
-      
+   
       <div class="row">
          <div class="image-container">
             <div class="main-image">
@@ -103,6 +99,7 @@ include 'components/like_dislike.php';
                
             </div>
             <div class="details"><?= $fetch_product['product_description']; ?></div>
+            
             <div class="flex-btn">
                <input class="option-btn" <?= (($x_coord==$x_coords)||($y_coord==$y_coords))?'':'disabled'; ?> type="submit" name="out_of_stock" value="η προσφορα έχει εξαντληθεί">
             </div>
@@ -117,19 +114,21 @@ include 'components/like_dislike.php';
                </div>
                <div class="dislike-btn">
                <input class="option-btn" <?= (($x_coord==$x_coords)||($y_coord==$y_coords))?'':'disabled'; ?> type="submit" name="dislike" value="Dislike (<?= $fetch_product['total_dislikes'];?>)">
+               <?php
+                  }
+                  }
+               
+               else{
+               echo '<p class="Η προσφορά που ψάχνετε δεν υπάρχει. Δοκιμάστε ξανά.</p>';
+               }
+               
+               ?>
                </div>
             </div> 
          </div>
       </div>
    </form>
-   <?php
-         }
-       }
-      }
-   else{
-      echo '<p class="Η προσφορά που ψάχνετε δεν υπάρχει. Δοκιμάστε ξανά.</p>';
-   }
-   ?>
+   
 
 </section>
 
