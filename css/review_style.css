@@ -1,0 +1,264 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700&display=swap");
+
+/* Use Nunito font for review modal */
+.modal label,
+.modal input,
+.modal button {
+  font-family: "Nunito", sans-serif;
+}
+
+/* Style the close button */
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Style the input and buttons in the modal */
+#review-input,
+#name-input {
+  display: block;
+  width: 100%;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#review-input {
+  height: 150px; /* set a fixed height to avoid the scrollbar appearing before the text exceeds the space /
+resize: vertical; / set the resize property to "vertical" to allow the textarea to resize as the user types */
+}
+
+#publish-button,
+#cancel-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#publish-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+#cancel-button {
+  background-color: #f44336;
+  color: white;
+  margin-left: 1rem;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.error-message {
+  color: red;
+}
+
+/* Position the modal in the center of the screen */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.review-button-container {
+  margin: 20px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+.review-button-container p {
+  margin-bottom: 10px;
+}
+
+#review-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  height: 400px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.proverbial-text {
+  font-size: 1.2rem;
+  color: #333;
+  font-style: italic;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#review-button {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.modal-content {
+  width: 600px;
+  height: 400px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Add styles for textarea and name input */
+#review-input,
+#name-input {
+  display: block;
+  width: 100%;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#review-input {
+  height: 150px; /* set a fixed height to avoid the scrollbar appearing before the text exceeds the space */
+  resize: vertical; /* set the resize property to "vertical" to allow the textarea to resize as the user types */
+}
+
+/* Add styles for the button container */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+#publish-button,
+#cancel-button {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#publish-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+#cancel-button {
+  background-color: #f44336;
+  color: white;
+  margin-left: 1rem;
+}
+
+/* Add styles for the modal content */
+.modal-content {
+  width: 600px;
+  height: auto; /* set the height to "auto" to allow the content to expand as necessary */
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+}
+
+/* Modify the close button styles to position it correctly */
+.close {
+  color: #aaa;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.review-container {
+  width: 300px;
+  height: 200px;
+}
+
+.review-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.review-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
