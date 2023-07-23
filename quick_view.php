@@ -110,7 +110,7 @@ include 'components/like_dislike.php';
             <div class="details"><?= $fetch_product['product_description']; ?></div>
             
             <div class="flex-btn">
-               <input class="option-btn"  type="submit" name="out_of_stock" value="η προσφορα έχει εξαντληθεί">
+               <input class="option-btn"  type="submit" name="out_of_stock" id="quick_view_1" value="η προσφορα έχει εξαντληθεί">
             </div>
             <div class="flex-btn">
                
@@ -119,10 +119,10 @@ include 'components/like_dislike.php';
             </div>
             <div class="like-dislike-btns">
                <div class="like-btn" >
-               <input class="option-btn"  type="submit" name="like" value="Like (<?= $fetch_product['total_likes'];?>)">
+               <input class="option-btn"  type="submit" name="like" id="quick_view_2" value="Like (<?= $fetch_product['total_likes'];?>)">
                </div>
                <div class="dislike-btn">
-               <input class="option-btn"  type="submit" name="dislike" value="Dislike (<?= $fetch_product['total_dislikes'];?>)">
+               <input class="option-btn"  type="submit" name="dislike" id="quick_view_3" value="Dislike (<?= $fetch_product['total_dislikes'];?>)">
                <?php
                   }
                   }

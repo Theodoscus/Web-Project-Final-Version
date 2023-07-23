@@ -33,9 +33,16 @@ navigator.geolocation.getCurrentPosition(onSuccess, onError);
                     console.log();
                     const distance = calculateDistance(userLatitude, userLongitude, mapPoints[0], mapPoints[1]);
                     console.log(distance);
-                    if( distance>=0){
-                      
+                    if( distance<=1000){
+                        document.getElementById("quick_view_1").disabled = false;
+                        document.getElementById("quick_view_2").disabled = false;
+                        document.getElementById("quick_view_3").disabled = false;
 
+
+                    }else{
+                        document.getElementById("quick_view_1").disabled = true;
+                        document.getElementById("quick_view_2").disabled = true;
+                        document.getElementById("quick_view_3").disabled = true;
                     }
                     
                
@@ -54,6 +61,9 @@ navigator.geolocation.getCurrentPosition(onSuccess, onError);
                         
                     } else {
                         console.error("Failed to retrieve map points.");
+                        document.getElementById("quick_view_1").disabled = true;
+                        document.getElementById("quick_view_2").disabled = true;
+                        document.getElementById("quick_view_3").disabled = true;
                     }
                 }
             };
@@ -64,4 +74,7 @@ navigator.geolocation.getCurrentPosition(onSuccess, onError);
 
         function onError(error) {
             console.error("Error getting user location:", error.message);
+            document.getElementById("quick_view_1").disabled = true;
+            document.getElementById("quick_view_2").disabled = true;
+            document.getElementById("quick_view_3").disabled = true;
         }
