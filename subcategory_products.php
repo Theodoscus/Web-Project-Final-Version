@@ -46,19 +46,19 @@ if(!isset($user_id)){
       <p> Υποκατηγορία: <?php echo $subcategoryName["subcategory_name"]; ?></p>
    </div>
    <div class="product-box">
-      <img src="images/clown-image.jpg"  style="width:15%">
+      <img src="images/clown-image.jpg"  style="width:20%">
       <h1>Tailored Jeans</h1>
       <p>Some text about the jeans..Super slim and comfy lorem ipsum lorem jeansum. Lorem jeamsun denim lorem jeansum.</p>
       <p><button>Δείτε τις προσφορές για το προϊόν</button></p>
    </div>
    <div class="product-box">
-      <img src="images/clown-image.jpg"  style="width:15%">
+      <img src="images/clown-image.jpg"  style="width:20%">
       <h1>Tailored Jeans</h1>
       <p>Some text about the jeans..Super slim and comfy lorem ipsum lorem jeansum. Lorem jeamsun denim lorem jeansum.</p>
       <p><button>Δείτε τις προσφορές για το προϊόν</button></p>
    </div>
    <div class="product-box">
-      <img src="images/clown-image.jpg"  style="width:15%">
+      <img src="images/clown-image.jpg"  style="width:20%">
       <h1>Tailored Jeans</h1>
       <p>Some text about the jeans..Super slim and comfy lorem ipsum lorem jeansum. Lorem jeamsun denim lorem jeansum.</p>
       <p><button>Δείτε τις προσφορές για το προϊόν</button></p>
