@@ -1,6 +1,7 @@
+
 <?php
 include 'connect.php';
-
+session_start();
 
 $get_markets = $conn->prepare("SELECT supermarket.supermarket_id, supermarket.supermarket_name, supermarket.x_coord, supermarket.y_coord, supermarket.has_offers, supermarket.supermarket_address  FROM supermarket "); 
 $get_markets->execute();
@@ -16,3 +17,5 @@ echo json_encode($rows);
 }
 
 ?>
+
+

@@ -4,14 +4,20 @@ include 'components/connect.php';
 
 session_start();
 
+
 if(isset($_SESSION['user_id'])){
    $user_id = $_SESSION['user_id'];
+   
+
 }else{
    $user_id = '';
 };
 
+
 include 'components/wishlist_cart.php';
 //include 'components/get_supermarkets.php';
+
+
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +37,7 @@ include 'components/wishlist_cart.php';
    <link rel="stylesheet" href="css/style.css">
    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"/>
    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
    
@@ -181,6 +188,7 @@ include 'components/wishlist_cart.php';
 
 <script src="js/script.js"></script>
 <script src="js/map.js"></script>
+<script src="js/getlocation.js"></script>
 
 
 

@@ -16,53 +16,52 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        // Success callback - the user's position is available
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-  
-        // Now you can use the latitude and longitude as needed
-        fetch("components/get_supermarkets.php")
-        .then((response) => {
-            if(!response.ok){ 
-            throw new Error("Something went wrong!");
+navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+        function onSuccess(position) {
+            const userLatitude = position.coords.latitude;
+            const userLongitude = position.coords.longitude;
+
+            // Function to calculate distance between two points using haversine formula
+            
+
+            // Function to enable/disable buttons based on distance
+            function updateButtons(mapPoints) {
+                const calculateButton = document.getElementById("calculateButton");
+
+                
+                    console.log();
+                    const distance = calculateDistance(userLatitude, userLongitude, mapPoints[0], mapPoints[1]);
+                    console.log(distance);
+                    if( distance>=0){
+                      
+
+                    }
+                    
+               
+
+                
+            }
+
+            // AJAX request to retrieve map points from the database
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        const mapPoints = JSON.parse(xhr.responseText);
+                        updateButtons(mapPoints);
+                        
+                        
+                    } else {
+                        console.error("Failed to retrieve map points.");
+                    }
+                }
+            };
+
+            xhr.open("GET", "components/set_location.php", true);
+            xhr.send();
         }
 
-            return response.json(); 
-        })
-        .then((data) => {
-        dynamicDataArray = [];
-        for (var i = 0; i < data.length; i++)
-        {
-            distance = calculateDistance(data[i].x_coord, data[i].y_coord, latitude, longitude);
-            if (distance>1000){
-            const newRow = [data[i].x_coord,data[i].y_coord];
-            dynamicDataArray.push(newRow);}
+        function onError(error) {
+            console.error("Error getting user location:", error.message);
         }
-            console.log("HERE:"+dynamicDataArray);
-            $.ajax({
-                type: "GET",
-                url: "quick_view.php",
-                data: {key1: dynamicDataArray},
-                success: function(response) {
-                  // Process the response from the PHP script
-                  console.log("Response from server: ", response);
-                },
-                error: function(xhr, status, error) {
-                  // Handle errors here
-                  console.error("Error sending data: ", error);
-                }
-              });
-              
-        
-        })
-        },
-        (error) => {
-            // Error callback - handle errors here
-            console.error("Error getting location: ", error.message);
-        }
-        );
-    }
-    

@@ -11,7 +11,7 @@ if(isset($_SESSION['user_id'])){
 };
 
 if(isset($_POST['submit'])){
-
+   
    $email = $_POST['email'];
    $email = filter_var($email, FILTER_SANITIZE_STRING);
    $pass = sha1($_POST['pass']);
@@ -23,12 +23,16 @@ if(isset($_POST['submit'])){
 
    if($select_user->rowCount() > 0){
       $_SESSION['user_id'] = $row['user_id'];
-      header('location:home.php');
-   }else{
-      $message[] = 'incorrect username or password!';
+      header('location:home.php');}
    }
+        
+         
+      
+      
+      
+   
 
-}
+
 
 ?>
 
@@ -45,7 +49,8 @@ if(isset($_POST['submit'])){
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
-
+   
+   
 </head>
 <body>
    
@@ -63,6 +68,7 @@ if(isset($_POST['submit'])){
    </form>
 
 </section>
+
 
 
 

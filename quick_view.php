@@ -1,13 +1,16 @@
 
 <?php
-
 include 'components/connect.php';
+
+
+
 session_start();
 
 $user_id = $_SESSION['user_id'];
 
 if(!isset($user_id)){
    header('location:user_login.php');
+
 }
 
 include 'components/wishlist_cart.php';
@@ -41,29 +44,35 @@ include 'components/like_dislike.php';
    <h1 class="heading">Επισκόπηση προσφοράς</h1>
 
    <?php
-         $x_coord=0;
-         $y_coord=0;
          
-         if ($_SERVER["REQUEST_METHOD"] === "GET") {
-         if (isset($_GET["key1"])){
-            $x_coord = array($_GET["key1"]);
+         $oid=0;
+         if (isset($_GET["oid"])){   
+         $oid = $_GET["oid"];
          }
          
          
-         
-         
-       }    
-         if (isset($_GET["oid"])){   
-         $oid = $_GET["oid"];}
-         
+    
+
+           // Assuming the table name is "map_points" with fields "latitude" and "longitude"
+            /*$stmt = $conn->prepare("SELECT supermarket.x_coord, supermarket.y_coord from product,offers,users,supermarket  WHERE offers.offer_id=? AND offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id "); 
+            $stmt->execute([$oid]);
+            $mapPoints = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+            // Return the map points as JSON data
+            header('Content-Type: application/json');
+            echo json_encode($mapPoints);*/
+        
+   
          
       
       $select_products = $conn->prepare("SELECT offers.offer_id, offers.note, offers.product_price, offers.creation_date, offers.total_likes, offers.total_dislikes, offers.out_of_stock, users.user_id, users.username, supermarket.supermarket_name,supermarket.supermarket_address, product.product_id, product.product_name, product.product_name, product.product_description, product.product_image, supermarket.x_coord, supermarket.y_coord from product,offers,users,supermarket  WHERE offers.offer_id=? AND offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id "); 
       $select_products->execute([$oid]);
       if($select_products->rowCount() > 0){
          while($fetch_product = $select_products->fetch(PDO::FETCH_ASSOC)){
-         $x_coords = $fetch_product['x_coord'];
-         $y_coords = $fetch_product['y_coord'];
+         $x_coord = $fetch_product['x_coord'];
+         $y_coord = $fetch_product['y_coord'];
+         $_SESSION['x_coord'] = $x_coord;
+         $_SESSION['y_coord'] = $y_coord;
    ?>
    <form action="" method="post" class="box">
       <input type="hidden" name="oid" value="<?= $fetch_product['offer_id']; ?>">
@@ -101,7 +110,7 @@ include 'components/like_dislike.php';
             <div class="details"><?= $fetch_product['product_description']; ?></div>
             
             <div class="flex-btn">
-               <input class="option-btn" <?= (($x_coord==$x_coords)||($y_coord==$y_coords))?'':'disabled'; ?> type="submit" name="out_of_stock" value="η προσφορα έχει εξαντληθεί">
+               <input class="option-btn"  type="submit" name="out_of_stock" value="η προσφορα έχει εξαντληθεί">
             </div>
             <div class="flex-btn">
                
@@ -110,10 +119,10 @@ include 'components/like_dislike.php';
             </div>
             <div class="like-dislike-btns">
                <div class="like-btn" >
-               <input class="option-btn" <?= (($x_coord==$x_coords)||($y_coord==$y_coords))?'':'disabled'; ?> type="submit" name="like" value="Like (<?= $fetch_product['total_likes'];?>)">
+               <input class="option-btn"  type="submit" name="like" value="Like (<?= $fetch_product['total_likes'];?>)">
                </div>
                <div class="dislike-btn">
-               <input class="option-btn" <?= (($x_coord==$x_coords)||($y_coord==$y_coords))?'':'disabled'; ?> type="submit" name="dislike" value="Dislike (<?= $fetch_product['total_dislikes'];?>)">
+               <input class="option-btn"  type="submit" name="dislike" value="Dislike (<?= $fetch_product['total_dislikes'];?>)">
                <?php
                   }
                   }
