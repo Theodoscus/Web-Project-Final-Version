@@ -30,9 +30,9 @@ navigator.geolocation.getCurrentPosition(onSuccess, onError);
                 const calculateButton = document.getElementById("calculateButton");
 
                 
-                    console.log();
+                   
                     const distance = calculateDistance(userLatitude, userLongitude, mapPoints[0], mapPoints[1]);
-                    console.log(distance);
+                    
                     if( distance<=1000){
                         document.getElementById("quick_view_1").disabled = false;
                         document.getElementById("quick_view_2").disabled = false;
