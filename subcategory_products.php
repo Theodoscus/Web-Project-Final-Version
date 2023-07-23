@@ -26,6 +26,7 @@ if(!isset($user_id)){
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
+   <link rel="stylesheet" href="css/subcategory_style.css">
    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"/>
    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
    
@@ -33,8 +34,18 @@ if(!isset($user_id)){
 <body>
 
 <?php include 'components/user_header.php';?>
-<h1>Print PHP Variable</h1>
-<p><?php echo $subcategoryId; ?></p>
+<div class="filter-box">
+   <p> Here add filters </p> 
+</div>
+<div class="products-container">
+   <div class="subcategory-name-display"> 
+      <?php
+         $stmt = $conn->query("SELECT subcategory_name FROM subcategory WHERE subcategory_id=$subcategoryId");
+         $subcategoryName = $stmt->fetch();
+      ?>
+      <p> Υποκατηγορία: <?php echo $subcategoryName["subcategory_name"]; ?></p>
+   </div>
+</div>
 
 
 

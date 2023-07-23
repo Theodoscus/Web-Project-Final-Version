@@ -1,0 +1,29 @@
+.filter-box{
+    padding: 70px;
+    background-color: rgb(192, 228, 240);
+    margin-left: 220px;
+    margin-right: 220px;
+}
+.products-container{
+    background-color:white;
+    padding:250px;
+    padding-bottom: 400px;
+    margin-left: 220px;
+    margin-right: 220px;
+}
+.subcategory-name-display{
+    position:relative;
+    background-color:white;
+    bottom:200px;
+    margin:auto;
+    width:50%
+}
+.subcategory-name-display  p{
+    position: static;
+    color: blue;
+    text-align: center;
+    margin:auto;
+    font-size: large;
+    font-weight: bold;
+    width: 500px;
+}
