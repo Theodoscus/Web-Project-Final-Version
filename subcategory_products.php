@@ -27,9 +27,9 @@ if(!isset($user_id)){
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
    <link rel="stylesheet" href="css/subcategory_style.css">
+   <link rel="stylesheet" href="css/glider.min.css">
    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"/>
    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
-   
 </head>
 <body>
 
@@ -37,43 +37,132 @@ if(!isset($user_id)){
 <div class="filter-box">
    <p> Here add filters </p> 
 </div>
-<div class="products-container">
-   <div class="subcategory-name-display"> 
-      <?php
-         $stmt = $conn->query("SELECT subcategory_name FROM subcategory WHERE subcategory_id=$subcategoryId");
-         $subcategoryName = $stmt->fetch();
-      ?>
-      <p> Υποκατηγορία: <?php echo $subcategoryName["subcategory_name"]; ?></p>
-   </div>
-   <div class="product-box">
-      <img src="images/clown-image.jpg"  style="width:20%">
-      <h1>Tailored Jeans</h1>
-      <p>Some text about the jeans..Super slim and comfy lorem ipsum lorem jeansum. Lorem jeamsun denim lorem jeansum.</p>
-      <p><button>Δείτε τις προσφορές για το προϊόν</button></p>
-   </div>
-   <div class="product-box">
-      <img src="images/clown-image.jpg"  style="width:20%">
-      <h1>Tailored Jeans</h1>
-      <p>Some text about the jeans..Super slim and comfy lorem ipsum lorem jeansum. Lorem jeamsun denim lorem jeansum.</p>
-      <p><button>Δείτε τις προσφορές για το προϊόν</button></p>
-   </div>
-   <div class="product-box">
-      <img src="images/clown-image.jpg"  style="width:20%">
-      <h1>Tailored Jeans</h1>
-      <p>Some text about the jeans..Super slim and comfy lorem ipsum lorem jeansum. Lorem jeamsun denim lorem jeansum.</p>
-      <p><button>Δείτε τις προσφορές για το προϊόν</button></p>
-   </div>
-</div>
+
+<section class="p-slider"> 
+   <?php
+      $stmt = $conn->query("SELECT subcategory_name FROM subcategory WHERE subcategory_id=$subcategoryId");
+      $subcategoryName = $stmt->fetch();
+   ?>
+   <h3 class="product-slider-heading" >Υποκατηγορία: <?php echo $subcategoryName["subcategory_name"]; ?></h3>
+
+   <div class="glider-contain">
+      <div class="glider">
+         <div class="product-box">
+      
+            <div class="p-img-container">
+               <div class="p-img">
+                  <a href="#">
+                     <img src="images/clown-image.jpg"  >
+                  </a>
+               </div>
+            </div>
+
+            <div class="p-box-text">
+               <span>ProductName</span>
+            </div>
+            <a href="#" class="product-title">
+               Δείτε τις προσφορές
+            </a>
+         </div>
+
+         <div class="product-box">
+      
+            <div class="p-img-container">
+               <div class="p-img">
+                  <a href="#">
+                     <img src="images/clown-image.jpg"  >
+                  </a>
+               </div>
+            </div>
+
+            <div class="p-box-text">
+               <span>ProductName</span>
+            </div>
+            <a href="#" class="product-title">
+               Δείτε τις προσφορές
+            </a>
+         </div>
+
+         <div class="product-box">
+      
+            <div class="p-img-container">
+               <div class="p-img">
+                  <a href="#">
+                     <img src="images/clown-image.jpg"  >
+                  </a>
+               </div>
+            </div>
+
+            <div class="p-box-text">
+               <span>ProductName</span>
+            </div>
+            <a href="#" class="product-title">
+               Δείτε τις προσφορές
+            </a>
+         </div>
 
 
+         <div class="product-box">
+      
+            <div class="p-img-container">
+               <div class="p-img">
+                  <a href="#">
+                     <img src="images/clown-image.jpg"  >
+                  </a>
+               </div>
+            </div>
 
+            <div class="p-box-text">
+               <span>ProductName</span>
+            </div>
+            <a href="#" class="product-title">
+               Δείτε τις προσφορές
+            </a>
+         </div>
 
+         <div class="product-box">
+      
+            <div class="p-img-container">
+               <div class="p-img">
+                  <a href="#">
+                     <img src="images/clown-image.jpg"  >
+                  </a>
+               </div>
+            </div>
+
+            <div class="p-box-text">
+               <span>ProductName</span>
+            </div>
+            <a href="#" class="product-title">
+               Δείτε τις προσφορές
+            </a>
+         </div>
+      </div>
+
+      <button aria-label="Previous" class="glider-prev">«</button>
+      <button aria-label="Next" class="glider-next">»</button>
+      <div role="tablist" class="dots"></div>
+   </div>
+
+</section>
+   
 
 <?php include 'components/footer.php'; ?>
 
 <!-- custom js file link  -->
-
-<script src="js/script.js"></script>
+<script src="js/glider.min.js"></script>
+   <script>
+      new Glider(document.querySelector('.glider'), {
+  slidesToScroll: 1,
+  slidesToShow: 4,
+  draggable: true,
+  dots: '.dots',
+  arrows: {
+    prev: '.glider-prev',
+    next: '.glider-next'
+  }
+});
+</script>
 
 </body>
 </html>
