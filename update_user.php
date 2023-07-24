@@ -372,6 +372,34 @@ echo '</table>';
     </section>
 
 
+    </section>
+
+    <!-- here we create "Total score from History for the user from This month" -->
+    <section class="score-activity">
+        <?php
+// Retrieve the user ID from the session
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    $user_id = '';
+}
+
+// Calculate the total score for this month
+$month_score = $month_likes + $month_history_cal;
+
+// Calculate the total score for the entire history
+$total_Score = $history_cal + $total_likes;
+
+// Create the HTML table for the total score and product name
+echo '<table>';
+echo '<tr><th>Score</th></tr>';
+echo '<tr><td>Total Score: '.$total_Score.'</td></tr>';
+echo '<tr><td>Monthly Score: '.$month_score.'</td></tr>';
+echo '</table>';
+
+?>
+    </section>
+
 
     <footer style="clear: both;">
         <?php include 'components/footer.php'; ?>
