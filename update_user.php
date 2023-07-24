@@ -223,6 +223,8 @@ while ($row = $stmt_total->fetch(PDO::FETCH_ASSOC)) {
 echo '<tr><td class="total-score" colspan="2">Total score for all the offers from the beginning are: '.$total_likes.'</td></tr>';
 echo '</table>';
 
+// here we create "Total score from likes/deslikes for the user from this month
+
 // Get the first and last day of the current month
 $first_day = date('Y-m-01');
 $last_day = date('Y-m-t');
@@ -232,9 +234,10 @@ $sql_month = 'SELECT
                     offers.total_likes * 5 - offers.total_dislikes AS month_likes
                 FROM offers
                 JOIN product ON offers.product_product_id = product.product_id
+                JOIN likeactivity ON likeactivity.offers_offer_id = offers.offer_id
                 WHERE offers.Users_user_id = :user_id
-                AND offers.creation_date >= :first_day
-                AND offers.creation_date <= :last_day
+                AND likeactivity.date >= :first_day
+                AND likeactivity.date <= :last_day
                 ORDER BY product.product_id ASC';
 
 // Check if $stmt_month is not set, then prepare and execute the total score query for this month
@@ -280,58 +283,43 @@ $today = date('Y-m-d H:i:s');
 // Calculate the date 1 day before
 $one_day_ago = date('Y-m-d H:i:s', strtotime('-1 day', strtotime($today)));
 
-// Calculate the date 7 days ago
-$seven_days_ago = date('Y-m-d H:i:s', strtotime('-7 days', strtotime($today)));
+// Query to get the average price for the offers in the specified date range and product for 1 day ago
+$sql_avg_price_1day = 'SELECT product.product_id, AVG(offers.product_price) AS average_price
+                      FROM offers
+                      JOIN product ON offers.product_product_id = product.product_id
+                      WHERE DATE(offers.creation_date) >= :one_day_ago AND DATE(offers.creation_date) <= :today
+                      GROUP BY product.product_id';
 
-// Query to get the average price for the offers in the specified date range and product
-$sql_avg_price = 'SELECT product.product_id, AVG(offers.product_price) AS average_price
-FROM offers
-JOIN product ON offers.product_product_id = product.product_id
-WHERE DATE(offers.creation_date) >= :seven_days_ago
-AND DATE(offers.creation_date) <= :one_day_ago
-GROUP BY product.product_id';
+$stmt_avg_price_1day = $conn->prepare($sql_avg_price_1day);
+$stmt_avg_price_1day->bindParam(':one_day_ago', $one_day_ago, PDO::PARAM_STR);
+$stmt_avg_price_1day->bindParam(':today', $today, PDO::PARAM_STR);
+$stmt_avg_price_1day->execute();
 
-$stmt_avg_price = $conn->prepare($sql_avg_price);
-$stmt_avg_price->bindParam(':seven_days_ago', $seven_days_ago, PDO::PARAM_STR);
-$stmt_avg_price->bindParam(':one_day_ago', $one_day_ago, PDO::PARAM_STR);
-$stmt_avg_price->execute();
+// Query to get offers from today for the specific user
+$sql_check_offer_1day = 'SELECT product_price
+                        FROM offers
+                        WHERE Users_user_id = :user_id
+                        AND DATE(offers.creation_date) = :today';
+
+$stmt_check_offer_1day = $conn->prepare($sql_check_offer_1day);
+$stmt_check_offer_1day->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt_check_offer_1day->bindParam(':today', $today, PDO::PARAM_STR);
+$stmt_check_offer_1day->execute();
 
 // Initialize the history_cal variable
 $history_cal = 0;
 
-// Check each $check_offer and update history_cal accordingly
-while ($row_avg_price = $stmt_avg_price->fetch(PDO::FETCH_ASSOC)) {
-    $product_id = $row_avg_price['product_id'];
-    $average_price = $row_avg_price['average_price'];
+while ($row_avg_price_1day = $stmt_avg_price_1day->fetch(PDO::FETCH_ASSOC)) {
+    $product_id = $row_avg_price_1day['product_id'];
+    $average_price_1day = $row_avg_price_1day['average_price'];
 
-    // Query to get offers that are 20% less than average_price for the specific product
-    $sql_check_offer = 'SELECT product_price, creation_date
-       FROM offers
-       WHERE Users_user_id = :user_id
-       AND product_product_id = :product_id
-       AND product_price * 0.8 <= :average_price';
+    // Check each $check_offer and update history_cal accordingly (1 day ago)
+    while ($row_check_offer_1day = $stmt_check_offer_1day->fetch(PDO::FETCH_ASSOC)) {
+        $check_offer_1day = $row_check_offer_1day['product_price'];
 
-    $stmt_check_offer = $conn->prepare($sql_check_offer);
-    $stmt_check_offer->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt_check_offer->bindParam(':product_id', $product_id, PDO::PARAM_INT);
-    $stmt_check_offer->bindParam(':average_price', $average_price, PDO::PARAM_INT);
-    $stmt_check_offer->execute();
-
-    // Check each $check_offer and update history_cal accordingly
-    while ($row_check_offer = $stmt_check_offer->fetch(PDO::FETCH_ASSOC)) {
-        $check_offer = $row_check_offer['product_price'];
-        $check_offer_date = $row_check_offer['creation_date'];
-
-        // Check if the offer's creation date is 1 day ago
-        $one_day_ago_check_offer = date('Y-m-d', strtotime('-1 day', strtotime($check_offer_date)));
-        if ($one_day_ago_check_offer === $one_day_ago) {
-            $history_cal += 50;
-        }
-
-        // Check if the offer's creation date is up to 7 days ago
-        $seven_days_ago_check_offer = date('Y-m-d', strtotime('-7 days', strtotime($check_offer_date)));
-        if ($check_offer_date <= $seven_days_ago_check_offer) {
-            $history_cal += 20;
+        // Check if the offer's price is 20% less than the average price
+        if ($check_offer_1day <= $average_price_1day * 0.8) {
+            $history_cal += 50; // Add 50 to history_cal if the condition is met
         }
     }
 }
@@ -341,6 +329,7 @@ echo '<table>';
 echo '<tr><th>Score from HISTORY for the Beginning</th></tr>';
 echo '<tr><td>'.$history_cal.'</td></tr>';
 echo '</table>';
+
 ?>
     </section>
 
