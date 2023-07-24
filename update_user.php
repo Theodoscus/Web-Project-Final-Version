@@ -220,7 +220,7 @@ echo '<tr><th>Score from likes/dislikes</th></tr>';
 while ($row = $stmt_total->fetch(PDO::FETCH_ASSOC)) {
     echo '<tr><td>'.$row['total_likes'].'</td><td>';
 }
-echo '<tr><td class="total-score" colspan="2">Total score for all the offers from the beginning are: '.$total_likes.'</td></tr>';
+echo '<tr><td class="total-score" colspan="2">'.$total_likes.'</td></tr>';
 echo '</table>';
 
 // here we create "Total score from likes/deslikes for the user from this month
@@ -267,9 +267,6 @@ echo '</table>';
     <!-- here we create "Total score from History for the user from Beginning" -->
     <section class="score-activity">
         <?php
-// Initialize the variable to store the total score
-$history_cal = 0;
-
 // Retrieve the user ID from the session
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
@@ -278,13 +275,13 @@ if (isset($_SESSION['user_id'])) {
 }
 
 // Retrieve today's date with hours, minutes, and seconds
-$today = date('Y-m-d H:i:s');
+$today = date('Y-m-d');
 
 // Calculate the date 1 day before
 $one_day_ago = date('Y-m-d H:i:s', strtotime('-1 day', strtotime($today)));
 
 // Query to get the average price for the offers in the specified date range and product for 1 day ago
-$sql_avg_price_1day = 'SELECT product.product_id, AVG(offers.product_price) AS average_price
+$sql_avg_price_1day = 'SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
                       FROM offers
                       JOIN product ON offers.product_product_id = product.product_id
                       WHERE DATE(offers.creation_date) >= :one_day_ago AND DATE(offers.creation_date) <= :today
@@ -295,17 +292,6 @@ $stmt_avg_price_1day->bindParam(':one_day_ago', $one_day_ago, PDO::PARAM_STR);
 $stmt_avg_price_1day->bindParam(':today', $today, PDO::PARAM_STR);
 $stmt_avg_price_1day->execute();
 
-// Query to get offers from today for the specific user
-$sql_check_offer_1day = 'SELECT product_price
-                        FROM offers
-                        WHERE Users_user_id = :user_id
-                        AND DATE(offers.creation_date) = :today';
-
-$stmt_check_offer_1day = $conn->prepare($sql_check_offer_1day);
-$stmt_check_offer_1day->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-$stmt_check_offer_1day->bindParam(':today', $today, PDO::PARAM_STR);
-$stmt_check_offer_1day->execute();
-
 // Initialize the history_cal variable
 $history_cal = 0;
 
@@ -313,11 +299,32 @@ while ($row_avg_price_1day = $stmt_avg_price_1day->fetch(PDO::FETCH_ASSOC)) {
     $product_id = $row_avg_price_1day['product_id'];
     $average_price_1day = $row_avg_price_1day['average_price'];
 
-    // Check each $check_offer and update history_cal accordingly (1 day ago)
+    // Query to get offers from today for the specific user and product
+    $sql_check_offer_1day = 'SELECT product_price
+ FROM offers
+ WHERE Users_user_id = :user_id
+ AND product_product_id = :product_id
+ AND DATE(offers.creation_date) = :today';
+
+    $stmt_check_offer_1day = $conn->prepare($sql_check_offer_1day);
+    $stmt_check_offer_1day->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_check_offer_1day->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+    $stmt_check_offer_1day->bindParam(':today', $today, PDO::PARAM_STR);
+    $stmt_check_offer_1day->execute();
+
+    // Debug statements
+    echo 'Product ID: '.$product_id.'<br>';
+    echo 'Average Price 1 Day Ago: '.$average_price_1day.'<br>';
+    echo 'check_offer: '.$sql_check_offer_1day.'<br>';
+    echo 'user_id: '.$user_id.'<br>';
+    echo 'product_id: '.$product_id.'<br>';
+    echo 'today: '.$today.'<br>';
+
+    // Check each $check_offer and update history_cal accordingly
     while ($row_check_offer_1day = $stmt_check_offer_1day->fetch(PDO::FETCH_ASSOC)) {
         $check_offer_1day = $row_check_offer_1day['product_price'];
 
-        // Check if the offer's price is 20% less than the average price
+        // Check if the offer's price is 20% less than the average price for that specific product
         if ($check_offer_1day <= $average_price_1day * 0.8) {
             $history_cal += 50; // Add 50 to history_cal if the condition is met
         }
