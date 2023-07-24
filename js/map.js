@@ -48,7 +48,7 @@ fetch("components/get_supermarkets.php")
     var id = data[i].supermarket_id;
     var address = data[i].supermarket_address;
     let button1 = "view_supermarket_offers.php?sid=";
-    let button2 = "create_offer.php";
+    let button2 = "create_offer.php?sid=";
     if (has_offers==1){
       marker = new L.marker(location,{icon: greenIcon}).addTo(map);
       if (circle.getBounds().contains(marker.getLatLng())){
@@ -64,7 +64,7 @@ fetch("components/get_supermarkets.php")
     else if(has_offers==0) {
       marker = new L.marker(location,{icon: redIcon}).bindPopup("Όνομα supermarket: " + name).addTo(map);
       if (circle.getBounds().contains(marker.getLatLng())){
-        marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Δεν υπάρχουν διαθέσιμες προσφορές! <br> <a href="+button2+">Δημιουργήστε μια καινούργια προσφορά!</a>");
+        marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Δεν υπάρχουν διαθέσιμες προσφορές! <br> <a href="+button2+id+">Δημιουργήστε μια καινούργια προσφορά!</a>");
       } else {
         marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Δεν υπάρχουν διαθέσιμες προσφορές!");
       }
