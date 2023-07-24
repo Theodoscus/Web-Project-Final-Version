@@ -34,9 +34,9 @@ if(!isset($user_id)){
 <body>
 
 <?php include 'components/user_header.php';?>
-<div class="filter-box">
+<section class="filter-box">
    <p> Here add filters </p> 
-</div>
+</section>
 
 <section class="p-slider"> 
    <?php
@@ -155,7 +155,9 @@ if(!isset($user_id)){
    </div>
 
 </section>
-   
+
+<section class="filler-space"> 
+</section>
 
 <?php include 'components/footer.php'; ?>
 

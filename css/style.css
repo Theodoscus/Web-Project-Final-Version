@@ -1120,8 +1120,8 @@ section{
    position:relative;
     height: 56rem;
     margin-top: 5rem;
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 250px;
+    margin-right: 250px;
     box-shadow: 0 3px 30px #9cb0ff26;
     z-index: 1;
 
@@ -1130,8 +1130,8 @@ section{
     padding-top: 4rem;
     font-size: 3rem!important;
     text-align: center;
-    text-emphasis-color: blue;
-    color: blue;
+    text-emphasis-color: darkblue;
+    color: darkblue;
     margin-bottom: 2rem;
     display: block;
     font-weight: 600;
@@ -1163,7 +1163,7 @@ section{
 .background-category-select .cat-subc-selection .category-select .category-text{
    
    font-size: 24px;
-    color: blue;
+    color: darkblue;
     text-align: center ;
     box-sizing: inherit;
     font-weight: 1000;
@@ -1234,7 +1234,7 @@ section{
 
 .search-button {
    padding: 13px 26px 13px 26px;
-   background-color: #1234BC;
+   background-color: darkblue;
     color: #FFFFFF;
     border-radius: 10px;
     width: 25rem;
@@ -1246,8 +1246,8 @@ section{
     cursor: pointer;
 }
 
-.search-button .search-but:hover{
-   background: rgb(3, 4, 19);
+.search-button .search-button:hover{
+   background: white;
 }
 
 @media (max-width:991px){
