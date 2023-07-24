@@ -18,6 +18,32 @@ var redIcon = new L.Icon({
 // Get the tile layer from OpenStreetMaps
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 18, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
+const searchControl = L.Control.geocoder({
+  defaultMarkGeocode: false,
+  placeholder: "Search markers..."
+}).addTo(map);
+
+// Listen for 'markgeocode' event to handle the search result
+searchControl.on('markgeocode', function (e) {
+  const { latlng } = e.geocode;
+  map.setView(latlng, 13); // Zoom to the selected location
+});
+
+searchControl.on('markgeocode', function (e) {
+  const { latlng } = e.geocode;
+  map.setView(latlng, 13); // Zoom to the selected location
+
+  // Filter the markers based on the user's input
+  const searchValue = e.originalEvent.target.value.toLowerCase();
+  markers.forEach(marker => {
+    const markerName = marker.getPopup().getContent().toLowerCase();
+    if (markerName.includes(searchValue)) {
+      marker.addTo(map);
+    } else {
+      marker.removeFrom(map);
+    }
+  });
+});
 
 function onLocationFound(e) {
 var radius = 1000;
@@ -29,7 +55,6 @@ circle = new L.circle(e.latlng, radius).addTo(map);
 
 map.on('locationfound', onLocationFound);
 map.locate({setView: true, watch: true, maxZoom: 16});
-
 
 fetch("components/get_supermarkets.php")
 .then((response) => {
@@ -64,6 +89,7 @@ fetch("components/get_supermarkets.php")
     else if(has_offers==0) {
       marker = new L.marker(location,{icon: redIcon}).bindPopup("Όνομα supermarket: " + name).addTo(map);
       if (circle.getBounds().contains(marker.getLatLng())){
+        
         marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Δεν υπάρχουν διαθέσιμες προσφορές! <br> <a href="+button2+id+">Δημιουργήστε μια καινούργια προσφορά!</a>");
       } else {
         marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Δεν υπάρχουν διαθέσιμες προσφορές!");

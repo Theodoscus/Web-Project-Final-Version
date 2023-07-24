@@ -20,7 +20,6 @@ if(!isset($user_id)){
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>home</title>
-   
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
@@ -40,21 +39,32 @@ if(!isset($user_id)){
       
       }
       
-      $select_products = $conn->prepare("SELECT x_coord, y_coord FROM supermarket WHERE supermarket_id= ?"); 
+      $select_products = $conn->prepare("SELECT x_coord, y_coord, supermarket_name, supermarket_address FROM supermarket WHERE supermarket_id= ?"); 
       $select_products->execute([$sid]);
       if($select_products->rowCount() > 0){
          while($fetch_product = $select_products->fetch(PDO::FETCH_ASSOC)){
          $x_coord = $fetch_product['x_coord'];
          $y_coord = $fetch_product['y_coord'];
          $_SESSION['x_coord'] = $x_coord;
-         $_SESSION['y_coord'] = $y_coord;}}
+         $_SESSION['y_coord'] = $y_coord;
 ?>
-   <form action="" method="post">
+   <form action="store_offer.php" method="post">
+   <input type="hidden" name="supermarket_name" value="<?= $fetch_product['supermarket_name']; ?>">
+   <input type="hidden" name="supermarket_address" value="<?= $fetch_product['supermarket_address']; ?>">
       <h3>Συμπληρώστε μια προσφορά!</h3>
-      <input type="text" name="name" required placeholder="enter your username" maxlength="20"  class="box">
-      <input type="email" name="email" required placeholder="enter your email" maxlength="50"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="pass" required placeholder="enter your password" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="cpass" required placeholder="confirm your password" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <h2> Supermarket: <?= $fetch_product['supermarket_name']; ?>, <?= $fetch_product['supermarket_address']; ?></h2>
+      <div class="custom-dropdown">
+      <input type="text" id="search" placeholder="Αναζήτηση προιόντος...">
+      <div class="dropdown">
+      <div class="selected-option">Select an option</div>
+      <ul class="options">
+        <!-- The dropdown options will be populated dynamically from the database -->
+      </ul>
+      </div>
+      </div>
+      <input type="price" name="offer_price" required placeholder="Εισάγετε την τιμή της προσφοράς" maxlength="10"  class="box">
+      <input type="text" name="offer_note" required placeholder="Εισάγετε λεπτομέρειες ή διευκρινίσεις" maxlength="50"  class="box" >
+      
       <input type="submit" value="Συμπλήρωση προσφοράς" class="btn" id="submit_offer_button" name="submit">
       
    </form>
@@ -69,13 +79,14 @@ if(!isset($user_id)){
     </div>
 
 </section>
+<?php }} ?>
 <?php include 'components/footer.php'; ?>
 
 
 
 <script src="js/script.js"></script>
 <script src="js/get_access.js"></script>
-
+<script src="js/fetch_products_dp.js"></script>
 
 
 

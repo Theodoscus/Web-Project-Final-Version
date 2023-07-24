@@ -11,7 +11,8 @@ if(isset($_SESSION['user_id'])){
 };
 
 if(isset($_POST['submit'])){
-
+   
+   
    $name = $_POST['name'];
    $name = filter_var($name, FILTER_SANITIZE_STRING);
    $email = $_POST['email'];
@@ -24,16 +25,16 @@ if(isset($_POST['submit'])){
    $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ? OR username = ?");
    $select_user->execute([$email, $name]);
    $row = $select_user->fetch(PDO::FETCH_ASSOC);
-
+   
    if($select_user->rowCount() > 0){
-      $message[] = 'email or username already exists!';
+      $message[] = 'Το e-mail ή το username χρησιμοποιούνται ήδη!';
    }else{
       if($pass != $cpass){
-         $message[] = 'confirm password not matched!';
+         $message[] = 'Οι κωδικοί δεν ταιριάζουν μεταξύ τους!';
       }else{
          $insert_user = $conn->prepare("INSERT INTO `users`(username, password, email, signup_date, user_type) VALUES(?,?,?,NOW(),'user')");
          $insert_user->execute([$name, $cpass, $email]);
-         $message[] = 'registered successfully, login now please!';
+         $message[] = 'Επιτυχής εγγραφή! Συνδεθείτε στον λογαριασμό σας.';
       }
    }
 

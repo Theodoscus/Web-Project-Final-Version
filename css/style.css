@@ -696,7 +696,7 @@ section{
    margin:1.5rem 0;
 }
 
-.form-container form .box{
+.form-container form .box {
    margin:1rem 0;
    background-color: var(--light-bg);
    padding:1.4rem;
@@ -705,6 +705,7 @@ section{
    width: 100%;
    border-radius: .5rem;
 }
+
 
 .about .row{
    display: flex;
@@ -1339,3 +1340,53 @@ section{
    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
    z-index: 1000; /* Place the modal above the overlay */
 }
+
+ .custom-dropdown {
+   
+   position: relative;
+   display: inline-block;
+   width: 100%;
+   margin: 1rem 0;
+   border-radius: 0.5rem;
+   
+   
+ }
+ 
+ #search {
+   padding: 1.4rem;
+   background-color: var(--light-bg);
+   width: 100%;
+   border-radius: 0.5rem;
+   font-size: 1.8rem;
+ }
+ 
+ .dropdown {
+   position: absolute;
+   width: 100%;
+   background-color: #fff;
+   border: 1px solid #ccc;
+   display: none;
+ }
+ 
+ .selected-option {
+   padding: 5px;
+   cursor: pointer;
+ }
+ 
+ .options {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   max-height: 150px;
+   overflow-y: auto;
+   border-top: 1px solid #ccc;
+ }
+ 
+ .options li {
+   padding: 5px;
+   cursor: pointer;
+ }
+ 
+ .options li:hover {
+   background-color: #f1f1f1;
+ }
