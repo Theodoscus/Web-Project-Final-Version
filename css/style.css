@@ -1110,17 +1110,20 @@ section{
 }
 
 .background-category-select{
-   background-color: lightblue;
+   background-image: url("../images/bg2.jpg");
    padding:2rem;
 }
 
 .background-category-select .category-select-container{
 
-   background-color: white;
+   background-color: rgba(255, 255, 255, 0.911);
    position:relative;
     height: 56rem;
     margin-top: 5rem;
+    margin-left: 200px;
+    margin-right: 200px;
     box-shadow: 0 3px 30px #9cb0ff26;
+    z-index: 1;
 
 }
 .background-category-select .category-select-container .products-title{
