@@ -58,7 +58,9 @@ if(!isset($user_id)){
             </div>
 
             <div class="p-box-text">
-               <span>ProductName</span>
+               <div class="product-category">
+                  <span>ProductName</span>
+               </div>
             </div>
             <a href="#" class="product-title">
                Δείτε τις προσφορές
@@ -76,7 +78,9 @@ if(!isset($user_id)){
             </div>
 
             <div class="p-box-text">
-               <span>ProductName</span>
+               <div class="product-category">
+                  <span>ProductName</span>
+               </div>
             </div>
             <a href="#" class="product-title">
                Δείτε τις προσφορές
@@ -94,7 +98,9 @@ if(!isset($user_id)){
             </div>
 
             <div class="p-box-text">
-               <span>ProductName</span>
+               <div class="product-category">
+                  <span>ProductName</span>
+               </div>
             </div>
             <a href="#" class="product-title">
                Δείτε τις προσφορές
@@ -113,7 +119,9 @@ if(!isset($user_id)){
             </div>
 
             <div class="p-box-text">
-               <span>ProductName</span>
+               <div class="product-category">
+                  <span>ProductName</span>
+               </div>
             </div>
             <a href="#" class="product-title">
                Δείτε τις προσφορές
@@ -131,7 +139,9 @@ if(!isset($user_id)){
             </div>
 
             <div class="p-box-text">
-               <span>ProductName</span>
+               <div class="product-category">
+                  <span>ProductName</span>
+               </div>
             </div>
             <a href="#" class="product-title">
                Δείτε τις προσφορές
