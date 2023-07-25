@@ -47,107 +47,37 @@ if(!isset($user_id)){
 
    <div class="glider-contain">
       <div class="glider">
+         
+         <?php
+         $query = $conn->query("SELECT * FROM product WHERE subcategory_subcategory_id = $subcategoryId");
+         
+            while (($row = $query->fetch()) !== false ){
+               $imageURL = 'images/'.$row["product_image"];
+         ?>
+
          <div class="product-box">
-      
             <div class="p-img-container">
                <div class="p-img">
                   <a href="#">
-                     <img src="images/clown-image.jpg"  >
+                     <img src="<?php echo $imageURL; ?>" alt="images/clown-image.jpg" >
                   </a>
                </div>
             </div>
 
             <div class="p-box-text">
                <div class="product-category">
-                  <span>ProductName</span>
+                  <span><?php echo $row["product_name"];?></span>
                </div>
             </div>
             <a href="#" class="product-title">
                Δείτε τις προσφορές
             </a>
          </div>
-
-         <div class="product-box">
-      
-            <div class="p-img-container">
-               <div class="p-img">
-                  <a href="#">
-                     <img src="images/clown-image.jpg"  >
-                  </a>
-               </div>
-            </div>
-
-            <div class="p-box-text">
-               <div class="product-category">
-                  <span>ProductName</span>
-               </div>
-            </div>
-            <a href="#" class="product-title">
-               Δείτε τις προσφορές
-            </a>
-         </div>
-
-         <div class="product-box">
-      
-            <div class="p-img-container">
-               <div class="p-img">
-                  <a href="#">
-                     <img src="images/clown-image.jpg"  >
-                  </a>
-               </div>
-            </div>
-
-            <div class="p-box-text">
-               <div class="product-category">
-                  <span>ProductName</span>
-               </div>
-            </div>
-            <a href="#" class="product-title">
-               Δείτε τις προσφορές
-            </a>
-         </div>
-
-
-         <div class="product-box">
-      
-            <div class="p-img-container">
-               <div class="p-img">
-                  <a href="#">
-                     <img src="images/clown-image.jpg"  >
-                  </a>
-               </div>
-            </div>
-
-            <div class="p-box-text">
-               <div class="product-category">
-                  <span>ProductName</span>
-               </div>
-            </div>
-            <a href="#" class="product-title">
-               Δείτε τις προσφορές
-            </a>
-         </div>
-
-         <div class="product-box">
-      
-            <div class="p-img-container">
-               <div class="p-img">
-                  <a href="#">
-                     <img src="images/clown-image.jpg"  >
-                  </a>
-               </div>
-            </div>
-
-            <div class="p-box-text">
-               <div class="product-category">
-                  <span>ProductName</span>
-               </div>
-            </div>
-            <a href="#" class="product-title">
-               Δείτε τις προσφορές
-            </a>
-         </div>
+            <?php
+               }
+            ?>
       </div>
+   </div>
 
       <button aria-label="Previous" class="glider-prev">«</button>
       <button aria-label="Next" class="glider-next">»</button>
