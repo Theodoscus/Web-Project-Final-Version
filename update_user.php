@@ -400,6 +400,32 @@ echo '</table>';
 ?>
     </section>
 
+        <!-- here we create Tokens from Beginnig -->
+        <section class="score-activity">
+        <?php
+// Retrieve the user ID from the session
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    $user_id = '';
+}
+
+?>
+    </section>
+
+      <!-- here we create Tokens from Previous Month -->
+      <section class="score-activity">
+        <?php
+// Retrieve the user ID from the session
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    $user_id = '';
+}
+
+?>
+    </section>
+
 
     <footer style="clear: both;">
         <?php include 'components/footer.php'; ?>
