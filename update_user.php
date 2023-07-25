@@ -314,6 +314,7 @@ $history_cal = 0;
 
 // Initialize the month_history_cal variable for this month
 $month_history_cal = 0;
+$check_offer_1day = 0;
 
 while ($row_avg_price_1day = $stmt_avg_price_1day->fetch(PDO::FETCH_ASSOC)) {
     $product_id = $row_avg_price_1day['product_id'];
@@ -374,7 +375,7 @@ echo '</table>';
 
     </section>
 
-    <!-- here we create "Total score from History for the user from This month" -->
+    <!-- here we create "Total score for the user " -->
     <section class="score-activity">
         <?php
 // Retrieve the user ID from the session
@@ -389,6 +390,10 @@ $month_score = $month_likes + $month_history_cal;
 
 // Calculate the total score for the entire history
 $total_Score = $history_cal + $total_likes;
+// ----------------------------------------------------------------------------------
+// Here we are insert in the db the total score from the begging and total score from this month in order to select them for the tokens
+
+// ----------------------------------------------------------------------------------
 
 // Create the HTML table for the total score and product name
 echo '<table>';
@@ -409,6 +414,37 @@ if (isset($_SESSION['user_id'])) {
 } else {
     $user_id = '';
 }
+
+// Query to get the count of user IDs that meet the conditions
+$sql_num_users = 'SELECT COUNT(users.user_id) AS num_users
+                  FROM users
+                  WHERE users.user_type = "user" AND users.signup_date IS NOT NULL';
+
+$stmt_num_users = $conn->prepare($sql_num_users);
+$stmt_num_users->execute();
+
+// Fetch the result
+$row_num_users = $stmt_num_users->fetch(PDO::FETCH_ASSOC);
+$num_users = $row_num_users['num_users'];
+
+// Calculate month_tokens
+$month_tokens = $num_users * 50;
+$month_tokens80 = $month_tokens * 0.8;
+echo '<tr><td>Monthly Tokesn: '.$month_tokens.', Number of users : '.$num_users.' , 80% of total_tokens:  '.$month_tokens80.' </td></tr>';
+
+// Prepare the update query
+$sql_update_scores = 'UPDATE score_activity
+                      SET month_score = :month_score, total_score = :total_score
+                      WHERE Users_user_id = :user_id';
+
+// Bind the parameters
+$stmt_update_scores = $conn->prepare($sql_update_scores);
+$stmt_update_scores->bindParam(':month_score', $month_score, PDO::PARAM_INT);
+$stmt_update_scores->bindParam(':total_score', $total_Score, PDO::PARAM_INT);
+$stmt_update_scores->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+// Execute the update query
+$stmt_update_scores->execute();
 
 ?>
     </section>
