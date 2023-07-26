@@ -52,7 +52,7 @@ if(!isset($user_id)){
          $query = $conn->query("SELECT * FROM product WHERE subcategory_subcategory_id = $subcategoryId");
          
             while (($row = $query->fetch()) !== false ){
-               $imageURL = 'images/'.$row["product_image"];
+               $imageURL = 'uploaded_img/'.$row["product_image"];
          ?>
 
          <div class="product-box">

@@ -44,6 +44,7 @@ fetch("components/get_supermarkets.php")
   return response.json(); 
 })
 .then((data) => {
+  const markerLayers=[];
   for (var i = 0; i < data.length; i++)
   {
     var location = new L.LatLng(data[i].x_coord, data[i].y_coord);
@@ -57,33 +58,73 @@ fetch("components/get_supermarkets.php")
       marker = new L.marker(location,{icon: greenIcon}).addTo(map);
       if (circle.getBounds().contains(marker.getLatLng())){
         
-        marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> <a href="+button1+id+"> Δείτε τις προσφορές!</a> <br> <a href="+button2+">Δημιουργήστε μια καινούργια προσφορά!</a>");
-        
+        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> <a href="+button1+id+"> Δείτε τις προσφορές!</a> <br> <a href="+button2+">Δημιουργήστε μια καινούργια προσφορά!</a>");
+        markerLayers.push(markerLayer);
         
       } else {
         
-        marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> <a href="+button1+id+"> Δείτε τις προσφορές!</a>");
+        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> <a href="+button1+id+"> Δείτε τις προσφορές!</a>");
+        markerLayers.push(markerLayer);
       }
     }
     else if(has_offers==0) {
       marker = new L.marker(location,{icon: redIcon}).bindPopup("Όνομα supermarket: " + name).addTo(map);
       if (circle.getBounds().contains(marker.getLatLng())){
         
-        marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Δεν υπάρχουν διαθέσιμες προσφορές! <br> <a href="+button2+id+">Δημιουργήστε μια καινούργια προσφορά!</a>");
+        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Δεν υπάρχουν διαθέσιμες προσφορές! <br> <a href="+button2+id+">Δημιουργήστε μια καινούργια προσφορά!</a>");
+        markerLayers.push(markerLayer);
       } else {
-        marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Δεν υπάρχουν διαθέσιμες προσφορές!");
+        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Δεν υπάρχουν διαθέσιμες προσφορές!");
+        markerLayers.push(markerLayer);
       }
       }
 
      
   }
+  function filterMarkers(searchValue) {
+    // Convert the search input to lowercase for case-insensitive filtering
+    const searchTerm = searchValue.toLowerCase();
   
+    markerLayers.forEach((markerLayer) => {
+      const markerName = markerLayer.getPopup().getContent().toLowerCase();
+      
+     
+      // Check if the marker name includes the search term
+      if (markerName.includes(searchTerm)) {
+        // Show the marker on the map
+        markerLayer.addTo(map);
+      } else {
+        // Hide the marker on the map
+        map.removeLayer(markerLayer);
+      }
+    });
+  }
+  
+  // Add markers to the map
+  
+  
+  // Add an event listener to the search input
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", (event) => {
+    const searchValue = event.target.value;
+    filterMarkers(searchValue);
+  });
+
+
+
     
 })
 .catch((error) => {
    
    console.log(error);
 });
+
+
+
+
+
+
+
 
 
 

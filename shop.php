@@ -83,11 +83,13 @@ if(isset($_POST['submit'])) {
                         </div>
                     </div>     
                 </div>
-            </div>
-        </div>
-        <div>          
+                <div>          
                 <button class="search-button"  type="submit"  name="submit">Αναζήτηση </button>
         </div>
+            </div>
+            
+        </div>
+        
     </form>
     </div>
 </div>

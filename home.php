@@ -50,8 +50,8 @@ include 'components/wishlist_cart.php';
 <section class="map-container">
 
    <form action="" method="post">
-      <input type="text" name="search" placeholder="Αναζήτηση supermarket..." class="box">
-      <input type="submit" name="submit" value="Αναζήτηση" class="btn">
+      <input type="text" name="search" id="searchInput" placeholder="Αναζήτηση supermarket..." class="box">
+      
    </form>
 
 
