@@ -20,11 +20,9 @@ body{
     align-items: center;
     margin-left: auto;
     margin-right: auto;
-    height: 500px;
+    max-height: 630px;
     background-color: white;
     opacity: 0.9;
-
-    
 }
 
 .product-slider-heading{
@@ -32,7 +30,8 @@ body{
     color:darkblue;
     text-align: center;
     margin: 0px;
-    margin-bottom: 50px;
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .product-box{
@@ -59,6 +58,8 @@ body{
 .p-img{
     width: 100%;
     height: 100%;
+    max-height: 230px;
+    min-height: 230px;
     display: flex;
 }
 
@@ -66,7 +67,7 @@ body{
     width: 100%;
     height: 100%;
     object-position: center;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .p-box-text{
@@ -89,10 +90,10 @@ body{
 }
 
 .product-title{
-    color: #e98181;
-    font-weight: 600;
+    color: #e97474;
+    font-weight: 700;
     margin: auto;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     margin-top: 1rem;
 }
 
