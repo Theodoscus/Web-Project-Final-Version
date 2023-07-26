@@ -17,26 +17,31 @@ if(isset($_POST['submit'])){
    $name = filter_var($name, FILTER_SANITIZE_STRING);
    $email = $_POST['email'];
    $email = filter_var($email, FILTER_SANITIZE_STRING);
-   $pass = sha1($_POST['pass']);
-   $pass = filter_var($pass, FILTER_SANITIZE_STRING);
-   $cpass = sha1($_POST['cpass']);
-   $cpass = filter_var($cpass, FILTER_SANITIZE_STRING);
+   $pass = $_POST['pass'];
+   $cpass = $_POST['cpass'];
 
    $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ? OR username = ?");
    $select_user->execute([$email, $name]);
    $row = $select_user->fetch(PDO::FETCH_ASSOC);
    
+   $number = preg_match('@[A-Z]@', $cpass);
+   $uppercase = preg_match('@[^\w]@', $cpass);
+   $lowercase = preg_match('@[a-z]@', $cpass);
+   $specialChars = preg_match('@[0-9]@', $cpass);
+
+
    if($select_user->rowCount() > 0){
       $message[] = 'Το e-mail ή το username χρησιμοποιούνται ήδη!';
    }else{
       if($pass != $cpass){
          $message[] = 'Οι κωδικοί δεν ταιριάζουν μεταξύ τους!';
-      }elseif(strlen($cpass) < 8 || !preg_match('@[A-Z]@', $cpass) || !preg_match('@[a-z]@', $cpass) || !preg_match('@[^\w]@', $cpass) || !preg_match('@[0-9]@', $cpass)){
+      }elseif(strlen($cpass) <= 8 || !$number || !$uppercase || !$lowercase || !$specialChars){
          $message[] = 'Ο κωδικός πρέπει να είναι τουλάχιστον 8 χαρακτήρες και να περιέχει τουλάχιστον ένα κεφαλαίο, ένα μικρό γράμμα,έναν αριθμό και έναν ειδικό χαρακτήρα ';
       }
       else{
+         $securepass = sha1($cpass);
          $insert_user = $conn->prepare("INSERT INTO `users`(username, password, email, signup_date, user_type) VALUES(?,?,?,NOW(),'user')");
-         $insert_user->execute([$name, $cpass, $email]);
+         $insert_user->execute([$name, $securepass, $email]);
          $message[] = 'Επιτυχής εγγραφή! Συνδεθείτε στον λογαριασμό σας.';
       }
    }
