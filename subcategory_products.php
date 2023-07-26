@@ -34,9 +34,7 @@ if(!isset($user_id)){
 <body>
 
 <?php include 'components/user_header.php';?>
-<section class="filter-box">
-   <p> Here add filters </p> 
-</section>
+
 
 <section class="p-slider"> 
    <?php
@@ -69,7 +67,7 @@ if(!isset($user_id)){
                   <span><?php echo $row["product_name"];?></span>
                </div>
             </div>
-            <a href="#" class="product-title">
+            <a href="view_offers.php?pid=" class="product-title">
                Δείτε τις προσφορές
             </a>
          </div>

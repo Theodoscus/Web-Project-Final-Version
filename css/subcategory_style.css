@@ -25,6 +25,7 @@ body{
     background-color: white;
     opacity: 0.9;
     border-radius: 25px;
+    margin-top: 50px;
 }
 
 .product-slider-heading{
@@ -55,14 +56,17 @@ body{
     height: 100%;
     display: flex;
     overflow: hidden;
+    background-color: white;
+    
 }
 .p-img a,
 .p-img{
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
     max-height: 230px;
     min-height: 230px;
     display: flex;
+    justify-content: center;
 }
 
 .p-img a img{
