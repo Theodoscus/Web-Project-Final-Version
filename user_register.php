@@ -31,7 +31,10 @@ if(isset($_POST['submit'])){
    }else{
       if($pass != $cpass){
          $message[] = 'Οι κωδικοί δεν ταιριάζουν μεταξύ τους!';
-      }else{
+      }elseif(strlen($cpass) < 8 || !preg_match('@[A-Z]@', $cpass) || !preg_match('@[a-z]@', $cpass) || !preg_match('@[^\w]@', $cpass) || !preg_match('@[0-9]@', $cpass)){
+         $message[] = 'Ο κωδικός πρέπει να είναι τουλάχιστον 8 χαρακτήρες και να περιέχει τουλάχιστον ένα κεφαλαίο, ένα μικρό γράμμα,έναν αριθμό και έναν ειδικό χαρακτήρα ';
+      }
+      else{
          $insert_user = $conn->prepare("INSERT INTO `users`(username, password, email, signup_date, user_type) VALUES(?,?,?,NOW(),'user')");
          $insert_user->execute([$name, $cpass, $email]);
          $message[] = 'Επιτυχής εγγραφή! Συνδεθείτε στον λογαριασμό σας.';
