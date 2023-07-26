@@ -57,7 +57,7 @@ if(isset($_POST['submit'])) {
                     <div  class="cat-dropdown">
                         <div class="category-select-menu"  >
                         <select name="category_select" id="category_select"  style="width:300px;">
-                        <option selected disabled value='0'>Select Category</option>
+                        <option selected disabled value='0'>Επιλέξτε Κατηγορία</option>
                         <?php
                             $stmt = $conn->prepare("SELECT * FROM category ORDER BY category_name");
                             $stmt->execute();
@@ -78,7 +78,7 @@ if(isset($_POST['submit'])) {
                     <div  class="cat-dropdown">
                         <div class="category-select-menu"  >
                         <select name="subcategory_select" id="subcategory_select" style="width:300px;">
-                        <option selected disabled value='0'>Select Sub-Category</option>
+                        <option selected disabled value='0'>Επιλέξτε Υποκατηγορία</option>
                         </select>           
                         </div>
                     </div>     
