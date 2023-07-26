@@ -66,7 +66,7 @@ include 'components/wishlist_cart.php';
 
 <section class="category">
 
-   <h1 class="heading">Προσφορες ανα γενικη κατηγορια</h1>
+   <h1 class="heading">Προσφορες ανα γενικη υποκατηγορια</h1>
 
    <div class="swiper category-slider">
 
