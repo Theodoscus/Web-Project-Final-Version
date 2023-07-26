@@ -94,16 +94,13 @@ if (isset($_POST['submit'])) {
 
                 <?php
                 $select_products = $conn->prepare('SELECT  offers.offer_id,  product.product_name, offers.product_price, product.product_image ,supermarket.supermarket_name,supermarket.supermarket_address,users.username, offers.total_likes, offers.total_dislikes FROM offers,product,supermarket,users WHERE offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id AND users.user_id = :user_id ORDER BY offer_id DESC LIMIT 6');
-
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 } else {
     $user_id = '';
 }
-
 $select_products->bindParam(':user_id', $user_id);
 $select_products->execute();
-
 $select_products->execute();
 if ($select_products->rowCount() > 0) {
     while ($fetch_product = $select_products->fetch(PDO::FETCH_ASSOC)) {
@@ -145,6 +142,7 @@ if ($select_products->rowCount() > 0) {
         </div>
     </section>
 
+    <!-- here we create detailed bidding history of the player  -->
     <section class="like-activity">
         <?php
         // Prepare the SQL query to retrieve the user ID
@@ -185,6 +183,7 @@ echo '</table>';
 ?>
     </section>
 
+
     <!-- here we create "Total score from likes/deslikes for the user from Beginning" -->
     <section class="score-activity">
         <?php
@@ -223,8 +222,7 @@ while ($row = $stmt_total->fetch(PDO::FETCH_ASSOC)) {
 echo '<tr><td class="total-score" colspan="2">'.$total_likes.'</td></tr>';
 echo '</table>';
 
-// here we create "Total score from likes/deslikes for the user from this month
-
+// here we create "Total score from likes/deslikes for the user from this month"
 // Get the first and last day of the current month
 $first_day = date('Y-m-01');
 $last_day = date('Y-m-t');
@@ -371,9 +369,9 @@ echo '</table>';
 
 ?>
     </section>
-
-
+    
     </section>
+
 
     <!-- here we create "Total score for the user " -->
     <section class="score-activity">
@@ -385,15 +383,64 @@ if (isset($_SESSION['user_id'])) {
     $user_id = '';
 }
 
+// -------------------------------------------------------------------------------------
+
+// Get the current date
+$current_date = date('Y-m-d');
+
 // Calculate the total score for this month
 $month_score = $month_likes + $month_history_cal;
 
 // Calculate the total score for the entire history
 $total_Score = $history_cal + $total_likes;
-// ----------------------------------------------------------------------------------
-// Here we are insert in the db the total score from the begging and total score from this month in order to select them for the tokens
 
-// ----------------------------------------------------------------------------------
+// Check if there's an existing entry for this user and the current month
+$sql_check_existing = 'SELECT score_id, month_score, date FROM score_activity WHERE Users_user_id = :user_id ORDER BY date DESC LIMIT 1';
+$stmt_check_existing = $conn->prepare($sql_check_existing);
+$stmt_check_existing->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt_check_existing->execute();
+$existing_entry = $stmt_check_existing->fetch(PDO::FETCH_ASSOC);
+
+// Get the current month
+$current_month = date('Y-m', strtotime($current_date));
+
+if ($existing_entry) {
+    // If an entry exists, check if the current date has the same month as the last entry
+    $last_entry_date = $existing_entry['date'];
+    $last_entry_month = date('Y-m', strtotime($last_entry_date));
+
+    if ($current_month === $last_entry_month) {
+        // If it's the same month, update the existing row
+        $existing_score_id = $existing_entry['score_id'];
+        $sql_update_score = 'UPDATE score_activity SET month_score = :month_score, date = :current_date, score = :total_Score WHERE score_id = :score_id';
+        $stmt_update_score = $conn->prepare($sql_update_score);
+        $stmt_update_score->bindParam(':month_score', $month_score, PDO::PARAM_INT);
+        $stmt_update_score->bindParam(':current_date', $current_date, PDO::PARAM_STR);
+        $stmt_update_score->bindParam(':total_Score', $total_Score, PDO::PARAM_INT);
+        $stmt_update_score->bindParam(':score_id', $existing_score_id, PDO::PARAM_INT);
+        $stmt_update_score->execute();
+    } else {
+        // If it's a new month, insert a new row and update the current score_id
+        $sql_insert_score = 'INSERT INTO score_activity (Users_user_id, month_score, date, score) VALUES (:user_id, :month_score, :current_date, :total_Score)';
+        $stmt_insert_score = $conn->prepare($sql_insert_score);
+        $stmt_insert_score->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt_insert_score->bindParam(':month_score', $month_score, PDO::PARAM_INT);
+        $stmt_insert_score->bindParam(':current_date', $current_date, PDO::PARAM_STR);
+        $stmt_insert_score->bindParam(':total_Score', $total_Score, PDO::PARAM_INT);
+        $stmt_insert_score->execute();
+    }
+} else {
+    // If there's no existing entry for this user, insert a new row
+    $sql_insert_score = 'INSERT INTO score_activity (Users_user_id, month_score, date, score) VALUES (:user_id, :month_score, :current_date, :total_Score)';
+    $stmt_insert_score = $conn->prepare($sql_insert_score);
+    $stmt_insert_score->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_insert_score->bindParam(':month_score', $month_score, PDO::PARAM_INT);
+    $stmt_insert_score->bindParam(':current_date', $current_date, PDO::PARAM_STR);
+    $stmt_insert_score->bindParam(':total_Score', $total_Score, PDO::PARAM_INT);
+    $stmt_insert_score->execute();
+}
+
+// ------------------------------------------------------------------------------------
 
 // Create the HTML table for the total score and product name
 echo '<table>';
@@ -415,7 +462,7 @@ if (isset($_SESSION['user_id'])) {
     $user_id = '';
 }
 
-// Query to get the count of user IDs that meet the conditions
+// Query to get the count of user IDs
 $sql_num_users = 'SELECT COUNT(users.user_id) AS num_users
                   FROM users
                   WHERE users.user_type = "user" AND users.signup_date IS NOT NULL';
@@ -431,20 +478,6 @@ $num_users = $row_num_users['num_users'];
 $month_tokens = $num_users * 50;
 $month_tokens80 = $month_tokens * 0.8;
 echo '<tr><td>Monthly Tokesn: '.$month_tokens.', Number of users : '.$num_users.' , 80% of total_tokens:  '.$month_tokens80.' </td></tr>';
-
-// Prepare the update query
-$sql_update_scores = 'UPDATE score_activity
-                      SET month_score = :month_score, total_score = :total_score
-                      WHERE Users_user_id = :user_id';
-
-// Bind the parameters
-$stmt_update_scores = $conn->prepare($sql_update_scores);
-$stmt_update_scores->bindParam(':month_score', $month_score, PDO::PARAM_INT);
-$stmt_update_scores->bindParam(':total_score', $total_Score, PDO::PARAM_INT);
-$stmt_update_scores->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-
-// Execute the update query
-$stmt_update_scores->execute();
 
 ?>
     </section>
