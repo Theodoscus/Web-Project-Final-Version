@@ -57,7 +57,7 @@ fetch("components/get_supermarkets.php")
       marker = new L.marker(location,{icon: greenIcon}).addTo(map);
       if (circle.getBounds().contains(marker.getLatLng())){
         
-        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> <a href="+button1+id+"> Δείτε τις προσφορές!</a> <br> <a href="+button2+">Δημιουργήστε μια καινούργια προσφορά!</a>");
+        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> <a href="+button1+id+"> Δείτε τις προσφορές!</a> <br> <a href="+button2+id+">Δημιουργήστε μια καινούργια προσφορά!</a>");
         markerLayers.push(markerLayer);
         
       } else {
