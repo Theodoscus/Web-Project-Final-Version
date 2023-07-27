@@ -213,15 +213,6 @@ while ($row_total = $stmt_total->fetch(PDO::FETCH_ASSOC)) {
     $total_likes += $row_total['total_likes'];
 }
 
-// Create the HTML table for the total score and product name
-echo '<table>';
-echo '<tr><th>Score from likes/dislikes</th></tr>';
-while ($row = $stmt_total->fetch(PDO::FETCH_ASSOC)) {
-    echo '<tr><td>'.$row['total_likes'].'</td><td>';
-}
-echo '<tr><td class="total-score" colspan="2">'.$total_likes.'</td></tr>';
-echo '</table>';
-
 // here we create "Total score from likes/deslikes for the user from this month"
 // Get the first and last day of the current month
 $first_day = date('Y-m-01');
@@ -253,11 +244,6 @@ while ($row_month = $stmt_month->fetch(PDO::FETCH_ASSOC)) {
     $month_likes += $row_month['month_likes'];
 }
 
-// Create the HTML table for the total score and product name
-echo '<table>';
-echo '<tr><th>Score from likes/dislikes for this month</th></tr>';
-echo '<tr><td>'.$month_likes.'</td></tr>';
-echo '</table>';
 ?>
     </section>
 
@@ -360,13 +346,6 @@ while ($row_avg_price_1day = $stmt_avg_price_1day->fetch(PDO::FETCH_ASSOC)) {
     }
 }
 
-// Create the HTML table for the total score and product name
-echo '<table>';
-echo '<tr><th>Score from HISTORY </th></tr>';
-echo '<tr><td>Total History Score: '.$history_cal.'</td></tr>';
-echo '<tr><td>History Score for this Month: '.$month_history_cal.'</td></tr>';
-echo '</table>';
-
 ?>
     </section>
     
@@ -442,11 +421,21 @@ if ($existing_entry) {
 
 // ------------------------------------------------------------------------------------
 
-// Create the HTML table for the total score and product name
+// Final view:
+// Create the HTML table
 echo '<table>';
 echo '<tr><th>Score</th></tr>';
-echo '<tr><td>Total Score: '.$total_Score.'</td></tr>';
-echo '<tr><td>Monthly Score: '.$month_score.'</td></tr>';
+
+// Score from beginning and this month
+echo '<tr><td>Score from beginning:</td><td>'.$total_Score.'</td></tr>';
+echo '<tr><td>Score this month:</td><td>'.$month_score.'</td></tr>';
+
+// Score from likes and this month's likes
+echo '<tr><td>Score from likes from beginning:</td><td>'.$total_likes.'</td><td>Score from likes for this month:</td><td>'.$month_likes.'</td></tr>';
+
+// Score from history and this month's history
+echo '<tr><td>Score from history from beginning:</td><td>'.$history_cal.'</td><td>Score from history for this month:</td><td>'.$month_history_cal.'</td></tr>';
+
 echo '</table>';
 
 ?>
