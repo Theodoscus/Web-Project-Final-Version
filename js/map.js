@@ -29,7 +29,6 @@ var radius = 1000;
 var marker = new L.marker(e.latlng).addTo(map)
   .bindPopup("You are here!").openPopup();
 circle = new L.circle(e.latlng, radius).addTo(map);
-
 }
 
 map.on('locationfound', onLocationFound);
@@ -52,9 +51,9 @@ fetch("components/get_supermarkets.php")
     var name = data[i].supermarket_name
     var id = data[i].supermarket_id;
     var address = data[i].supermarket_address;
-    let button1 = "view_supermarket_offers.php?sid=";
+    let button1 = "view_sm_offers.php?sid=";
     let button2 = "create_offer.php?sid=";
-    if (has_offers==1){
+    if (has_offers>=1){
       marker = new L.marker(location,{icon: greenIcon}).addTo(map);
       if (circle.getBounds().contains(marker.getLatLng())){
         

@@ -37,20 +37,20 @@ if(!isset($user_id)){
 
 
 <section class="home-products">
-    <h1 class="heading">Προσφορές για το προιόν: </h1>
-
+    <h1 class="heading">Προσφορές για το supermarket: </h1>
+    
     <div class="swiper products-slider">
 
    <div class="swiper-wrapper">
     <?php
-    $pid=0;
-    if (isset($_GET["pid"])){   
-    $pid = $_GET["pid"];
+    $sid=0;
+    if (isset($_GET["sid"])){   
+    $sid = $_GET["sid"];
     }
     
-     $select_offers = $conn->prepare("SELECT offers.offer_id, product.product_id, product.product_name, offers.product_price, product.product_image ,supermarket.supermarket_name,supermarket.supermarket_address,users.username, offers.total_likes, offers.total_dislikes FROM offers,product,supermarket,users WHERE product.product_id=? AND offers.product_product_id=product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id"); 
-     $select_offers->execute([$pid]);
-     if($select_offers->rowCount() > 0){
+     $select_offers = $conn->prepare("SELECT offers.offer_id, product.product_id, product.product_name, offers.product_price, product.product_image ,supermarket.supermarket_name,supermarket.supermarket_address,users.username, offers.total_likes, offers.total_dislikes FROM offers,product,supermarket,users WHERE supermarket.supermarket_id=? AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.product_product_id=product.product_id  AND offers.Users_user_id=users.user_id AND offers.product_product_id=product.product_id"); 
+     $select_offers->execute([$sid]);
+     if($select_offers->rowCount() >0){
       while($fetch_product = $select_offers->fetch(PDO::FETCH_ASSOC)){
    ?>
    
