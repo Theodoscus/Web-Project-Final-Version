@@ -72,42 +72,42 @@ include 'components/wishlist_cart.php';
 
    <div class="swiper-wrapper">
 
-   <a href="category.php?category=laptop" class="swiper-slide slide">
+   <a class="swiper-slide slide">
       <img src="images/liquid-soap.png" alt="">
       <h3>Αντισηπτικά</h3>
    </a>
 
-   <a href="category.php?category=tv" class="swiper-slide slide">
+   <a class="swiper-slide slide">
       <img src="images/baby-boy.png" alt="">
       <h3>Βρεφικά Είδη</h3>
    </a>
 
-   <a href="category.php?category=camera" class="swiper-slide slide">
+   <a  class="swiper-slide slide">
       <img src="images/pet.png" alt="">
       <h3>Για κατοικίδια</h3>
    </a>
 
-   <a href="category.php?category=mouse" class="swiper-slide slide">
+   <a  class="swiper-slide slide">
       <img src="images/cleaning.png" alt="">
       <h3>Καθαριότητα</h3>
    </a>
 
-   <a href="category.php?category=fridge" class="swiper-slide slide">
+   <a  class="swiper-slide slide">
       <img src="images/cheers.png" alt="">
       <h3>Ποτά-Αναψυκτικά</h3>
    </a>
 
-   <a href="category.php?category=washing" class="swiper-slide slide">
+   <a  class="swiper-slide slide">
       <img src="images/first-aid-kit.png" alt="">
       <h3>Προστασία Υγείας</h3>
    </a>
 
-   <a href="category.php?category=smartphone" class="swiper-slide slide">
+   <a  class="swiper-slide slide">
       <img src="images/social-care.png" alt="">
       <h3>Προσωπική Φροντίδα</h3>
    </a>
 
-   <a href="category.php?category=watch" class="swiper-slide slide">
+   <a  class="swiper-slide slide">
       <img src="images/healthy-food.png" alt="">
       <h3>Τρόφιμα</h3>
    </a>
