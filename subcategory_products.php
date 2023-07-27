@@ -67,7 +67,7 @@ if(!isset($user_id)){
                   <span><?php echo $row["product_name"];?></span>
                </div>
             </div>
-            <a href="view_offers.php?pid=" class="product-title">
+            <a href="view_offers.php?pid=<?php echo $row["product_id"];?>"class="product-title">
                Δείτε τις προσφορές
             </a>
          </div>
