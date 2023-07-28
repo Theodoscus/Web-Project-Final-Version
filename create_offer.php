@@ -11,6 +11,36 @@ if(!isset($user_id)){
 
 }
 
+if(isset($_POST['submit'])){
+   if (isset($_GET["sid"])){   
+      $sid = $_GET["sid"];
+      }
+      $product_name = $_POST['offer_product'];
+      $offer_price = $_POST['offer_price'];
+      $offer_note = $_POST['offer_note'];
+      $select_product_id = $conn->prepare("SELECT product_id FROM  product WHERE product_name = ?"); 
+      $select_product_id->execute([$product_name]);
+      if($select_product_id->rowCount() > 0){
+         while($fetch_product_id = $select_product_id->fetch(PDO::FETCH_ASSOC)){
+         $product_id = $fetch_product_id['product_id'];
+         }
+      }
+      $select_product_price = $conn->prepare("SELECT offers.product_price FROM  offers WHERE offers.product_product_id = ? AND offers.supermarket_supermarket_id=? ORDER BY product_price ASC LIMIT 1"); 
+      $select_product_price->execute([$product_id, $sid]);
+      if($select_product_price->rowCount() > 0){
+         while($fetch_product_price = $select_product_price->fetch(PDO::FETCH_ASSOC)){
+         $product_price_fetch = $fetch_product_price['product_price'];
+         if ($offer_price <= 0.8 * $product_price_fetch){
+            
+         } else {
+            echo 'Υπάρχει ήδη προσφορά για το συγκεκριμένο προιόν στο επιλεγμένο super market!'
+
+         }
+
+         }
+      }
+      
+}
 ?>
 
 <!DOCTYPE html>
@@ -48,13 +78,13 @@ if(!isset($user_id)){
          $_SESSION['x_coord'] = $x_coord;
          $_SESSION['y_coord'] = $y_coord;
 ?>
-   <form action="store_offer.php" method="post">
+   <form action="" method="post">
    <input type="hidden" name="supermarket_name" value="<?= $fetch_product['supermarket_name']; ?>">
    <input type="hidden" name="supermarket_address" value="<?= $fetch_product['supermarket_address']; ?>">
       <h3>Συμπληρώστε μια προσφορά!</h3>
       <h2> Supermarket: <?= $fetch_product['supermarket_name']; ?>, <?= $fetch_product['supermarket_address']; ?></h2>
       <div class="custom-dropdown">
-      <input type="text" id="search" placeholder="Αναζήτηση προιόντος...">
+      <input type="text" name="offer_product" id="search" placeholder="Αναζήτηση προιόντος...">
       <div class="dropdown">
       <div class="selected-option">Select an option</div>
       <ul class="options">
