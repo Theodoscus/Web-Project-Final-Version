@@ -552,8 +552,6 @@ section{
 
 
 
-
-
 @media (max-width:991px){
 
    html{
@@ -625,3 +623,79 @@ section{
    }
 
 }
+
+/* Search bar */
+.search-container {
+   margin: 2rem auto;
+   max-width: 800px;
+   display: flex;
+   justify-content: center;
+}
+
+#searchInput {
+   width: 100%;
+   padding: 1rem;
+   font-size: 1.8rem;
+   border: var(--border);
+   border-radius: 0.5rem;
+   background-color: var(--light-bg);
+   color: var(--black);
+   outline: none;
+   transition: border-color 0.2s ease;
+}
+
+#searchInput::placeholder {
+   color: var(--light-color);
+}
+
+#searchInput:focus {
+   border-color: var(--main-color);
+}
+
+/* Adjust the product boxes to center them */
+.show-products .box-container {
+   justify-content: center;
+}
+
+/* Add some spacing between the search bar and the product boxes */
+.show-products .box-container .box {
+   margin-top: 2rem;
+}
+
+
+
+/* for the month field container */
+.month-container {
+   margin: 2rem auto;
+   max-width: 800px;
+   display: flex;
+   justify-content: center;
+}
+
+#bdaymonth {
+   width: 100%;
+   padding: 1rem;
+   font-size: 1.8rem;
+   border: var(--border);
+   border-radius: 0.5rem;
+   background-color: var(--light-bg);
+   color: var(--black);
+   outline: none;
+   transition: border-color 0.2s ease;
+}
+
+#bdaymonth::before {
+   content: "\f073";
+   font-family: "Font Awesome 5 Free";
+   position: absolute;
+   top: 50%;
+   right: 1rem;
+   transform: translateY(-50%);
+   color: var(--main-color);
+   pointer-events: none;
+}
+
+#bdaymonth:focus {
+   border-color: var(--main-color);
+}
+

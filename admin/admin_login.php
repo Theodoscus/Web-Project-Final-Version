@@ -4,27 +4,33 @@ include '../components/connect.php';
 
 session_start();
 
-if(isset($_POST['submit'])){
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    $user_id = '';
+}
 
-   $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
-   $pass = sha1($_POST['pass']);
-   $pass = filter_var($pass, FILTER_SANITIZE_STRING);
+if (isset($_POST['submit'])) {
+    $email = $_POST['email'];
+    $pass = $_POST['pass']; // Do not sanitize the password for admins
 
-   $select_admin = $conn->prepare("SELECT * FROM `admins` WHERE name = ? AND password = ?");
-   $select_admin->execute([$name, $pass]);
-   $row = $select_admin->fetch(PDO::FETCH_ASSOC);
+    $select_admin = $conn->prepare("SELECT * FROM `users` WHERE email = ? AND password = ? AND user_type = 'admin'");
+    $select_admin->execute([$email, $pass]);
+    $row = $select_admin->fetch(PDO::FETCH_ASSOC);
 
-   if($select_admin->rowCount() > 0){
-      $_SESSION['admin_id'] = $row['id'];
-      header('location:dashboard.php');
-   }else{
-      $message[] = 'incorrect username or password!';
-   }
+    echo 'Email: '.$email.'<br>';
+    echo 'Password: '.$pass.'<br>';
 
+    if ($select_admin->rowCount() > 0) {
+        $_SESSION['user_id'] = $row['user_id'];
+        header('location: admin_home.php');
+    } else {
+        $message[] = 'Incorrect email or password!';
+    }
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +38,7 @@ if(isset($_POST['submit'])){
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>login</title>
+   <title>Admin Login</title>
 
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
@@ -42,26 +48,25 @@ if(isset($_POST['submit'])){
 <body>
 
 <?php
-   if(isset($message)){
-      foreach($message as $message){
-         echo '
+   if (isset($message)) {
+       foreach ($message as $message) {
+           echo '
          <div class="message">
             <span>'.$message.'</span>
             <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
          </div>
          ';
-      }
+       }
    }
 ?>
 
 <section class="form-container">
 
    <form action="" method="post">
-      <h3>login now</h3>
-      <p>default username = <span>admin</span> & password = <span>111</span></p>
-      <input type="text" name="name" required placeholder="enter your username" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="pass" required placeholder="enter your password" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="submit" value="login now" class="btn" name="submit">
+      <h3>Login Login</h3>
+      <input type="email" name="email" required placeholder="Enter your email" maxlength="50"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="password" name="pass" required placeholder="Enter your password" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="submit" value="Login Now" class="btn" name="submit">
    </form>
 
 </section>
