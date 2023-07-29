@@ -11,6 +11,108 @@ if(!isset($user_id)){
 
 }
 
+function select_product_id($product_name){
+      include 'components/connect.php';
+      $select_product_id = $conn->prepare("SELECT product_id FROM  product WHERE product_name = ?"); 
+      $select_product_id->execute([$product_name]);
+      if($select_product_id->rowCount() > 0){
+         while($fetch_product_id = $select_product_id->fetch(PDO::FETCH_ASSOC)){
+         $product_id = $fetch_product_id['product_id'];
+         }
+      } 
+      return $product_id;
+
+}
+
+function select_product_price($product_id, $sid){
+   include 'components/connect.php';
+   $select_product_price = $conn->prepare("SELECT offers.product_price FROM  offers WHERE offers.product_product_id = ? AND offers.supermarket_supermarket_id=? ORDER BY product_price ASC LIMIT 1"); 
+      $select_product_price->execute([$product_id, $sid]);
+      if($select_product_price->rowCount() > 0){
+         while($fetch_product_price = $select_product_price->fetch(PDO::FETCH_ASSOC)){
+         $product_price_fetch = $fetch_product_price['product_price'];}
+      return $product_price_fetch;
+} else {
+   return INF;
+}
+}
+
+function get_current_date(){
+   $current_date = new DateTime();
+   $current_date_f = $current_date->format('Y-m-d');
+   return $current_date_f;
+}
+
+function get_last_day_date(){
+   $current_date = new DateTime();
+   $current_date_f = $current_date->format('Y-m-d');
+   $last_day = $current_date->modify('-1 day');
+   $last_day_f = $last_day->format('Y-m-d');
+   return $last_day_f;
+}
+
+function get_last_week_date(){
+   $current_date = new DateTime();
+   $current_date_f = $current_date->format('Y-m-d');
+   $last_week = $current_date->modify('-1 week');
+   $last_week_f = $last_week->format('Y-m-d');
+   return $last_week_f;
+}
+
+function get_avg_day_price($product_id, $last_day){
+   include 'components/connect.php';
+   $select_product_avg_day_price = $conn->prepare("SELECT offers.product_price FROM  offers WHERE offers.product_product_id = ? AND offers.creation_date=? "); 
+            $select_product_avg_day_price->execute([$product_id, $last_day]);
+            $total_price=0;
+            $total_prods=0;
+            if($select_product_avg_day_price->rowCount() > 0){
+            while($fetch_product_avg_day_price = $select_product_avg_day_price->fetch(PDO::FETCH_ASSOC)){
+               $total_price += $fetch_product_avg_day_price['product_price'];
+               $total_prods += 1;
+               
+               
+            }
+            $avg_day_price = $total_price/$total_prods;
+            return $avg_day_price;
+         } else {
+            return INF;
+         }
+}
+
+function get_avg_week_price($product_id, $last_week){
+   include 'components/connect.php';
+   $select_product_avg_week_price = $conn->prepare("SELECT offers.product_price FROM  offers WHERE offers.product_product_id = ? AND offers.creation_date=? "); 
+            $select_product_avg_week_price->execute([$product_id, $last_week]);
+            $total_price=0;
+            $total_prods=0;
+            if($select_product_avg_week_price->rowCount() > 0){
+            while($fetch_product_avg_week_price = $select_product_avg_week_price->fetch(PDO::FETCH_ASSOC)){
+               $total_price += $fetch_product_avg_week_price['product_price'];
+               $total_prods += 1;
+               
+               
+            }
+            $avg_week_price = $total_price/$total_prods;
+            return $avg_week_price;
+         } else {
+            return INF;
+         }
+}
+
+function insert_offer($note, $user_id, $product_price, $product_id, $supermarket_id){
+         include 'components/connect.php';
+         $insert_user = $conn->prepare("INSERT INTO `offers`(note, Users_user_id, product_price, product_product_id, creation_date, out_of_stock, supermarket_supermarket_id, total_likes, total_dislikes, expiration_date) VALUES(?,?,?,?,CURDATE(),'false',?,0,0,DATE_ADD(CURDATE(), INTERVAL 7 DAY))");
+         $insert_user->execute([$note, $user_id, $product_price, $product_id, $supermarket_id]);
+}
+
+function insert_score($score, $user_id, $action_type){
+         include 'components/connect.php';
+         $insert_score = $conn->prepare("INSERT INTO `score_activity`(score, Users_user_id, date, action_type) VALUES(?,?,CURDATE(),?)");
+         $insert_score->execute([$score, $user_id, $action_type]);
+         $insert_user_score = $conn->prepare("UPDATE users SET  total_score = total_score + ? WHERE user_id = ?;");
+         $insert_score->execute([$score, $user_id]);
+}
+
 if(isset($_POST['submit'])){
    if (isset($_GET["sid"])){   
       $sid = $_GET["sid"];
@@ -18,29 +120,27 @@ if(isset($_POST['submit'])){
       $product_name = $_POST['offer_product'];
       $offer_price = $_POST['offer_price'];
       $offer_note = $_POST['offer_note'];
-      $select_product_id = $conn->prepare("SELECT product_id FROM  product WHERE product_name = ?"); 
-      $select_product_id->execute([$product_name]);
-      if($select_product_id->rowCount() > 0){
-         while($fetch_product_id = $select_product_id->fetch(PDO::FETCH_ASSOC)){
-         $product_id = $fetch_product_id['product_id'];
-         }
-      }
-      $select_product_price = $conn->prepare("SELECT offers.product_price FROM  offers WHERE offers.product_product_id = ? AND offers.supermarket_supermarket_id=? ORDER BY product_price ASC LIMIT 1"); 
-      $select_product_price->execute([$product_id, $sid]);
-      if($select_product_price->rowCount() > 0){
-         while($fetch_product_price = $select_product_price->fetch(PDO::FETCH_ASSOC)){
-         $product_price_fetch = $fetch_product_price['product_price'];
+      $product_id = select_product_id($product_name);
+      $product_price_fetch = select_product_price($product_id, $sid);
          if ($offer_price <= 0.8 * $product_price_fetch){
-            
+            $current_date = get_current_date();
+            $last_day = get_last_day_date();
+            $last_week = get_last_week_date();
+            $avg_day_price = get_avg_day_price($product_id, $last_day);
+            $avg_week_price = get_avg_week_price($product_id, $last_week);
+            if ($offer_price <= 0.8 * $avg_day_price){
+                  insert_score(50, $user_id, 'best_avg_day');
+            }
+            if ($offer_price <= 0.8 * $avg_week_price){
+                  insert_score(20, $user_id, 'best_avg_week');
+            }
+            insert_offer($offer_note, $user_id, $product_price_fetch, $product_id, $sid);
+
          } else {
-            echo 'Υπάρχει ήδη προσφορά για το συγκεκριμένο προιόν στο επιλεγμένο super market!'
-
+            $message[] = 'Το e-mail ή το username χρησιμοποιούνται ήδη!';
          }
-
-         }
-      }
-      
 }
+      
 ?>
 
 <!DOCTYPE html>
