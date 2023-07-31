@@ -51,18 +51,26 @@ fetch("components/get_supermarkets.php")
     var name = data[i].supermarket_name
     var id = data[i].supermarket_id;
     var address = data[i].supermarket_address;
+    var sanitizers = data[i].Sanitizers;
+    var baby = data[i].Baby;
+    var pets = data[i].Pets;
+    var cleaning = data[i].Cleaning
+    var drinks = data[i].Drinks;
+    var health = data[i].Health;
+    var care = data[i].Care;
+    var food = data[i].Food;
     let button1 = "view_sm_offers.php?sid=";
     let button2 = "create_offer.php?sid=";
     if (has_offers>=1){
       marker = new L.marker(location,{icon: greenIcon}).addTo(map);
       if (circle.getBounds().contains(marker.getLatLng())){
         
-        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> <a href="+button1+id+"> Δείτε τις προσφορές!</a> <br> <a href="+button2+id+">Δημιουργήστε μια καινούργια προσφορά!</a>");
+        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Προσφορές ανά γενική κατηγορία: <br> Αντισηπτικά ("+sanitizers+")<br> Βρεφικά Είδη ("+baby+")<br> Για κατοικίδια ("+pets+")<br> Καθαριότητα ("+cleaning+")<br> Ποτά-Αναψυκτικά ("+drinks+")<br> Προστασία Υγείας ("+health+")<br> Προσωπική Φροντίδα ("+care+")<br> Τρόφιμα ("+food+")<br><a href="+button1+id+"> Δείτε τις προσφορές!</a> <br> <a href="+button2+id+">Δημιουργήστε μια καινούργια προσφορά!</a>");
         markerLayers.push(markerLayer);
         
       } else {
         
-        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> <a href="+button1+id+"> Δείτε τις προσφορές!</a>");
+        const markerLayer = marker.bindPopup("Όνομα supermarket: " + name + "<br> Διεύθυνση supermarket: " + address + "<br> Προσφορές ανά γενική κατηγορία: <br> Αντισηπτικά ("+sanitizers+")<br> Βρεφικά Είδη ("+baby+")<br> Για κατοικίδια ("+pets+")<br> Καθαριότητα ("+cleaning+")<br> Ποτά-Αναψυκτικά ("+drinks+")<br> Προστασία Υγείας ("+health+")<br> Προσωπική Φροντίδα ("+care+")<br> Τρόφιμα ("+food+")<br><a href="+button1+id+"> Δείτε τις προσφορές!</a>");
         markerLayers.push(markerLayer);
       }
     }
@@ -108,6 +116,230 @@ fetch("components/get_supermarkets.php")
     const searchValue = event.target.value;
     filterMarkers(searchValue);
   });
+
+  const sanitizersButton = document.getElementById('sanitizers');
+  const babyButton = document.getElementById('baby');
+  const petsButton = document.getElementById('pets');
+  const cleanButton = document.getElementById('clean');
+  const drinksButton = document.getElementById('drinks');
+  const healthButton = document.getElementById('health');
+  const careButton = document.getElementById('care');
+  const foodButton = document.getElementById('food');
+  const clearFilters = document.getElementById('clear_filters');
+  
+  
+  function sanitizersClickHandler(event) {
+    event.preventDefault();
+    
+    markerLayers.forEach((markerLayer) => {
+      const regex = /αντισηπτικά \((\d+)\)/i;
+      const markerName = markerLayer.getPopup().getContent().toLowerCase();
+      const match = markerName.match(regex);
+      
+      
+      if (match) {
+        const number = parseInt(match[1]);
+        console.log(number);
+        if (number === 0) {
+          map.removeLayer(markerLayer);
+        } else {
+          markerLayer.addTo(map);
+        }
+      } else {
+        map.removeLayer(markerLayer);
+      }
+    });
+    
+  }
+
+  function babyClickHandler(event) {
+    event.preventDefault();
+    
+    markerLayers.forEach((markerLayer) => {
+      const regex = /βρεφικά είδη \((\d+)\)/i;
+      const markerName = markerLayer.getPopup().getContent().toLowerCase();
+      const match = markerName.match(regex);
+      
+      
+      if (match) {
+        const number = parseInt(match[1]);
+        console.log(number);
+        if (number === 0) {
+          map.removeLayer(markerLayer);
+        } else {
+          markerLayer.addTo(map);
+        }
+      } else {
+        map.removeLayer(markerLayer);
+      }
+    });
+    
+  }
+
+  function petsClickHandler(event) {
+    event.preventDefault();
+    
+    markerLayers.forEach((markerLayer) => {
+      const regex = /για κατοικίδια \((\d+)\)/i;
+      const markerName = markerLayer.getPopup().getContent().toLowerCase();
+      const match = markerName.match(regex);
+      
+      
+      if (match) {
+        const number = parseInt(match[1]);
+        console.log(number);
+        if (number === 0) {
+          map.removeLayer(markerLayer);
+        } else {
+          markerLayer.addTo(map);
+        }
+      } else {
+        map.removeLayer(markerLayer);
+      }
+    });
+    
+  }
+
+  function cleanClickHandler(event) {
+    event.preventDefault();
+    
+    markerLayers.forEach((markerLayer) => {
+      const regex = /καθαριότητα \((\d+)\)/i;
+      const markerName = markerLayer.getPopup().getContent().toLowerCase();
+      const match = markerName.match(regex);
+      
+      
+      if (match) {
+        const number = parseInt(match[1]);
+        console.log(number);
+        if (number === 0) {
+          map.removeLayer(markerLayer);
+        } else {
+          markerLayer.addTo(map);
+        }
+      } else {
+        map.removeLayer(markerLayer);
+      }
+    });
+    
+  }
+
+  function drinksClickHandler(event) {
+    event.preventDefault();
+    
+    markerLayers.forEach((markerLayer) => {
+      const regex = /ποτά-αναψυκτικά \((\d+)\)/i;
+      const markerName = markerLayer.getPopup().getContent().toLowerCase();
+      const match = markerName.match(regex);
+      
+      
+      if (match) {
+        const number = parseInt(match[1]);
+        console.log(number);
+        if (number === 0) {
+          map.removeLayer(markerLayer);
+        } else {
+          markerLayer.addTo(map);
+        }
+      } else {
+        map.removeLayer(markerLayer);
+      }
+    });
+    
+  }
+
+  function healthClickHandler(event) {
+    event.preventDefault();
+    
+    markerLayers.forEach((markerLayer) => {
+      const regex = /προστασία υγείας \((\d+)\)/i;
+      const markerName = markerLayer.getPopup().getContent().toLowerCase();
+      const match = markerName.match(regex);
+      
+      
+      if (match) {
+        const number = parseInt(match[1]);
+        console.log(number);
+        if (number === 0) {
+          map.removeLayer(markerLayer);
+        } else {
+          markerLayer.addTo(map);
+        }
+      } else {
+        map.removeLayer(markerLayer);
+      }
+    });
+    
+  }
+
+  function careClickHandler(event) {
+    event.preventDefault();
+    
+    markerLayers.forEach((markerLayer) => {
+      const regex = /προσωπική φροντίδα \((\d+)\)/i;
+      const markerName = markerLayer.getPopup().getContent().toLowerCase();
+      const match = markerName.match(regex);
+      
+      
+      if (match) {
+        const number = parseInt(match[1]);
+        console.log(number);
+        if (number === 0) {
+          map.removeLayer(markerLayer);
+        } else {
+          markerLayer.addTo(map);
+        }
+      } else {
+        map.removeLayer(markerLayer);
+      }
+    });
+    
+  }
+
+  function foodClickHandler(event) {
+    event.preventDefault();
+    
+    markerLayers.forEach((markerLayer) => {
+      const regex = /τρόφιμα \((\d+)\)/i;
+      const markerName = markerLayer.getPopup().getContent().toLowerCase();
+      const match = markerName.match(regex);
+      
+      
+      if (match) {
+        const number = parseInt(match[1]);
+        console.log(number);
+        if (number === 0) {
+          map.removeLayer(markerLayer);
+        } else {
+          markerLayer.addTo(map);
+        }
+      } else {
+        map.removeLayer(markerLayer);
+      }
+    });
+    
+  }
+
+  function clearFiltersClickHandler(event) {
+    event.preventDefault();
+    
+    markerLayers.forEach((markerLayer) => {
+      markerLayer.addTo(map);
+    });
+    
+  }
+
+  sanitizersButton.addEventListener('click', sanitizersClickHandler);
+  babyButton.addEventListener('click', babyClickHandler);
+  petsButton.addEventListener('click', petsClickHandler);
+  cleanButton.addEventListener('click', cleanClickHandler);
+  drinksButton.addEventListener('click', drinksClickHandler);
+  healthButton.addEventListener('click', healthClickHandler);
+  careButton.addEventListener('click', careClickHandler);
+  foodButton.addEventListener('click', foodClickHandler);
+  clearFilters.addEventListener('click', clearFiltersClickHandler);
+  
+
 
 
 

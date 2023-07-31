@@ -51,7 +51,7 @@ include 'components/wishlist_cart.php';
 
    <form action="" method="post">
       <input type="text" name="search" id="searchInput" placeholder="Αναζήτηση supermarket..." class="box">
-      
+      <a href="#" class="btn" id="clear_filters">Καθαρισμός Φίλτρων</a>
    </form>
 
 
@@ -72,42 +72,42 @@ include 'components/wishlist_cart.php';
 
    <div class="swiper-wrapper">
 
-   <a class="swiper-slide slide">
+   <a href="#" id="sanitizers" class="swiper-slide slide">
       <img src="images/liquid-soap.png" alt="">
       <h3>Αντισηπτικά</h3>
    </a>
 
-   <a class="swiper-slide slide">
+   <a href="#" id="baby" class="swiper-slide slide">
       <img src="images/baby-boy.png" alt="">
       <h3>Βρεφικά Είδη</h3>
    </a>
 
-   <a  class="swiper-slide slide">
+   <a href="#" id="pets" class="swiper-slide slide">
       <img src="images/pet.png" alt="">
       <h3>Για κατοικίδια</h3>
    </a>
 
-   <a  class="swiper-slide slide">
+   <a href="#" id="clean" class="swiper-slide slide">
       <img src="images/cleaning.png" alt="">
       <h3>Καθαριότητα</h3>
    </a>
 
-   <a  class="swiper-slide slide">
+   <a href="#" id="drinks" class="swiper-slide slide">
       <img src="images/cheers.png" alt="">
       <h3>Ποτά-Αναψυκτικά</h3>
    </a>
 
-   <a  class="swiper-slide slide">
+   <a href="#" id="health" class="swiper-slide slide">
       <img src="images/first-aid-kit.png" alt="">
       <h3>Προστασία Υγείας</h3>
    </a>
 
-   <a  class="swiper-slide slide">
+   <a href="#" id="care" class="swiper-slide slide">
       <img src="images/social-care.png" alt="">
       <h3>Προσωπική Φροντίδα</h3>
    </a>
 
-   <a  class="swiper-slide slide">
+   <a href="#" id="food" class="swiper-slide slide">
       <img src="images/healthy-food.png" alt="">
       <h3>Τρόφιμα</h3>
    </a>
@@ -147,7 +147,7 @@ include 'components/wishlist_cart.php';
       <img src="uploaded_img/<?= $fetch_product['product_image']; ?>" alt="">
       <div class="name"><?= $fetch_product['product_name']; ?></div>
       <div class="flex">
-         <div class="price"><?= $fetch_product['product_price']; ?><span>€ στο supermarket: </span><?= $fetch_product['supermarket_name']; ?><span>, </span><?= $fetch_product['supermarket_address']; ?></div>
+         <div class="price"><?= $fetch_product['product_price']; ?><span>€ στο supermarket: </span><br><?= $fetch_product['supermarket_name']; ?><span>, </span><?= $fetch_product['supermarket_address']; ?></div>
          
       </div>
       <div class="down-part">
