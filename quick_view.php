@@ -49,6 +49,7 @@ include 'components/like_dislike.php';
          if (isset($_GET["oid"])){   
          $oid = $_GET["oid"];
          }
+         $_SESSION['oid'] = $oid;
          
          
     
@@ -80,7 +81,9 @@ include 'components/like_dislike.php';
       <input type="hidden" name="name" value="<?= $fetch_product['product_name']; ?>">
       <input type="hidden" name="price" value="<?= $fetch_product['product_price']; ?>">
       <input type="hidden" name="image" value="<?= $fetch_product['product_image']; ?>">
-      <input type="hidden" name="user_id" value="<?= $fetch_product['product_image']; ?>">
+      <input type="hidden" name="user_id" value="<?= $fetch_product['username']; ?>">
+      <input type="hidden" name="creation_date" value="<?= $fetch_product['creation_date']; ?>">
+      <input type="hidden" name="stock" value="<?= $fetch_product['out_of_stock']; ?>">
    
       <div class="row">
          <div class="image-container">
@@ -95,7 +98,7 @@ include 'components/like_dislike.php';
          </div>
          <div class="content">
          <div class="author">
-               <div class="author-name"><span>Created by: </span><?= $fetch_product['username'];?> </div>
+               <div class="author-name"><span>Δημιουργήθηκε από: </span><?= $fetch_product['username']; ?> την ημερομηνία: <?= $fetch_product['creation_date']; ?></div>
             </div>
             <div class="location-container">
                <img src="images/location.png" alt="">
@@ -103,6 +106,13 @@ include 'components/like_dislike.php';
             </div>
            
             <div class="name"><?= $fetch_product['product_name']; ?></div>
+            <?php $stock = $fetch_product['out_of_stock']; if ($stock==='false'){
+            $has_stock='Υπάρχει απόθεμα';
+            }else{
+            $has_stock='Δεν υπάρχει απόθεμα';
+            }
+            $_SESSION["stock"]=$stock;?>
+            <div class="stock"><?= $has_stock?></div>
             <div class="flex">
                <div class="price"><span>$</span><?= $fetch_product['product_price']; ?><span>/-</span></div>
                
@@ -111,6 +121,9 @@ include 'components/like_dislike.php';
             
             <div class="flex-btn">
                <input class="option-btn"  type="submit" name="out_of_stock" id="quick_view_1" value="η προσφορα έχει εξαντληθεί">
+            </div>
+            <div class="flex-btn">
+               <input class="option-btn"  type="submit" name="in_stock" id="quick_view_4" value="η προσφορα είναι διαθέσιμη">
             </div>
             <div class="flex-btn">
                

@@ -1437,3 +1437,23 @@ section{
  #subcategory_form {
    padding-bottom: 10rem;
  }
+
+ #quick_view_1[disabled] {
+   opacity: 0.6; 
+   cursor: not-allowed; 
+ }
+
+ #quick_view_2[disabled] {
+   opacity: 0.6; 
+   cursor: not-allowed; 
+ }
+
+ #quick_view_3[disabled] {
+   opacity: 0.6; 
+   cursor: not-allowed; 
+ }
+
+ #quick_view_4[disabled] {
+   opacity: 0.6; 
+   cursor: not-allowed; 
+ }

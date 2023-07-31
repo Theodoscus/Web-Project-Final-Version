@@ -12,13 +12,13 @@ if(isset($_POST['add_to_wishlist'])){
       $oid = filter_var($oid, FILTER_SANITIZE_STRING);
 
       $check_wishlist_numbers = $conn->prepare("SELECT * FROM `wishlist` WHERE offer_id = ? AND user_id = ?");
-      $check_wishlist_numbers->execute([$pid, $user_id]);
+      $check_wishlist_numbers->execute([$oid, $user_id]);
 
       if($check_wishlist_numbers->rowCount() > 0){
          $message[] = 'already added to wishlist!';
       }else{
          $insert_wishlist = $conn->prepare("INSERT INTO `wishlist`(user_id, product_id, offer_id) VALUES(?,?,?)");
-         $insert_wishlist->execute([$user_id, $oid, $pid]);
+         $insert_wishlist->execute([$user_id, $pid, $oid]);
          $message[] = 'added to wishlist!';
       }
 

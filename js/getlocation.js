@@ -34,15 +34,14 @@ navigator.geolocation.getCurrentPosition(onSuccess, onError);
                     const distance = calculateDistance(userLatitude, userLongitude, mapPoints[0], mapPoints[1]);
                     
                     if( distance<=1000){
-                        document.getElementById("quick_view_1").disabled = false;
-                        document.getElementById("quick_view_2").disabled = false;
-                        document.getElementById("quick_view_3").disabled = false;
+                        
 
 
                     }else{
                         document.getElementById("quick_view_1").disabled = true;
                         document.getElementById("quick_view_2").disabled = true;
                         document.getElementById("quick_view_3").disabled = true;
+                        document.getElementById("quick_view_4").disabled = true;
                     }
                     
                
@@ -64,6 +63,7 @@ navigator.geolocation.getCurrentPosition(onSuccess, onError);
                         document.getElementById("quick_view_1").disabled = true;
                         document.getElementById("quick_view_2").disabled = true;
                         document.getElementById("quick_view_3").disabled = true;
+                        document.getElementById("quick_view_4").disabled = true;
                     }
                 }
             };
@@ -77,4 +77,119 @@ navigator.geolocation.getCurrentPosition(onSuccess, onError);
             document.getElementById("quick_view_1").disabled = true;
             document.getElementById("quick_view_2").disabled = true;
             document.getElementById("quick_view_3").disabled = true;
+            document.getElementById("quick_view_4").disabled = true;
         }
+
+        function update_stock(stock){
+            if( stock=='false'){
+                document.getElementById("quick_view_1").disabled = false;
+                document.getElementById("quick_view_2").disabled = false;
+                document.getElementById("quick_view_3").disabled = false;
+                document.getElementById("quick_view_4").disabled = true;
+
+
+
+            }else{
+                document.getElementById("quick_view_1").disabled = true;
+                document.getElementById("quick_view_2").disabled = true;
+                document.getElementById("quick_view_3").disabled = true;
+                document.getElementById("quick_view_4").disabled = false;
+            }
+        }
+
+        const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        const stock = JSON.parse(xhr.responseText);
+                        update_stock(stock);
+                        
+                        
+                    } else {
+                        console.error("Failed to retrieve stock.");
+                        document.getElementById("quick_view_1").disabled = true;
+                        document.getElementById("quick_view_2").disabled = true;
+                        document.getElementById("quick_view_3").disabled = true;
+                        document.getElementById("quick_view_4").disabled = true;
+                    }
+                }
+            };
+
+            xhr.open("GET", "components/get_stock.php", true);
+            xhr.send();
+        
+
+        const inStockButton = document.getElementById('quick_view_4');
+        const outOfStockButton = document.getElementById('quick_view_1');
+        
+
+        
+        function inStockButtonClickHandler(event) {
+            const dataToSend={
+                key1: 'false',
+            };
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'components/send_stock.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                // Request was successful, handle the response from PHP here
+                console.log(xhr.responseText);
+                } else {
+                // Request failed
+                console.error('Request failed');
+                }
+            }
+            };
+
+// Convert JavaScript object to a URL-encoded string
+            const urlEncodedDataPairs = [];
+            for (const key1 in dataToSend) {
+            urlEncodedDataPairs.push(encodeURIComponent(key1) + '=' + encodeURIComponent(dataToSend[key1]));
+            }
+            const urlEncodedData = urlEncodedDataPairs.join('&');
+
+            xhr.send(urlEncodedData);
+            
+            
+              
+            
+          }
+        
+        function outOfStockButtonClickHandler(event) {
+            const dataToSend={
+                key1:'true',
+            };
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'components/send_stock.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                // Request was successful, handle the response from PHP here
+                console.log(xhr.responseText);
+                } else {
+                // Request failed
+                console.error('Request failed');
+                }
+            }
+            };
+
+// Convert JavaScript object to a URL-encoded string
+            const urlEncodedDataPairs = [];
+            for (const key1 in dataToSend) {
+            urlEncodedDataPairs.push(encodeURIComponent(key1) + '=' + encodeURIComponent(dataToSend[key1]));
+            }
+            const urlEncodedData = urlEncodedDataPairs.join('&');
+
+            xhr.send(urlEncodedData);
+            
+            
+              
+            
+          }
+
+        inStockButton.addEventListener('click', inStockButtonClickHandler);
+        outOfStockButton.addEventListener('click', outOfStockButtonClickHandler);
+

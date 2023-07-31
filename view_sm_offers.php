@@ -38,7 +38,7 @@ if(!isset($user_id)){
 
 <section class="home-products">
     <h1 class="heading">Προσφορές για το supermarket: </h1>
-    
+
     <div class="swiper products-slider">
 
    <div class="swiper-wrapper">
@@ -48,7 +48,7 @@ if(!isset($user_id)){
     $sid = $_GET["sid"];
     }
     
-     $select_offers = $conn->prepare("SELECT offers.offer_id, product.product_id, product.product_name, offers.product_price, product.product_image ,supermarket.supermarket_name,supermarket.supermarket_address,users.username, offers.total_likes, offers.total_dislikes FROM offers,product,supermarket,users WHERE supermarket.supermarket_id=? AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.product_product_id=product.product_id  AND offers.Users_user_id=users.user_id AND offers.product_product_id=product.product_id"); 
+     $select_offers = $conn->prepare("SELECT offers.out_of_stock, offers.creation_date, offers.offer_id, product.product_id, product.product_name, offers.product_price, product.product_image ,supermarket.supermarket_name,supermarket.supermarket_address,users.username, offers.total_likes, offers.total_dislikes FROM offers,product,supermarket,users WHERE supermarket.supermarket_id=? AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.product_product_id=product.product_id  AND offers.Users_user_id=users.user_id AND offers.product_product_id=product.product_id"); 
      $select_offers->execute([$sid]);
      if($select_offers->rowCount() >0){
       while($fetch_product = $select_offers->fetch(PDO::FETCH_ASSOC)){
@@ -66,16 +66,24 @@ if(!isset($user_id)){
       <input type="hidden" name="image" value="<?= $fetch_product['product_image']; ?>">
       <input type="hidden" name="supermarket_name" value="<?= $fetch_product['supermarket_name']; ?>">
       <input type="hidden" name="supermarket_address" value="<?= $fetch_product['supermarket_address']; ?>">
+      <input type="hidden" name="creation_date" value="<?= $fetch_product['creation_date']; ?>">
+      <input type="hidden" name="stock" value="<?= $fetch_product['out_of_stock']; ?>">
       <button class="fas fa-heart" type="submit" name="add_to_wishlist"></button>
       <a href="quick_view.php?oid=<?= $fetch_product['offer_id']; ?>" class="fas fa-eye"></a>
       <img src="uploaded_img/<?= $fetch_product['product_image']; ?>" alt="">
       <div class="name"><?= $fetch_product['product_name']; ?></div>
+      <?php $stock = $fetch_product['out_of_stock']; if ($stock==='false'){
+         $has_stock='Υπάρχει απόθεμα';
+         }else{
+            $has_stock='Δεν υπάρχει απόθεμα';
+         }?>
+      <div class="stock"><?= $has_stock?></div>
       <div class="flex">
-         <div class="price"><?= $fetch_product['product_price']; ?><span>€ στο supermarket: </span><?= $fetch_product['supermarket_name']; ?><span>, </span><?= $fetch_product['supermarket_address']; ?></div>
+         <div class="price"><?= $fetch_product['product_price']; ?><span>€ στο supermarket: </span><br><?= $fetch_product['supermarket_name']; ?><span>, </span><?= $fetch_product['supermarket_address']; ?></div>
          
       </div>
       <div class="down-part">
-         <div class="author"><span>Created by: </span><?= $fetch_product['username']; ?></div>
+         <div class="author"><span>Δημιουργήθηκε από: </span><?= $fetch_product['username']; ?> την ημερομηνία: <?= $fetch_product['creation_date']; ?></div>
          
          <div class="likes">
          <img src="images/like.png" alt="like">

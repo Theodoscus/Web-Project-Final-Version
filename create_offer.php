@@ -103,15 +103,25 @@ function insert_offer($note, $user_id, $product_price, $product_id, $supermarket
          include 'components/connect.php';
          $insert_user = $conn->prepare("INSERT INTO `offers`(note, Users_user_id, product_price, product_product_id, creation_date, out_of_stock, supermarket_supermarket_id, total_likes, total_dislikes, expiration_date) VALUES(?,?,?,?,CURDATE(),'false',?,0,0,DATE_ADD(CURDATE(), INTERVAL 7 DAY))");
          $insert_user->execute([$note, $user_id, $product_price, $product_id, $supermarket_id]);
+         $update_sm = $conn->prepare("UPDATE supermarket SET has_offers=1 WHERE supermarket_id=?");
+         $update_sm->execute([$supermarket_id]);
+         $select_offers_id = $conn->prepare("SELECT offers.offer_id FROM  offers WHERE offers.Users_user_id = ? AND offers.product_product_id=? ORDER BY offers.offer_id DESC "); 
+         $select_offers_id->execute([$user_id, $product_id]);
+         $fetch_offers_id = $select_offers_id->fetch(PDO::FETCH_ASSOC);
+         $oid = $fetch_offers_id['offer_id'];
+         return $oid;
+
 }
 
-function insert_score($score, $user_id, $action_type){
+function insert_score($score, $user_id, $action_type,$oid){
          include 'components/connect.php';
-         $insert_score = $conn->prepare("INSERT INTO `score_activity`(score, Users_user_id, date, action_type) VALUES(?,?,CURDATE(),?)");
-         $insert_score->execute([$score, $user_id, $action_type]);
+         $insert_score = $conn->prepare("INSERT INTO `score_activity`(score, Users_user_id, date, action_type, offer_id) VALUES(?,?,CURDATE(),?,?)");
+         $insert_score->execute([$score, $user_id, $action_type,$oid]);
          $insert_user_score = $conn->prepare("UPDATE users SET  total_score = total_score + ? WHERE user_id = ?;");
-         $insert_score->execute([$score, $user_id]);
+         $insert_user_score->execute([$score, $user_id]);
 }
+
+
 
 if(isset($_POST['submit'])){
    if (isset($_GET["sid"])){   
@@ -128,16 +138,21 @@ if(isset($_POST['submit'])){
             $last_week = get_last_week_date();
             $avg_day_price = get_avg_day_price($product_id, $last_day);
             $avg_week_price = get_avg_week_price($product_id, $last_week);
+            
+            $oid=insert_offer($offer_note, $user_id, $offer_price, $product_id, $sid);
             if ($offer_price <= 0.8 * $avg_day_price){
-                  insert_score(50, $user_id, 'best_avg_day');
-            }
-            if ($offer_price <= 0.8 * $avg_week_price){
-                  insert_score(20, $user_id, 'best_avg_week');
-            }
-            insert_offer($offer_note, $user_id, $product_price_fetch, $product_id, $sid);
+               insert_score(50, $user_id, 'best_avg_day',$oid);
+         }
+         if ($offer_price <= 0.8 * $avg_week_price){
+               insert_score(20, $user_id, 'best_avg_week',$oid);
+         }
+            $message[] = 'Επιτυχής δημοσίευση προσφοράς!';
+            sleep(2);
+            header('location:home.php');
 
          } else {
-            $message[] = 'Το e-mail ή το username χρησιμοποιούνται ήδη!';
+            $message[] = 'Υπάρχει ήδη προσφορά για το συγκεκριμένο προιόν με παραπλήσια τιμή!';
+            
          }
 }
       
