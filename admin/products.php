@@ -52,10 +52,10 @@ if (isset($_GET['delete'])) {
     unlink('../uploaded_img/'.$fetch_delete_image['image_01']);
     $delete_product = $conn->prepare('DELETE FROM `product` WHERE product_id = ?');
     $delete_product->execute([$delete_product_id]);
-    $delete_cart = $conn->prepare('DELETE FROM `cart` WHERE pproduct_id = ?');
-    $delete_cart->execute([$delete_product_id]);
-    $delete_wishlist = $conn->prepare('DELETE FROM `wishlist` WHERE pproduct_id = ?');
-    $delete_wishlist->execute([$delete_product_id]);
+    // $delete_cart = $conn->prepare('DELETE FROM `cart` WHERE pproduct_id = ?');
+    // $delete_cart->execute([$delete_product_id]);
+    // $delete_wishlist = $conn->prepare('DELETE FROM `wishlist` WHERE pproduct_id = ?');
+    // $delete_wishlist->execute([$delete_product_id]);
     header('location:products.php');
 }
 
@@ -98,7 +98,7 @@ if (isset($_GET['delete'])) {
         </div>
          <div class="inputBox">
             <span>product_description (required)</span>
-            <textarea name="product_description" placeholder="enter product product_description" class="box" required maxlength="500" cols="30" rows="10"></textarea>
+            <textarea name="product_description" placeholder="enter product_description" class="box" required maxlength="500" cols="30" rows="10"></textarea>
          </div>
          <div class="inputBox">
                 <span>Category</span>
