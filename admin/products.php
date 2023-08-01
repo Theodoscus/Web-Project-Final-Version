@@ -52,10 +52,10 @@ if (isset($_GET['delete'])) {
     unlink('../uploaded_img/'.$fetch_delete_image['image_01']);
     $delete_product = $conn->prepare('DELETE FROM `product` WHERE product_id = ?');
     $delete_product->execute([$delete_product_id]);
-    $delete_cart = $conn->prepare('DELETE FROM `cart` WHERE pproduct_id = ?');
-    $delete_cart->execute([$delete_product_id]);
-    $delete_wishlist = $conn->prepare('DELETE FROM `wishlist` WHERE pproduct_id = ?');
-    $delete_wishlist->execute([$delete_product_id]);
+    // $delete_cart = $conn->prepare('DELETE FROM `cart` WHERE pproduct_id = ?');
+    // $delete_cart->execute([$delete_product_id]);
+    // $delete_wishlist = $conn->prepare('DELETE FROM `wishlist` WHERE pproduct_id = ?');
+    // $delete_wishlist->execute([$delete_product_id]);
     header('location:products.php');
 }
 
@@ -93,13 +93,29 @@ if (isset($_GET['delete'])) {
             <input type="number" min="0" class="box" required max="9999999999" placeholder="enter product price" onkeypress="if(this.value.length == 10) return false;" name="price">
          </div>
         <div class="inputBox">
-            <span>image (required)</span>
+            <span>image (not necessary)</span>
             <input type="file" name="image_01" accept="image/jpg, image/jpeg, image/png, image/webp" class="box" required>
         </div>
          <div class="inputBox">
-            <span>product product_description (required)</span>
-            <textarea name="product_description" placeholder="enter product product_description" class="box" required maxlength="500" cols="30" rows="10"></textarea>
+            <span>product_description (required)</span>
+            <textarea name="product_description" placeholder="enter product_description" class="box" required maxlength="500" cols="30" rows="10"></textarea>
          </div>
+         <div class="inputBox">
+                <span>Category</span>
+                <select name="category" id="category" class="box" required>
+                    <option value="">Select Category</option>
+                    <option value="1">Βρεφικά Είδη</option>
+                    <option value="2">Καθαριότητα</option>
+                    <option value="3">Ποτά - Αναψυκτικά</option>
+                    <option value="4">Προσωπική φροντίδα</option>
+                </select>
+            </div>
+            <div class="inputBox">
+                <span>Subcategory</span>
+                <select name="subcategory" id="subcategory" class="box" required>
+                    <option value="">Select Subcategory</option>
+                </select>
+            </div>
       </div>
       
       <input type="submit" value="add product" class="btn" name="add_product">
@@ -112,33 +128,101 @@ if (isset($_GET['delete'])) {
     <h1 class="heading">products added</h1>
 
     <!-- Search bar -->
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search by product name">
-    </div>
+<div class="search-container">
+   <input type="text" id="searchInput" placeholder="Search by product name">
+</div>
 
-    <div class="box-container" id="productContainer">
-        <?php
-        $select_products = $conn->prepare('SELECT * FROM `product`');
+<div class="box-container" id="productContainer">
+   <?php
+   $select_products = $conn->prepare('SELECT * FROM `product`');
 $select_products->execute();
 $products = $select_products->fetchAll(PDO::FETCH_ASSOC);
 foreach ($products as $product) {
     ?>
-            <div class="box">
-                <img src="../uploaded_img/<?php echo $product['product_image']; ?>" alt="Image about the product">
-                <div class="product_name"><?php echo $product['product_name']; ?></div>
-                <!-- <div class="price">$<span><?php // echo $product['price'];?></span>/-</div> -->
-                <div class="product_description"><span><?php echo $product['product_description']; ?></span></div>
-                <div class="flex-btn">
-                    <a href="update_product.php?update=<?php echo $product['product_id']; ?>" class="option-btn">update</a>
-                    <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">delete</a>
-                </div>
-            </div>
-        <?php
+      <div class="box">
+         <img src="../uploaded_img/<?php echo $product['product_image']; ?>" alt="Image about the product">
+         <div class="product_name"><?php echo $product['product_name']; ?></div>
+         <!-- <div class="price">$<span><?php // echo $fetch_products['price'];?></span>/-</div> -->
+         <div class="product_description"><span><?php echo $product['product_description']; ?></span></div>
+         <div class="flex-btn">
+            <a href="update_product.php?update=<?php echo $product['product_id']; ?>" class="option-btn">update</a>
+            <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">delete</a>
+         </div>
+      </div>
+      <?php
 }
 ?>
-    </div>
+</div>
 
-</section>
+<!-- Here the code is the js for the search bar: -->
+<script>
+   const products = <?php echo json_encode($products); ?>;
+   const searchInput = document.getElementById('searchInput');
+   const productContainer = document.getElementById('productContainer');
+
+   function filterProducts() {
+      const searchTerm = searchInput.value.trim().toLowerCase();
+      productContainer.innerHTML = '';
+
+      if (searchTerm === '') {
+         products.forEach(product => renderProduct(product));
+      } else {
+         products.forEach(product => {
+            const productName = product.product_name.toLowerCase();
+            if (productName.includes(searchTerm)) {
+               renderProduct(product);
+            }
+         });
+      }
+   }
+
+   // Event listener for the search input
+   searchInput.addEventListener('input', filterProducts);
+</script>
+
+<!-- Here the code is for the subcategory -->
+<script>
+    const categorySelect = document.getElementById('category');
+    const subcategorySelect = document.getElementById('subcategory');
+
+    const subcategories = {
+        1: [
+            { id: 1, name: 'Aporripantiko' },
+            { id: 2, name: 'Panes' },
+        ],
+        2: [
+            { id: 3, name: 'Eidi Katharismou' },
+            { id: 4, name: 'Xartika' },
+        ],
+        3: [
+            { id: 5, name: 'Bires' },
+            { id: 6, name: 'Nera' },
+        ],
+        4: [
+            { id: 7, name: 'Aposmitika' },
+            { id: 8, name: 'Vamvakia' },
+        ],
+    };
+
+    categorySelect.addEventListener('change', () => {
+        const categoryId = categorySelect.value;
+        populateSubcategories(categoryId);
+    });
+
+    function populateSubcategories(categoryId) {
+        subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+        if (categoryId !== '') {
+            const categorySubcategories = subcategories[categoryId];
+            categorySubcategories.forEach(subcategory => {
+                const option = document.createElement('option');
+                option.value = subcategory.id;
+                option.textContent = subcategory.name;
+                subcategorySelect.appendChild(option);
+            });
+        }
+    }
+</script>
+
 
 <script src="../js/admin_script.js"></script>
 
