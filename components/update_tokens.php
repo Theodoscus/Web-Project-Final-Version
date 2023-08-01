@@ -1,9 +1,14 @@
 <?php
 include 'components/connect.php';
-$get_tokens = $conn->prepare("SELECT amount FROM tokens WHERE MONTH(creation_date)=MONTH(CURDATE()) AND YEAR(creation_date)=YEAR(CURDATE())"); 
+$current_date = date("j");
+if($current_date==1){
+$get_tokens_cm = $conn->prepare("SELECT user_tokens_id FROM user_tokens WHERE MONTH(date)=MONTH(CURDATE()) AND YEAR(date)=YEAR(CURDATE())");
+$get_tokens_cm->execute();
+if($get_tokens_cm->rowCount() <= 0){
+$get_tokens = $conn->prepare("SELECT amount FROM system_tokens WHERE MONTH(creation_date)=MONTH(DATE_SUB(curdate(), INTERVAL 1 MONTH)) AND YEAR(creation_date)=YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))"); 
 $get_tokens->execute();
 if($get_tokens->rowCount() > 0){
-    while($fetch_tokens= $get_score->fetch(PDO::FETCH_ASSOC)) {
+    while($fetch_tokens= $get_tokens->fetch(PDO::FETCH_ASSOC)) {
         $total_tokens_non_format = $fetch_tokens['amount'];
         $total_tokens=round($total_tokens_non_format*0.8);
         
@@ -24,17 +29,18 @@ GROUP BY Users_user_id;");
 $get_user_score->execute();
 if($get_user_score->rowCount() > 0){
 while($fetch_user_score= $get_user_score->fetch(PDO::FETCH_ASSOC)) {
-    $user_score = $fetch_users['SUM(score)'];
+    $user_score = $fetch_user_score['total_score'];
     $user_percentage = $user_score/$total_score;
     $user_tokens = $user_percentage*$total_tokens;
     $user_tokens_round = round($user_tokens);
-    $user_id = $fetch_users['Users_user_id'];
+    $user_id = $fetch_user_score['Users_user_id'];
     $insert_tokens = $conn->prepare("INSERT INTO user_tokens(tokens,Users_user_id,date) VALUES (?,?,curdate())"); 
-    $get_tokens->execute([$user_tokens_round, $user_id]);
+    $insert_tokens->execute([$user_tokens_round, $user_id]);
     
 }
 }
-
+}
+}
 
 
 

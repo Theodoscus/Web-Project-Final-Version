@@ -1,7 +1,8 @@
 <?php
 
 include 'components/connect.php';
-
+include 'components/calc_tokens.php';
+include 'components/update_tokens.php';
 session_start();
 
 if(isset($_SESSION['user_id'])){
