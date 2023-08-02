@@ -1,0 +1,258 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`category` (
+  `category_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `category_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`category_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 9
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`users` (
+  `user_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `signup_date` DATETIME NOT NULL,
+  `user_type` ENUM('user', 'admin') NOT NULL,
+  `total_score` INT(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`subcategory`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`subcategory` (
+  `subcategory_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `subcategory_name` VARCHAR(45) NOT NULL,
+  `category_category_id` INT(11) NOT NULL,
+  PRIMARY KEY (`subcategory_id`, `category_category_id`),
+  INDEX `fk_subcategory_category1_idx` (`category_category_id` ASC) VISIBLE,
+  CONSTRAINT `fk_subcategory_category1`
+    FOREIGN KEY (`category_category_id`)
+    REFERENCES `mydb`.`category` (`category_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`product`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`product` (
+  `product_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `product_name` VARCHAR(45) NOT NULL,
+  `product_description` TEXT NULL DEFAULT NULL,
+  `subcategory_subcategory_id` INT(11) NOT NULL,
+  `product_image` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`product_id`, `subcategory_subcategory_id`),
+  INDEX `fk_product_subcategory1_idx` (`subcategory_subcategory_id` ASC) VISIBLE,
+  CONSTRAINT `fk_product_subcategory1`
+    FOREIGN KEY (`subcategory_subcategory_id`)
+    REFERENCES `mydb`.`subcategory` (`subcategory_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`supermarket`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`supermarket` (
+  `supermarket_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `supermarket_name` VARCHAR(45) NOT NULL,
+  `supermarket_address` VARCHAR(45) NOT NULL,
+  `x_coord` DECIMAL(12,8) NOT NULL,
+  `y_coord` DECIMAL(12,8) NOT NULL,
+  `has_offers` INT(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`supermarket_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`offers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`offers` (
+  `offer_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `note` TEXT NULL DEFAULT NULL,
+  `Users_user_id` INT(11) NOT NULL,
+  `product_price` DECIMAL(5,2) NOT NULL,
+  `product_product_id` INT(11) NOT NULL,
+  `creation_date` DATE NOT NULL,
+  `out_of_stock` ENUM('true', 'false') NOT NULL,
+  `supermarket_supermarket_id` INT(11) NOT NULL,
+  `total_likes` INT(11) NULL DEFAULT 0,
+  `total_dislikes` INT(11) NULL DEFAULT 0,
+  `expiration_date` DATE NOT NULL,
+  PRIMARY KEY (`offer_id`),
+  INDEX `fk_offers_Users1_idx` (`Users_user_id` ASC) VISIBLE,
+  INDEX `fk_offers_product1_idx` (`product_product_id` ASC) VISIBLE,
+  INDEX `fk_offers_supermarket1_idx` (`supermarket_supermarket_id` ASC) VISIBLE,
+  CONSTRAINT `fk_offers_Users1`
+    FOREIGN KEY (`Users_user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_offers_product1`
+    FOREIGN KEY (`product_product_id`)
+    REFERENCES `mydb`.`product` (`product_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_offers_supermarket1`
+    FOREIGN KEY (`supermarket_supermarket_id`)
+    REFERENCES `mydb`.`supermarket` (`supermarket_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`likeactivity`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`likeactivity` (
+  `likeactivity_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `like_type` ENUM('like', 'dislike') NOT NULL,
+  `offers_offer_id` INT(11) NOT NULL,
+  `Users_user_id` INT(11) NOT NULL,
+  `date` DATE NOT NULL,
+  PRIMARY KEY (`likeactivity_id`),
+  INDEX `fk_likeactivity_offers1_idx` (`offers_offer_id` ASC) VISIBLE,
+  INDEX `fk_likeactivity_Users1_idx` (`Users_user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_likeactivity_Users1`
+    FOREIGN KEY (`Users_user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_likeactivity_offers1`
+    FOREIGN KEY (`offers_offer_id`)
+    REFERENCES `mydb`.`offers` (`offer_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`score_activity`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`score_activity` (
+  `score_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `score` INT(11) NULL DEFAULT NULL,
+  `Users_user_id` INT(11) NOT NULL,
+  `date` DATE NOT NULL,
+  `action_type` ENUM('like', 'dislike', 'best_avg_day', 'best_avg_week') NOT NULL,
+  `offer_id` INT(11) NOT NULL,
+  PRIMARY KEY (`score_id`),
+  INDEX `fk_score_Users1_idx` (`Users_user_id` ASC) VISIBLE,
+  INDEX `fk_score_Offers1_idx` (`offer_id` ASC) VISIBLE,
+  CONSTRAINT `fk_score_Users1`
+    FOREIGN KEY (`Users_user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 9
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`system_tokens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`system_tokens` (
+  `system_tokens_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `amount` INT(11) NOT NULL,
+  `creation_date` DATE NOT NULL,
+  PRIMARY KEY (`system_tokens_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`user_tokens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`user_tokens` (
+  `user_tokens_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `tokens` INT(11) NOT NULL DEFAULT 0,
+  `Users_user_id` INT(11) NOT NULL,
+  `date` DATE NOT NULL,
+  PRIMARY KEY (`user_tokens_id`),
+  INDEX `fk_token_Users1_idx` (`Users_user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_token_Users1`
+    FOREIGN KEY (`Users_user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`wishlist`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`wishlist` (
+  `wishlist_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `product_id` INT(11) NOT NULL,
+  `offer_id` INT(11) NOT NULL,
+  PRIMARY KEY (`wishlist_id`),
+  INDEX `fk_wishlist_Users1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_wishlist_product1_idx` (`product_id` ASC) VISIBLE,
+  INDEX `fk_wishlist_offers1_idx` (`offer_id` ASC) VISIBLE,
+  CONSTRAINT `fk_wishlist_Users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_wishlist_offers1`
+    FOREIGN KEY (`offer_id`)
+    REFERENCES `mydb`.`offers` (`offer_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_wishlist_product1`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `mydb`.`product` (`product_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 15
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
