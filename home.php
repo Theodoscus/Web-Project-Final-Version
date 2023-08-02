@@ -3,6 +3,7 @@
 include 'components/connect.php';
 include 'components/calc_tokens.php';
 include 'components/update_tokens.php';
+include 'components/update_offers.php';
 
 session_start();
 
@@ -131,10 +132,13 @@ include 'components/wishlist_cart.php';
    <div class="swiper-wrapper">
 
    <?php
-     $select_products = $conn->prepare("SELECT offers.out_of_stock, offers.offer_id, product.product_id, product.product_name, offers.product_price, product.product_image ,supermarket.supermarket_name,supermarket.supermarket_address,users.username, offers.total_likes, offers.total_dislikes, offers.creation_date FROM offers,product,supermarket,users WHERE offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id  ORDER BY offer_id DESC LIMIT 6"); 
+      $current_date=get_current_date();
+     $select_products = $conn->prepare("SELECT offers.expiration_date, offers.out_of_stock, offers.offer_id, product.product_id, product.product_name, offers.product_price, product.product_image ,supermarket.supermarket_name,supermarket.supermarket_address,users.username, offers.total_likes, offers.total_dislikes, offers.creation_date FROM offers,product,supermarket,users WHERE offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.Users_user_id=users.user_id  ORDER BY offer_id DESC LIMIT 6"); 
      $select_products->execute();
      if($select_products->rowCount() > 0){
       while($fetch_product = $select_products->fetch(PDO::FETCH_ASSOC)){
+         $offer_exp=$fetch_product['expiration_date'];
+         if($current_date<$offer_exp){
    ?>
    <form action="" method="post" class="swiper-slide slide">
       <input type="hidden" name="oid" value="<?= $fetch_product['offer_id']; ?>">
@@ -172,7 +176,9 @@ include 'components/wishlist_cart.php';
       </div>
    </form>
    <?php
-      }
+         }else{
+
+         }}
    }else{
       echo '<p class="empty">Δεν υπάρχουν διαθέσιμες προσφορές!</p>';
    }

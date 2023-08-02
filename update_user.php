@@ -158,7 +158,136 @@ if (isset($_POST['submit'])) {
 
 </section>
 
+<section class='like-dislike-table'>
+    <h1 class="heading">Like/Dislike που έχετε κάνει</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Like/Dislike</th>
+                <th>Date</th>
+                <th>Product name</th>
+                <th>Product price</th>
+                <th>Supermarket name</th>
+            </tr>
+        </thead>
+    <?php
+     $select_like_dislike = $conn->prepare("SELECT likeactivity.like_type,likeactivity.date, offers.product_price, product.product_name, supermarket.supermarket_name FROM likeactivity,offers,product,supermarket WHERE likeactivity.Users_user_id=? AND likeactivity.offers_offer_id=offers.offer_id AND offers.product_product_id=product.product_id AND offers.supermarket_supermarket_id=supermarket.supermarket_id"); 
+     $select_like_dislike->execute([$user_id]);
+     if($select_like_dislike->rowCount() > 0){
+      while($fetch_like_dislike = $select_like_dislike->fetch(PDO::FETCH_ASSOC)){
+   ?>
+    <form action="" method="post" class="like_dislike_form">
+      <input type="hidden" name="like_type" value="<?= $fetch_like_dislike['like_type']; ?>">
+      <input type="hidden" name="date" value="<?= $fetch_like_dislike['date']; ?>">
+      <input type="hidden" name="name" value="<?= $fetch_like_dislike['product_name']; ?>">
+      <input type="hidden" name="price" value="<?= $fetch_like_dislike['product_price']; ?>">
+      <input type="hidden" name="supermarket_name" value="<?= $fetch_like_dislike['supermarket_name']; ?>">
+      
+        <tbody id="tableBody">
+        <td> <?= $fetch_like_dislike['like_type']?>  </td>
+        <td> <?= $fetch_like_dislike['date']?>  </td>
+        <td> <?= $fetch_like_dislike['product_name']?> </td>
+        <td> <?= $fetch_like_dislike['product_price']?> </td>
+        <td> <?= $fetch_like_dislike['supermarket_name']?> </td>
+        </tbody>
+    
+    </form>
 
+
+
+    <?php
+      }
+   }else{
+      echo '<p class="empty">Δεν υπάρχει διαθέσιμο ιστορικό!</p>';
+   }
+   ?>
+</table>
+</section>
+
+<section class='score_activity'>
+
+<h1 class="heading">Score και Tokens που έχετε συγκεντρώσει</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Total Score</th>
+                <th>Monthly Score</th>
+                <th>Total Tokens</th>
+                <th>Last Month Tokens</th>
+            </tr>
+        </thead>
+    <?php
+     $select_score = $conn->prepare("SELECT
+     u.user_id,
+     u.total_score,
+     COALESCE(current_month_score, 0) AS current_month_score,
+     COALESCE(last_month_tokens, 0) AS last_month_tokens,
+     COALESCE(total_tokens, 0) AS total_tokens
+ FROM
+     users u
+ LEFT JOIN (
+     SELECT
+         sa.Users_user_id,
+         SUM(sa.score) AS current_month_score
+     FROM
+         score_activity sa
+     WHERE
+         sa.Users_user_id = ? AND
+         MONTH(sa.date) = MONTH(CURRENT_DATE()) AND
+         YEAR(sa.date) = YEAR(CURRENT_DATE())
+     GROUP BY
+         sa.Users_user_id
+ ) cms ON u.user_id = cms.Users_user_id
+ LEFT JOIN (
+     SELECT
+         ut.Users_user_id,
+         SUM(CASE
+             WHEN MONTH(ut.date) = MONTH(CURRENT_DATE()) - 1 AND YEAR(ut.date) = YEAR(CURRENT_DATE()) THEN ut.tokens
+             ELSE 0
+         END) AS last_month_tokens,
+         SUM(ut.tokens) AS total_tokens
+     FROM
+         user_tokens ut
+     WHERE
+         ut.Users_user_id = ?
+     GROUP BY
+         ut.Users_user_id
+ ) lmt ON u.user_id = lmt.Users_user_id
+ WHERE
+     u.user_id = ?;"); 
+     $select_score->execute([$user_id, $user_id, $user_id]);
+     if($select_score->rowCount() > 0){
+      while($fetch_score = $select_score->fetch(PDO::FETCH_ASSOC)){
+   ?>
+    <form action="" method="post" class="score_form">
+      <input type="hidden" name="total_score" value="<?= $fetch_score['total_score']; ?>">
+      <input type="hidden" name="score" value="<?= $fetch_score['current_month_score']; ?>">
+      <input type="hidden" name="total_tokens" value="<?= $fetch_score['total_tokens']; ?>">
+      <input type="hidden" name="tokens" value="<?= $fetch_score['last_month_tokens']; ?>">
+      
+      
+      
+        <tbody id="tableBody">
+        <td> <?= $fetch_score['total_score']?>  </td>
+        <td> <?= $fetch_score['current_month_score']?>  </td>
+        <td> <?= $fetch_score['total_tokens']?> </td>
+        <td> <?= $fetch_score['last_month_tokens']?> </td>
+        
+        </tbody>
+    
+    </form>
+
+
+
+    <?php
+      }
+   }else{
+      echo '<p class="empty">Δεν υπάρχει διαθέσιμο ιστορικό!</p>';
+   }
+   ?>
+</table>
+
+</section>
     
 
 

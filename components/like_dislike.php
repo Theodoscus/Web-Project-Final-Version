@@ -21,7 +21,7 @@ if(isset($_POST['like'])){
                 $message[] = 'You already like this offer!';
                 
             }elseif($fetch_likes['like_type']=="dislike"){
-                $update_activity= $conn->prepare("UPDATE likeactivity SET like_type='like' WHERE offers_offer_id = ? AND Users_user_id = ?");
+                $update_activity= $conn->prepare("UPDATE likeactivity SET like_type='like', date=curdate() WHERE offers_offer_id = ? AND Users_user_id = ?");
                 $update_activity->execute([$oid, $user_id]);
                 $update_offer=$conn->prepare("UPDATE offers SET total_likes=total_likes+1, total_dislikes=total_dislikes-1 WHERE offer_id=?");
                 $update_offer->execute([$oid]);
@@ -33,7 +33,7 @@ if(isset($_POST['like'])){
          
         }
       }else{
-        $insert_activity= $conn->prepare("INSERT INTO likeactivity(like_type, offers_offer_id, Users_user_id) VALUES('like',?,?)");
+        $insert_activity= $conn->prepare("INSERT INTO likeactivity(like_type, offers_offer_id, Users_user_id,date) VALUES('like',?,?,curdate())");
         $insert_activity->execute([$oid,$user_id]);
         $update_offer=$conn->prepare("UPDATE offers SET total_likes=total_likes+1 WHERE offer_id=?");
         $update_offer->execute([$oid]);
@@ -61,7 +61,7 @@ if(isset($_POST['like'])){
             if($fetch_likes['like_type']=="dislike"){
                 $message[] = 'You already dislike this offer!';
             }elseif($fetch_likes['like_type']=="like"){
-                $update_activity= $conn->prepare("UPDATE likeactivity SET like_type='dislike' WHERE offers_offer_id = ? AND Users_user_id = ?");
+                $update_activity= $conn->prepare("UPDATE likeactivity SET like_type='dislike',date=curdate() WHERE offers_offer_id = ? AND Users_user_id = ?");
                 $update_activity->execute([$oid, $user_id]);
                 $update_offer=$conn->prepare("UPDATE offers SET total_likes=total_likes-1, total_dislikes=total_dislikes+1 WHERE offer_id=?");
                 $update_offer->execute([$oid]);
@@ -73,7 +73,7 @@ if(isset($_POST['like'])){
          
         }
       }else{
-        $insert_activity= $conn->prepare("INSERT INTO likeactivity(like_type, offers_offer_id, Users_user_id) VALUES('dislike',?,?)");
+        $insert_activity= $conn->prepare("INSERT INTO likeactivity(like_type, offers_offer_id, Users_user_id,date) VALUES('dislike',?,?,curdate())");
         $insert_activity->execute([$oid,$user_id]);
         $update_offer=$conn->prepare("UPDATE offers SET total_dislikes=total_dislikes+1 WHERE offer_id=?");
         $update_offer->execute([$oid]);

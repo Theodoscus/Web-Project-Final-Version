@@ -1,6 +1,7 @@
 <?php
 
 include 'components/connect.php';
+include 'components/update_offers.php';
 session_start();
 
 $user_id = $_SESSION['user_id'];
@@ -43,15 +44,18 @@ if(!isset($user_id)){
 
    <div class="swiper-wrapper">
     <?php
+    $current_date=get_current_date();
     $sid=0;
     if (isset($_GET["sid"])){   
     $sid = $_GET["sid"];
     }
     
-     $select_offers = $conn->prepare("SELECT offers.out_of_stock, offers.creation_date, offers.offer_id, product.product_id, product.product_name, offers.product_price, product.product_image ,supermarket.supermarket_name,supermarket.supermarket_address,users.username, offers.total_likes, offers.total_dislikes FROM offers,product,supermarket,users WHERE supermarket.supermarket_id=? AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.product_product_id=product.product_id  AND offers.Users_user_id=users.user_id AND offers.product_product_id=product.product_id"); 
+     $select_offers = $conn->prepare("SELECT offers.expiration_date, offers.out_of_stock, offers.creation_date, offers.offer_id, product.product_id, product.product_name, offers.product_price, product.product_image ,supermarket.supermarket_name,supermarket.supermarket_address,users.username, offers.total_likes, offers.total_dislikes FROM offers,product,supermarket,users WHERE supermarket.supermarket_id=? AND offers.supermarket_supermarket_id=supermarket.supermarket_id AND offers.product_product_id=product.product_id  AND offers.Users_user_id=users.user_id AND offers.product_product_id=product.product_id"); 
      $select_offers->execute([$sid]);
      if($select_offers->rowCount() >0){
       while($fetch_product = $select_offers->fetch(PDO::FETCH_ASSOC)){
+         $offer_exp=$fetch_product['expiration_date'];
+         if($current_date<$offer_exp){
    ?>
    
 
@@ -94,7 +98,7 @@ if(!isset($user_id)){
       </div>
    </form>
    <?php
-      }
+      }}
    }else{
       echo '<p class="empty">Δεν υπάρχουν διαθέσιμες προσφορές!</p>';
    }
