@@ -20,7 +20,7 @@ if (isset($message)) {
         <nav class="navbar">
             <a href="../admin/products.php">Προϊόντα</a>
             <a href="../admin/statics.php">Στατιστικά</a>
-            <a href="../admin/leaderboards.php">Leaderboard</a>
+            <a href="../admin/leaderboard.php">Leaderboard</a>
             <a href="../admin/stores.php">Καταστήματα</a>
             <a href="../admin/map.php">Χάρτης</a>
         </nav>
