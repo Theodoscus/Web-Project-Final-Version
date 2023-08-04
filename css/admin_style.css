@@ -708,4 +708,31 @@ section{
   background-color: #f9f9f9;
 }
 
+/* for ranking list of the LEADERBOARD */
+.ranking-list {
+   margin: 20px;
+}
+
+.ranking-list h2 {
+   font-size: 20px;
+   font-weight: bold;
+   margin-bottom: 10px;
+}
+
+.ranking-list table {
+   width: 100%;
+   border-collapse: collapse;
+}
+
+.ranking-list th,
+.ranking-list td {
+   padding: 8px;
+   text-align: center;
+   border: 1px solid #ccc;
+}
+
+.ranking-list th {
+   background-color: #f2f2f2;
+}
+
 

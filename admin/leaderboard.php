@@ -1,5 +1,4 @@
 <?php
-
 include '../components/connect.php';
 
 session_start();
@@ -9,11 +8,31 @@ $admin_product_id = $_SESSION['user_id'];
 if (!isset($admin_product_id)) {
     header('location:admin_home.php');
 }
+?>
 
-include '../components/admin_header.php';
+<!DOCTYPE html>
+<html lang="en">
 
-// Calculate previous month
-$previousMonth = date('Y-m', strtotime('first day of previous month'));
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/admin_style.css">
+
+</head>
+
+
+<body>
+    <?php include '../components/admin_header.php'; ?>
+
+    <section class="section">
+        <?php
+
+// Calculate previous month with day portion
+$previousMonth = date('Y-m-d', strtotime('first day of previous month'));
 
 // Fetch users and their data
 $select_users = $conn->prepare('SELECT users.user_id, users.username,
@@ -51,30 +70,13 @@ $users = $select_users->fetchAll(PDO::FETCH_ASSOC);
     </table>
 </div>
 
-<style>
-.ranking-list {
-    margin: 20px;
-}
 
-.ranking-list h2 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+</section>
 
-.ranking-list table {
-    width: 100%;
-    border-collapse: collapse;
-}
 
-.ranking-list th,
-.ranking-list td {
-    padding: 8px;
-    text-align: center;
-    border: 1px solid #ccc;
-}
 
-.ranking-list th {
-    background-color: #f2f2f2;
-}
-</style>
+
+
+</body>
+
+</html>
