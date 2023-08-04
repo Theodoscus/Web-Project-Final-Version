@@ -176,8 +176,6 @@ include 'components/wishlist_cart.php';
       </div>
    </form>
    <?php
-         }else{
-
          }}
    }else{
       echo '<p class="empty">Δεν υπάρχουν διαθέσιμες προσφορές!</p>';
