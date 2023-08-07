@@ -355,6 +355,8 @@ section{
    border-radius: .5rem;
    border:var(--border);
    padding:2rem;
+   max-height: 40rem;
+   min-height: 40rem;
 }
 
 .show-products .box-container .box img{
@@ -379,6 +381,7 @@ section{
 .show-products .box-container .box .product_description{
    font-size: 1rem;
    color:var(--light-color);
+   height: 40px;
 }
 
 .update-product form{

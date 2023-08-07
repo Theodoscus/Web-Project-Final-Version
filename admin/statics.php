@@ -149,7 +149,7 @@ $subcategories = $select_subcategories->fetchAll(PDO::FETCH_ASSOC);
 // Fetch data for the graph based on the selected category and subcategory
 $selectedSubcategoryId = '';
 if (isset($_POST['submit'])) {
-    $selectedSubcategoryId = $_POST['subcategory'];
+    $selectedSubcategoryId = $_POST['subcategory_select'];
 
     $select_offers = $conn->prepare('SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
                                         FROM offers
@@ -176,25 +176,26 @@ if (isset($_POST['submit'])) {
         <div class="selection-container">
     <form method="post" action="">
         <div class="inputBox">
-            <label for="category">Category</label>
-            <select name="category" id="category" class="box" required>
-                <option value="0">Select Category</option>
-                <?php foreach ($categories as $category) {?>
-                    <option value="<?php echo $category['category_id']; ?>" <?php echo ($category['category_id'] == $selectedCategoryId) ? 'selected' : ''; ?>>
-                        <?php echo $category['category_name']; ?>
-                    </option>
-                <?php }?>
+            <label for="category">Κατηγορία</label>
+            <select name="category_select" id="category_select" class="box" required>
+                <option selected disabled value="0">Επιλέξτε Κατηγορία</option>
+                <?php
+                            $stmt = $conn->prepare("SELECT * FROM category ORDER BY category_name");
+                            $stmt->execute();
+                            $categoriesList= $stmt->fetchAll();
+
+                            foreach($categoriesList as $category){
+                                echo "<option value='".$category['category_id']."'>".$category['category_name']."</option>";
+                            }
+        
+                        ?>
             </select>
         </div>
         <div class="inputBox">
-            <label for="subcategory">Subcategory</label>
-            <select name="subcategory" id="subcategory" class="box" required>
-                <option value="0">Select Subcategory</option>
-                <?php foreach ($subcategories as $subcategory) {
-                    if ($subcategory['category_category_id'] == $selectedCategoryId) {
-                        echo '<option value="'.$subcategory['subcategory_id'].'">'.$subcategory['subcategory_name'].'</option>';
-                    }
-                }?>
+            <label for="subcategory">Υποκατηγορία</label>
+            <select name="subcategory_select" id="subcategory_select" class="box" required>
+                <option selected disabled value="0">Επιλέξτε Υποκατηγορία</option>
+                
             </select>
         </div>
         <div class="inputBox">
@@ -203,24 +204,7 @@ if (isset($_POST['submit'])) {
     </form>
 </div>
 
-<script>
-    const categorySelect = document.getElementById('category');
-    const subcategorySelect = document.getElementById('subcategory');
-    
-    categorySelect.addEventListener('change', () => {
-        const selectedCategoryId = categorySelect.value;
-        
-        // Clear existing options
-        subcategorySelect.innerHTML = '<option value="0">Select Subcategory</option>';
-        
-        // Populate subcategories based on selected category
-        <?php foreach ($subcategories as $subcategory) { ?>
-            if (<?php echo $subcategory['category_category_id']; ?> == selectedCategoryId) {
-                subcategorySelect.innerHTML += '<option value="<?php echo $subcategory['subcategory_id']; ?>"><?php echo $subcategory['subcategory_name']; ?></option>';
-            }
-        <?php } ?>
-    });
-</script>
+
 
 
 
@@ -232,7 +216,8 @@ if (isset($_POST['submit'])) {
 
 
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="../js/admin_ajax.js"  ></script>
 
 </body>
 
