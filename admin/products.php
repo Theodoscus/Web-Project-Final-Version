@@ -85,35 +85,41 @@ if (isset($_GET['delete'])) {
    <form action="" method="post" enctype="multipart/form-data">
       <div class="flex">
          <div class="inputBox">
-            <span>product name (required)</span>
-            <input type="text" class="box" required maxlength="100" placeholder="enter product name" name="name">
+            <span>Όνομα προϊόντος (Υποχρεωτικό)</span>
+            <input type="text" class="box" required maxlength="100" placeholder="Εισάγετε το όνομα του προϊόντος" name="name">
          </div>
          <div class="inputBox">
-            <span>product price (required)</span>
-            <input type="number" min="0" class="box" required max="9999999999" placeholder="enter product price" onkeypress="if(this.value.length == 10) return false;" name="price">
+            <span>Τιμή προϊόντος (Υποχρεωτικό)</span>
+            <input type="number" min="0" class="box" required max="9999999999" placeholder="Εισάγετε την τιμή του προϊόντος" onkeypress="if(this.value.length == 10) return false;" name="price">
          </div>
         <div class="inputBox">
-            <span>image (not necessary)</span>
+            <span>Είκονα (Μη υποχρεωτικό)</span>
             <input type="file" name="image_01" accept="image/jpg, image/jpeg, image/png, image/webp" class="box" required>
         </div>
          <div class="inputBox">
-            <span>product_description (required)</span>
-            <textarea name="product_description" placeholder="enter product_description" class="box" required maxlength="500" cols="30" rows="10"></textarea>
+            <span>Περιγραφή προϊόντος (Υποχρεωτικό)</span>
+            <textarea name="product_description" placeholder="Εισάγετε την περιγραφή " class="box" required maxlength="500" cols="30" rows="10"></textarea>
          </div>
          <div class="inputBox">
-                <span>Category</span>
-                <select name="category" id="category" class="box" required>
-                    <option value="">Select Category</option>
-                    <option value="1">Βρεφικά Είδη</option>
-                    <option value="2">Καθαριότητα</option>
-                    <option value="3">Ποτά - Αναψυκτικά</option>
-                    <option value="4">Προσωπική φροντίδα</option>
+                <span>Κατηγορία</span>
+                <select name="category_select" id="category_select" class="box" required>
+                    <option selected disabled value='0'>Επιλέξτε Κατηγορία</option>
+                    <?php
+                            $stmt = $conn->prepare("SELECT * FROM category ORDER BY category_name");
+                            $stmt->execute();
+                            $categoriesList= $stmt->fetchAll();
+
+                            foreach($categoriesList as $category){
+                                echo "<option value='".$category['category_id']."'>".$category['category_name']."</option>";
+                            }
+        
+                        ?>
                 </select>
             </div>
             <div class="inputBox">
-                <span>Subcategory</span>
-                <select name="subcategory" id="subcategory" class="box" required>
-                    <option value="">Select Subcategory</option>
+                <span>Υποκατηγορία</span>
+                <select name="subcategory_select" id="subcategory_select" class="box" required>
+                    <option selected disabled value='0'>Επιλέξτε Υποκατηγορία</option>
                 </select>
             </div>
       </div>
@@ -180,52 +186,11 @@ foreach ($products as $product) {
    searchInput.addEventListener('input', filterProducts);
 </script>
 
-<!-- Here the code is for the subcategory -->
-<script>
-    const categorySelect = document.getElementById('category');
-    const subcategorySelect = document.getElementById('subcategory');
 
-    const subcategories = {
-        1: [
-            { id: 1, name: 'Aporripantiko' },
-            { id: 2, name: 'Panes' },
-        ],
-        2: [
-            { id: 3, name: 'Eidi Katharismou' },
-            { id: 4, name: 'Xartika' },
-        ],
-        3: [
-            { id: 5, name: 'Bires' },
-            { id: 6, name: 'Nera' },
-        ],
-        4: [
-            { id: 7, name: 'Aposmitika' },
-            { id: 8, name: 'Vamvakia' },
-        ],
-    };
-
-    categorySelect.addEventListener('change', () => {
-        const categoryId = categorySelect.value;
-        populateSubcategories(categoryId);
-    });
-
-    function populateSubcategories(categoryId) {
-        subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
-        if (categoryId !== '') {
-            const categorySubcategories = subcategories[categoryId];
-            categorySubcategories.forEach(subcategory => {
-                const option = document.createElement('option');
-                option.value = subcategory.id;
-                option.textContent = subcategory.name;
-                subcategorySelect.appendChild(option);
-            });
-        }
-    }
-</script>
 
 
 <script src="../js/admin_script.js"></script>
-
-   
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="../js/admin_ajax.js"  ></script>
 </body>
 </html>
