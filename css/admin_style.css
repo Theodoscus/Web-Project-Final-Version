@@ -364,9 +364,10 @@ section{
    margin-bottom: 1.5rem;
 }
 
-.show-products .box-container .box .name{
+.show-products .box-container .box .product_name{
    font-size: 2rem;
    color:var(--black);
+   font-weight:600;
 }
 
 .show-products .box-container .box .price{
@@ -375,10 +376,9 @@ section{
    margin:.5rem 0;
 }
 
-.show-products .box-container .box .details{
-   font-size: 1.5rem;
+.show-products .box-container .box .product_description{
+   font-size: 1rem;
    color:var(--light-color);
-   line-height: 2;
 }
 
 .update-product form{
