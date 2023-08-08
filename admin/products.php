@@ -151,8 +151,8 @@ foreach ($products as $product) {
          <!-- <div class="price">$<span><?php // echo $fetch_products['price'];?></span>/-</div> -->
          <div class="product_description"><span><?php echo $product['product_description']; ?></span></div>
          <div class="flex-btn">
-            <a href="update_product.php?update=<?php echo $product['product_id']; ?>" class="option-btn">update</a>
-            <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">delete</a>
+            <a href="update_product.php<?php echo $product['product_id']; ?>" class="option-btn">Ενημέρωση</a>
+            <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Διαγραφή προϊόντος?');">Διαγραφή</a>
          </div>
       </div>
       <?php
