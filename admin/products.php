@@ -78,6 +78,45 @@ if (isset($_GET['delete'])) {
 
 <?php include '../components/admin_header.php'; ?>
 
+   <div class="upload-container">
+        <h2>Upload JSON File</h2>
+        <form id="jsonUploadForm"  method="post" enctype="multipart/form-data">
+            <label for="jsonFileInput" class="custom-file-upload">
+                Choose File
+            </label>
+            <input type="file" id="jsonFileInput" name="jsonFileInput" accept=".json">
+            <button type="submit" name="submit" >Upload JSON</button>
+        </form>
+   </div>
+   <?php
+if (isset($_POST['submit'])) {
+    $jsonFileInput = $_FILES['jsonFileInput'];
+
+    // Check if there was no file upload error
+    if ($jsonFileInput['error'] === UPLOAD_ERR_OK) {
+        $jsonData = file_get_contents($jsonFileInput['tmp_name']);
+
+        if ($jsonData !== false) {
+            $parsedData = json_decode($jsonData, true);
+
+            if ($parsedData !== null) {
+                // Process and insert data into your MySQL database
+                // Replace this section with your database handling code
+                // Remember to use prepared statements for database interactions
+                // ...
+                echo "JSON data uploaded and processed successfully!";
+            } else {
+                echo "Error parsing JSON data.";
+            }
+        } else {
+            echo "Error reading JSON file.";
+        }
+    } else {
+        echo "File upload error: " . $jsonFileInput['error'];
+    }
+}
+?>
+
 <section class="add-products">
 
    <h1 class="heading">add product</h1>
