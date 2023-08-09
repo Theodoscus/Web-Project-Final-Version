@@ -57,7 +57,7 @@ if(!isset($user_id)){
             <div class="p-img-container">
                <div class="p-img">
                   <a href="#">
-                     <img src="<?php echo $imageURL; ?>" alt="images/clown-image.jpg" >
+                     <img src="<?php echo $imageURL; ?>" alt="product image" >
                   </a>
                </div>
             </div>
