@@ -93,8 +93,9 @@ if (isset($_POST['submit'])) {
     $jsonFileInput = $_FILES['jsonFileInput'];
     
     $stmt = $conn->prepare('INSERT INTO product(product_id,product_name,product_description,subcategory_subcategory_id) VALUES (?,?,?,?)');
-    
-    
+    $stmtCat = $conn->prepare('INSERT INTO category(category_id,category_name) VALUES (?,?)');
+    $stmtSub = $conn->prepare('INSERT INTO subcategory(subcategory_id,subcategory_name,category_category_id) VALUES (?,?,?)');
+
     // Check if there was no file upload error
     if ($jsonFileInput['error'] === UPLOAD_ERR_OK) {
         $jsonData = file_get_contents($jsonFileInput['tmp_name']);
@@ -118,7 +119,31 @@ if (isset($_POST['submit'])) {
                     $stmt->bindValue(4, $subcategory_subcategory_id, PDO::PARAM_STR);
 
                     $stmt->execute();
-                } 
+                }
+
+                foreach ($parsedData['categories'] as $row){
+                    $category_id = $row['id'];
+                    $category_name = $row['name'];
+                    
+                        foreach ($row['subcategories'] as $row2){
+                        $subcategory_name = $row2['name'];
+                        $subcategory_id = $row2['uuid'];
+                        
+                        $stmtSub->bindValue(1, $subcategory_id, PDO::PARAM_STR);
+                        $stmtSub->bindValue(2, $subcategory_name, PDO::PARAM_STR);
+                        $stmtSub->bindValue(3, $category_id, PDO::PARAM_STR);
+                    
+                        $stmtSub->execute();
+                        }
+                    
+                    $stmtCat->bindValue(1, $category_id, PDO::PARAM_STR);
+                    $stmtCat->bindValue(2, $category_name, PDO::PARAM_STR);
+                    
+                    $stmtCat->execute();
+
+                }
+                
+
 
                 echo "JSON data uploaded and processed successfully!";
             } else {
