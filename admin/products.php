@@ -104,43 +104,57 @@ if (isset($_POST['submit'])) {
             $parsedData = json_decode($jsonData, true);
 
             if ($parsedData !== null) {
-                // Process and insert data into your MySQL database
-                // Replace this section with your database handling code
-                // Remember to use prepared statements for database interactions
                 foreach ($parsedData['products'] as $row){
                     $product_id = $row['id'];
                     $product_name = $row['name'];
                     $product_description = $row['name'];
                     $subcategory_subcategory_id = $row['subcategory'];
+                    $existingProductQuery = $conn->prepare('SELECT COUNT(*) FROM product WHERE product_id = ?');
+                    $existingProductQuery->execute([$product_id]);
+                    $count = $existingProductQuery->fetchColumn();
+                    if ($count == 0) {
+                        $stmt->bindValue(1, $product_id, PDO::PARAM_INT);
+                        $stmt->bindValue(2, $product_name, PDO::PARAM_STR);
+                        $stmt->bindValue(3, $product_description, PDO::PARAM_STR);
+                        $stmt->bindValue(4, $subcategory_subcategory_id, PDO::PARAM_STR);
 
-                    $stmt->bindValue(1, $product_id, PDO::PARAM_INT);
-                    $stmt->bindValue(2, $product_name, PDO::PARAM_STR);
-                    $stmt->bindValue(3, $product_description, PDO::PARAM_STR);
-                    $stmt->bindValue(4, $subcategory_subcategory_id, PDO::PARAM_STR);
-
-                    $stmt->execute();
+                        $stmt->execute();
+                    }
                 }
 
                 foreach ($parsedData['categories'] as $row){
                     $category_id = $row['id'];
                     $category_name = $row['name'];
+
                     
                         foreach ($row['subcategories'] as $row2){
                         $subcategory_name = $row2['name'];
                         $subcategory_id = $row2['uuid'];
                         
-                        $stmtSub->bindValue(1, $subcategory_id, PDO::PARAM_STR);
-                        $stmtSub->bindValue(2, $subcategory_name, PDO::PARAM_STR);
-                        $stmtSub->bindValue(3, $category_id, PDO::PARAM_STR);
+                        $existingSubcategoryQuery = $conn->prepare('SELECT COUNT(*) FROM subcategory WHERE subcategory_id = ?');
+                        $existingSubcategoryQuery->execute([$subcategory_id]);
+                        $count = $existingSubcategoryQuery->fetchColumn();
+                        
+
+                        if ($count == 0){
+                            $stmtSub->bindValue(1, $subcategory_id, PDO::PARAM_STR);
+                            $stmtSub->bindValue(2, $subcategory_name, PDO::PARAM_STR);
+                            $stmtSub->bindValue(3, $category_id, PDO::PARAM_STR);
                     
-                        $stmtSub->execute();
+                            $stmtSub->execute();
+                        }
                         }
                     
-                    $stmtCat->bindValue(1, $category_id, PDO::PARAM_STR);
-                    $stmtCat->bindValue(2, $category_name, PDO::PARAM_STR);
+                    $existingCategoryQuery = $conn->prepare('SELECT COUNT(*) FROM category WHERE category_id = ?');
+                    $existingCategoryQuery->execute([$category_id]);
+                    $count = $existingCategoryQuery->fetchColumn();
                     
-                    $stmtCat->execute();
-
+                    if ($count == 0){
+                        $stmtCat->bindValue(1, $category_id, PDO::PARAM_STR);
+                        $stmtCat->bindValue(2, $category_name, PDO::PARAM_STR);
+                    
+                        $stmtCat->execute();
+                    }
                 }
                 
 
@@ -154,6 +168,9 @@ if (isset($_POST['submit'])) {
         }
     } else {
         echo "File upload error: " . $jsonFileInput['error'];
+        if ($jsonFileInput['error'] = 4){
+            echo " No file was uploaded";
+        }
     }
 }
 ?>
