@@ -66,7 +66,7 @@ if (isset($_GET['delete'])) {
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="wproduct_idth=device-wproduct_idth, initial-scale=1.0">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>products</title>
 
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -79,19 +79,22 @@ if (isset($_GET['delete'])) {
 <?php include '../components/admin_header.php'; ?>
 
    <div class="upload-container">
-        <h2>Upload JSON File</h2>
+        <h2>Εισάγετε το αρχείο JSON</h2>
         <form id="jsonUploadForm"  method="post" enctype="multipart/form-data">
             <label for="jsonFileInput" class="custom-file-upload">
                 Choose File
             </label>
             <input type="file" id="jsonFileInput" name="jsonFileInput" accept=".json">
-            <button type="submit" name="submit" >Upload JSON</button>
+            <button type="submit" name="submit" >Ανέβασμα JSON</button>
         </form>
    </div>
    <?php
 if (isset($_POST['submit'])) {
     $jsonFileInput = $_FILES['jsonFileInput'];
-
+    
+    $stmt = $conn->prepare('INSERT INTO product(product_id,product_name,product_description,subcategory_subcategory_id) VALUES (?,?,?,?)');
+    
+    
     // Check if there was no file upload error
     if ($jsonFileInput['error'] === UPLOAD_ERR_OK) {
         $jsonData = file_get_contents($jsonFileInput['tmp_name']);
@@ -103,7 +106,20 @@ if (isset($_POST['submit'])) {
                 // Process and insert data into your MySQL database
                 // Replace this section with your database handling code
                 // Remember to use prepared statements for database interactions
-                // ...
+                foreach ($parsedData['products'] as $row){
+                    $product_id = $row['id'];
+                    $product_name = $row['name'];
+                    $product_description = $row['name'];
+                    $subcategory_subcategory_id = $row['subcategory'];
+
+                    $stmt->bindValue(1, $product_id, PDO::PARAM_INT);
+                    $stmt->bindValue(2, $product_name, PDO::PARAM_STR);
+                    $stmt->bindValue(3, $product_description, PDO::PARAM_STR);
+                    $stmt->bindValue(4, $subcategory_subcategory_id, PDO::PARAM_STR);
+
+                    $stmt->execute();
+                } 
+
                 echo "JSON data uploaded and processed successfully!";
             } else {
                 echo "Error parsing JSON data.";
