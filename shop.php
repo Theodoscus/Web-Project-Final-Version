@@ -12,7 +12,7 @@ if(!isset($user_id)){
 
 if(isset($_POST['submit'])) {
     if (!empty($_POST['subcategory_select'])){
-    
+        
         $selected = $_POST['subcategory_select'];
         header('location:subcategory_products.php');
         $_SESSION['subcategoryId'] = $selected;

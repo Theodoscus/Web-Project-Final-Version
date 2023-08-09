@@ -6,7 +6,6 @@ session_start();
 
 $user_id = $_SESSION['user_id'];
 $subcategoryId = $_SESSION['subcategoryId'];
-$var = 10;
 if(!isset($user_id)){
    header('location:user_login.php');
 }
@@ -39,7 +38,7 @@ if(!isset($user_id)){
 
 <section class="p-slider"> 
    <?php
-      $stmt = $conn->query("SELECT subcategory_name FROM subcategory WHERE subcategory_id=$subcategoryId");
+      $stmt = $conn->query("SELECT subcategory_name FROM subcategory WHERE subcategory_id= '$subcategoryId'");
       $subcategoryName = $stmt->fetch();
    ?>
    <h3 class="product-slider-heading" >Υποκατηγορία: <?php echo $subcategoryName["subcategory_name"]; ?></h3>
@@ -48,7 +47,7 @@ if(!isset($user_id)){
       <div class="glider">
          
          <?php
-         $query = $conn->query("SELECT * FROM product WHERE subcategory_subcategory_id = $subcategoryId");
+         $query = $conn->query("SELECT * FROM product WHERE subcategory_subcategory_id = '$subcategoryId' ");
          
             while (($row = $query->fetch()) !== false ){
                $imageURL = 'uploaded_img/'.$row["product_image"];

@@ -20,7 +20,7 @@ if(isset($_POST['request'])){
     $categoryid = $_POST['categoryid'];
 
     $stmt = $conn->prepare("SELECT * FROM subcategory WHERE category_category_id=:categoryId ORDER BY subcategory_name");
-    $stmt->bindValue(':categoryId', (int)$categoryid, PDO::PARAM_INT);
+    $stmt->bindValue(':categoryId', $categoryid, PDO::PARAM_STR);
 
     $stmt->execute();
     $subcategoryList = $stmt->fetchAll();
