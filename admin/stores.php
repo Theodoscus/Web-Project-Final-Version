@@ -7,7 +7,7 @@ session_start();
 $admin_product_id = $_SESSION['user_id'];
 
 if (!isset($admin_product_id)) {
-    header('location:admin_home.php');
+    header('location:admin_login.php');
 }
 
 ?>
@@ -64,9 +64,25 @@ if (isset($_POST['submit'])) {
     <h1 class="heading">Καταστήματα</h1>
 
     <div class="box-container">
+        <?php
+        $select_shops = $conn->prepare('SELECT * FROM `supermarket`');
+        $select_shops->execute();
+        $supermarkets = $select_shops->fetchALL(PDO::FETCH_ASSOC);
+        foreach ($supermarkets as $supermarket) {
+        ?>
         <div class="box">
-
+            <div class="supermarket-info"> Όνομα καταστήματος: <?php echo $supermarket['supermarket_name']; ?></div>
+            <div class="supermarket-info"> Διεύθυνση: <?php echo $supermarket['supermarket_address']; ?></div>
+            <div class="supermarket-info"> Συν/μενες:  Χ:<?php echo $supermarket['x_coord']; ?> Υ: <?php echo $supermarket['y_coord']; ?> </div>
+            <div class="supermarket-info"> Αριθμός προσφορών: <?php echo $supermarket['has_offers']; ?> </div>
+            <div class="flex-btn">
+            <a href="#" class="option-btn">Ενημέρωση</a>
+            <a href="#" class="delete-btn" onclick="return confirm('Διαγραφή καταστήματος?');">Διαγραφή</a>
+            </div>
         </div>
+        <?php
+        }
+        ?>
     </div>
 </section>
 

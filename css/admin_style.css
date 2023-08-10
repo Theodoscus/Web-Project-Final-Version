@@ -617,11 +617,19 @@ section{
    border-radius: .5rem;
    border:var(--border);
    padding:2rem;
-   margin-top: 2rem;
-   max-height: 25rem;
-   min-height: 25rem;
+   max-height: 30rem;
+   min-height: 30rem;
+   max-width: 48rem;
+   min-width: 48rem;
+   margin: auto;
 }
 
+.shop-display .box-container .box .supermarket-info{
+   font-size: 2rem;
+   color:var(--black);
+   font-weight:600;
+   min-height: 5rem;
+}
 
 
 
