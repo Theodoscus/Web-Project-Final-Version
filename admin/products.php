@@ -79,7 +79,7 @@ if (isset($_GET['delete'])) {
 <?php include '../components/admin_header.php'; ?>
 
    <div class="upload-container">
-        <h2>Εισάγετε το αρχείο JSON</h2>
+        <h2>Εισάγετε το αρχείο JSON για τα προϊόντα</h2>
         <form id="jsonUploadForm"  method="post" enctype="multipart/form-data">
             <label for="jsonFileInput" class="custom-file-upload">
                 Choose File
@@ -87,6 +87,17 @@ if (isset($_GET['delete'])) {
             <input type="file" id="jsonFileInput" name="jsonFileInput" accept=".json">
             <button type="submit" name="submit" >Ανέβασμα JSON</button>
         </form>
+
+        <div class="delete-button-container">
+        <?php
+            if (isset($_POST['delete'])) {
+                // Perform the action you want to do when the button is pressed
+                // For example, delete a file or a database record
+                // You can add your own logic here
+                }
+        ?>
+            <button type="submit" name="delete" class="stores-delete-button">Διαγραφή όλων των προϊόντων</button>
+        </div>
    </div>
    <?php
 if (isset($_POST['submit'])) {
@@ -177,7 +188,7 @@ if (isset($_POST['submit'])) {
 
 <section class="add-products">
 
-   <h1 class="heading">add product</h1>
+   <h1 class="heading">Προσθέστε προϊόν</h1>
 
    <form action="" method="post" enctype="multipart/form-data">
       <div class="flex">
@@ -228,7 +239,7 @@ if (isset($_POST['submit'])) {
 
 <section class="show-products">
 
-    <h1 class="heading">products added</h1>
+    <h1 class="heading">Προϊόντα</h1>
 
     <!-- Search bar -->
 <div class="search-container">

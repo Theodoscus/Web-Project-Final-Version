@@ -45,15 +45,18 @@ html{
 
 body{
    background-color: var(--light-bg);
+   background-image: url(../images/bg2.jpg);
    /* padding-bottom: 10rem; */
 }
 
 .upload-container {
-   background-color: #ffffff7a;
+   background-color: #ffffff;
    border-radius: 8px;
    padding: 30px;
    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
    text-align: center;
+   margin: auto;
+   width: 70%;
 }
 
 #jsonFileInput {
@@ -95,10 +98,9 @@ section{
 
 .heading{
    font-size: 4rem;
-   color:var(--black);
+   color:black;
    margin-bottom: 2rem;
    text-align: center;
-   text-transform: uppercase;
 }
 
 .btn,
@@ -583,11 +585,42 @@ section{
 }
 
 
+.stores-delete-button {
+   background-color: #f44336; /* Red color */
+   color: white;
+   border-radius: 8px;
+   padding: 12px 24px;
+   border: none;
+ }
+ 
+ .stores-delete-button:hover {
+   background-color: #d32f2f; /* Darker red color on hover */
+ }
 
+ .delete-button-container {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-top:15px;
+ }
 
-
-
-
+ .shop-display .box-container{
+   display: grid;
+   grid-template-columns: repeat(auto-fit, 33rem);
+   gap:1.5rem;
+   justify-content: center;
+   align-items: flex-start;
+}
+.shop-display .box-container .box{
+   background-color: var(--white);
+   box-shadow: var(--box-shadow);
+   border-radius: .5rem;
+   border:var(--border);
+   padding:2rem;
+   margin-top: 2rem;
+   max-height: 25rem;
+   min-height: 25rem;
+}
 
 
 
