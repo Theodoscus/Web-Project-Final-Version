@@ -610,6 +610,7 @@ section{
    gap:1.5rem;
    justify-content: center;
    align-items: flex-start;
+   margin: auto;
 }
 .shop-display .box-container .box{
    background-color: var(--white);
@@ -622,6 +623,7 @@ section{
    max-width: 48rem;
    min-width: 48rem;
    margin: auto;
+   width: 50%;
 }
 
 .shop-display .box-container .box .supermarket-info{
