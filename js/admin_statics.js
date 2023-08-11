@@ -42,10 +42,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // Retrieve the chart data and dates array for the SECOND chart from hidden inputs
     const discountDataInput = document.getElementById('chartDataB');
     const discountDatesArrayInput = document.getElementById('datesArrayB');
-
+    
     const discountData = JSON.parse(discountDataInput.value);
     const discountDatesArray = JSON.parse(discountDatesArrayInput.value);
-
+    
     // Create the chart for the second section
     new Chart('discountChart', {
         type: 'line',

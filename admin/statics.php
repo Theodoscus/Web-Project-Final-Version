@@ -83,9 +83,9 @@ foreach ($offersData as $offer) {
 
     <!-- -------------------------------------------------------------------------------------------------------------------------------- -->
     <section class="b-section">
-        <?php
-// Retrieve today's date without hours and minutes
-$today = date('Y-m-d');
+    <?php
+    // Retrieve today's date without hours and minutes
+    $today = date('Y-m-d');
 
 // Calculate the date 7 days before
 $seven_days_ago = date('Y-m-d', strtotime('-7 days', strtotime($today)));
@@ -96,46 +96,57 @@ $select_categories->execute();
 $categories = $select_categories->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch subcategories based on the selected category
-$selectedCategoryId = isset($_POST['category']) ? $_POST['category'] : (isset($_GET['category']) ? $_GET['category'] : 0);
+$selectedCategoryId = isset($_POST['category_select']) ? $_POST['category_select'] : (isset($_GET['category']) ? $_GET['category'] : 0);
 
 $select_subcategories = $conn->prepare('SELECT subcategory_id, subcategory_name, category_category_id FROM subcategory WHERE category_category_id = ?');
 $select_subcategories->execute([$selectedCategoryId]);
 $subcategories = $select_subcategories->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch data for the graph based on the selected category and subcategory
-$selectedSubcategoryId = '';
-if (isset($_POST['submit'])) {
-    $selectedSubcategoryId = $_POST['subcategory_select'];
+$selectedSubcategoryId = isset($_POST['subcategory_select']) ? $_POST['subcategory_select'] : 0;
 
-    $select_offers = $conn->prepare('SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
+// Adjusted query based on user selection
+if ($selectedSubcategoryId) {
+    $selected_offers = $conn->prepare('SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
                                         FROM offers
                                         JOIN product ON offers.product_product_id = product.product_id
                                         JOIN subcategory ON product.subcategory_subcategory_id = subcategory.subcategory_id
-                                        WHERE (subcategory.category_category_id = :category OR :category = 0)
-                                        AND (product.subcategory_subcategory_id = :subcategory OR :subcategory = 0)
+                                        WHERE subcategory.category_category_id = :category 
+                                        AND product.subcategory_subcategory_id = :subcategory
                                         AND DATE(offers.creation_date) >= :seven_days_ago AND DATE(offers.creation_date) <= :today
                                         GROUP BY product.product_id');
-    $select_offers->execute([
+    $selected_offers->execute([
         'category' => $selectedCategoryId,
         'subcategory' => $selectedSubcategoryId,
         'seven_days_ago' => $seven_days_ago,
         'today' => $today,
     ]);
-    $offersData = $select_offers->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    // Default data when no subcategory is selected
-    $offersData = [];
+    $selected_offers = $conn->prepare('SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
+                                        FROM offers
+                                        JOIN product ON offers.product_product_id = product.product_id
+                                        JOIN subcategory ON product.subcategory_subcategory_id = subcategory.subcategory_id
+                                        WHERE subcategory.category_category_id = :category 
+                                        AND DATE(offers.creation_date) >= :seven_days_ago AND DATE(offers.creation_date) <= :today
+                                        GROUP BY product.product_id');
+    $selected_offers->execute([
+        'category' => $selectedCategoryId,
+        'seven_days_ago' => $seven_days_ago,
+        'today' => $today,
+    ]);
 }
+
+$offersData = $selected_offers->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-        <h1 class="heading">Average Discount (%)</h1>
-        <div class="selection-container">
-            <form method="post" action="">
-                <div class="inputBox">
-                    <label for="category">Κατηγορία</label>
-                    <select name="category_select" id="category_select" class="box" required>
-                        <option selected disabled value="0">Επιλέξτε Κατηγορία</option>
-                        <?php
+    <h1 class="heading">Average Discount (%)</h1>
+    <div class="selection-container">
+        <form method="post" action="">
+            <div class="inputBox">
+                <label for="category">Κατηγορία</label>
+                <select name="category_select" id="category_select" class="box" required>
+                    <option selected disabled value="0">Επιλέξτε Κατηγορία</option>
+                    <?php
                 $stmt = $conn->prepare('SELECT * FROM category ORDER BY category_name');
 $stmt->execute();
 $categoriesList = $stmt->fetchAll();
@@ -145,29 +156,34 @@ foreach ($categoriesList as $category) {
 }
 
 ?>
-                    </select>
-                </div>
-                <div class="inputBox">
-                    <label for="subcategory">Υποκατηγορία</label>
-                    <select name="subcategory_select" id="subcategory_select" class="box" required>
-                        <option selected disabled value="0">Επιλέξτε Υποκατηγορία</option>
+                </select>
+            </div>
+            <div class="inputBox">
+                <label for="subcategory">Υποκατηγορία</label>
+                <select name="subcategory_select" id="subcategory_select" class="box" required>
+                    <option selected disabled value="0">Επιλέξτε Υποκατηγορία</option>
+                    <?php
+foreach ($subcategories as $subcategory) {
+    echo "<option value='".$subcategory['subcategory_id']."'>".$subcategory['subcategory_name'].'</option>';
+}
+?>
+                </select>
+            </div>
+            <div class="inputBox">
+                <input type="submit" value="Submit" name="submit">
+            </div>
+        </form>
+    </div>
 
-                    </select>
-                </div>
-                <div class="inputBox">
-                    <input type="submit" value="Submit" name="submit">
-                </div>
-            </form>
-        </div>
+    <!-- Add a container for the chart -->
+    <div class="chart-container">
+        <canvas id="discountChart"></canvas>
+    </div>
 
-        <!-- Add a container for the chart -->
-        <div class="chart-container">
-            <canvas id="discountChart"></canvas>
-        </div>
+    <input type="hidden" id="chartDataB" value="<?php echo htmlentities(json_encode($offersData)); ?>">
+    <input type="hidden" id="datesArrayB" value="<?php echo htmlentities(json_encode($datesArray)); ?>">
+</section>
 
-        <input type="hidden" id="chartDataB" value="<?php echo htmlentities(json_encode($discountData)); ?>">
-        <input type="hidden" id="datesArrayB" value="<?php echo htmlentities(json_encode($discountDatesArray)); ?>">
-    </section>
 
 
 
