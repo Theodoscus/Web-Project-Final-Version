@@ -63,242 +63,220 @@ if (isset($_GET['delete'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>products</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>products</title>
 
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
-   <link rel="stylesheet" href="../css/admin_style.css">
+    <link rel="stylesheet" href="../css/admin_style.css">
 
 </head>
+
 <body>
 
-<?php include '../components/admin_header.php'; ?>
+    <?php include '../components/admin_header.php'; ?>
 
-   <div class="upload-container">
+    <div class="upload-container">
         <h2>Εισάγετε το αρχείο JSON για τα προϊόντα</h2>
-        <form id="jsonUploadForm"  method="post" enctype="multipart/form-data">
+        <form id="jsonUploadForm" method="post" enctype="multipart/form-data">
             <label for="jsonFileInput" class="custom-file-upload">
                 Choose File
             </label>
             <input type="file" id="jsonFileInput" name="jsonFileInput" accept=".json">
-            <button type="submit" name="submit" >Ανέβασμα JSON</button>
+            <button type="submit" name="submit">Ανέβασμα JSON</button>
         </form>
 
         <div class="delete-button-container">
-        <?php
+            <?php
             if (isset($_POST['delete'])) {
                 // Perform the action you want to do when the button is pressed
                 // For example, delete a file or a database record
                 // You can add your own logic here
-                }
-        ?>
+            }
+?>
             <button type="submit" name="delete" class="stores-delete-button">Διαγραφή όλων των προϊόντων</button>
         </div>
-   </div>
-   <?php
-if (isset($_POST['submit'])) {
-    $jsonFileInput = $_FILES['jsonFileInput'];
-    
-    $stmt = $conn->prepare('INSERT INTO product(product_id,product_name,product_description,subcategory_subcategory_id) VALUES (?,?,?,?)');
-    $stmtCat = $conn->prepare('INSERT INTO category(category_id,category_name) VALUES (?,?)');
-    $stmtSub = $conn->prepare('INSERT INTO subcategory(subcategory_id,subcategory_name,category_category_id) VALUES (?,?,?)');
+    </div>
+    <?php
+    if (isset($_POST['submit'])) {
+        $jsonFileInput = $_FILES['jsonFileInput'];
 
-    // Check if there was no file upload error
-    if ($jsonFileInput['error'] === UPLOAD_ERR_OK) {
-        $jsonData = file_get_contents($jsonFileInput['tmp_name']);
+        $stmt = $conn->prepare('INSERT INTO product(product_id,product_name,product_description,subcategory_subcategory_id) VALUES (?,?,?,?)');
+        $stmtCat = $conn->prepare('INSERT INTO category(category_id,category_name) VALUES (?,?)');
+        $stmtSub = $conn->prepare('INSERT INTO subcategory(subcategory_id,subcategory_name,category_category_id) VALUES (?,?,?)');
 
-        if ($jsonData !== false) {
-            $parsedData = json_decode($jsonData, true);
+        // Check if there was no file upload error
+        if ($jsonFileInput['error'] === UPLOAD_ERR_OK) {
+            $jsonData = file_get_contents($jsonFileInput['tmp_name']);
 
-            if ($parsedData !== null) {
-                foreach ($parsedData['products'] as $row){
-                    $product_id = $row['id'];
-                    $product_name = $row['name'];
-                    $product_description = $row['name'];
-                    $subcategory_subcategory_id = $row['subcategory'];
-                    $existingProductQuery = $conn->prepare('SELECT COUNT(*) FROM product WHERE product_id = ?');
-                    $existingProductQuery->execute([$product_id]);
-                    $count = $existingProductQuery->fetchColumn();
-                    if ($count == 0) {
-                        $stmt->bindValue(1, $product_id, PDO::PARAM_INT);
-                        $stmt->bindValue(2, $product_name, PDO::PARAM_STR);
-                        $stmt->bindValue(3, $product_description, PDO::PARAM_STR);
-                        $stmt->bindValue(4, $subcategory_subcategory_id, PDO::PARAM_STR);
+            if ($jsonData !== false) {
+                $parsedData = json_decode($jsonData, true);
 
-                        $stmt->execute();
-                    }
-                }
+                if ($parsedData !== null) {
+                    foreach ($parsedData['products'] as $row) {
+                        $product_id = $row['id'];
+                        $product_name = $row['name'];
+                        $product_description = $row['name'];
+                        $subcategory_subcategory_id = $row['subcategory'];
+                        $existingProductQuery = $conn->prepare('SELECT COUNT(*) FROM product WHERE product_id = ?');
+                        $existingProductQuery->execute([$product_id]);
+                        $count = $existingProductQuery->fetchColumn();
+                        if ($count == 0) {
+                            $stmt->bindValue(1, $product_id, PDO::PARAM_INT);
+                            $stmt->bindValue(2, $product_name, PDO::PARAM_STR);
+                            $stmt->bindValue(3, $product_description, PDO::PARAM_STR);
+                            $stmt->bindValue(4, $subcategory_subcategory_id, PDO::PARAM_STR);
 
-                foreach ($parsedData['categories'] as $row){
-                    $category_id = $row['id'];
-                    $category_name = $row['name'];
-
-                    
-                        foreach ($row['subcategories'] as $row2){
-                        $subcategory_name = $row2['name'];
-                        $subcategory_id = $row2['uuid'];
-                        
-                        $existingSubcategoryQuery = $conn->prepare('SELECT COUNT(*) FROM subcategory WHERE subcategory_id = ?');
-                        $existingSubcategoryQuery->execute([$subcategory_id]);
-                        $count = $existingSubcategoryQuery->fetchColumn();
-                        
-
-                        if ($count == 0){
-                            $stmtSub->bindValue(1, $subcategory_id, PDO::PARAM_STR);
-                            $stmtSub->bindValue(2, $subcategory_name, PDO::PARAM_STR);
-                            $stmtSub->bindValue(3, $category_id, PDO::PARAM_STR);
-                    
-                            $stmtSub->execute();
+                            $stmt->execute();
                         }
-                        }
-                    
-                    $existingCategoryQuery = $conn->prepare('SELECT COUNT(*) FROM category WHERE category_id = ?');
-                    $existingCategoryQuery->execute([$category_id]);
-                    $count = $existingCategoryQuery->fetchColumn();
-                    
-                    if ($count == 0){
-                        $stmtCat->bindValue(1, $category_id, PDO::PARAM_STR);
-                        $stmtCat->bindValue(2, $category_name, PDO::PARAM_STR);
-                    
-                        $stmtCat->execute();
                     }
+
+                    foreach ($parsedData['categories'] as $row) {
+                        $category_id = $row['id'];
+                        $category_name = $row['name'];
+
+                        foreach ($row['subcategories'] as $row2) {
+                            $subcategory_name = $row2['name'];
+                            $subcategory_id = $row2['uuid'];
+
+                            $existingSubcategoryQuery = $conn->prepare('SELECT COUNT(*) FROM subcategory WHERE subcategory_id = ?');
+                            $existingSubcategoryQuery->execute([$subcategory_id]);
+                            $count = $existingSubcategoryQuery->fetchColumn();
+
+                            if ($count == 0) {
+                                $stmtSub->bindValue(1, $subcategory_id, PDO::PARAM_STR);
+                                $stmtSub->bindValue(2, $subcategory_name, PDO::PARAM_STR);
+                                $stmtSub->bindValue(3, $category_id, PDO::PARAM_STR);
+
+                                $stmtSub->execute();
+                            }
+                        }
+
+                        $existingCategoryQuery = $conn->prepare('SELECT COUNT(*) FROM category WHERE category_id = ?');
+                        $existingCategoryQuery->execute([$category_id]);
+                        $count = $existingCategoryQuery->fetchColumn();
+
+                        if ($count == 0) {
+                            $stmtCat->bindValue(1, $category_id, PDO::PARAM_STR);
+                            $stmtCat->bindValue(2, $category_name, PDO::PARAM_STR);
+
+                            $stmtCat->execute();
+                        }
+                    }
+
+                    echo 'JSON data uploaded and processed successfully!';
+                } else {
+                    echo 'Error parsing JSON data.';
                 }
-                
-
-
-                echo "JSON data uploaded and processed successfully!";
             } else {
-                echo "Error parsing JSON data.";
+                echo 'Error reading JSON file.';
             }
         } else {
-            echo "Error reading JSON file.";
-        }
-    } else {
-        echo "File upload error: " . $jsonFileInput['error'];
-        if ($jsonFileInput['error'] = 4){
-            echo " No file was uploaded";
+            echo 'File upload error: '.$jsonFileInput['error'];
+            if ($jsonFileInput['error'] = 4) {
+                echo ' No file was uploaded';
+            }
         }
     }
-}
 ?>
 
-<section class="add-products">
+    <section class="add-products">
 
-   <h1 class="heading">Προσθέστε προϊόν</h1>
+        <h1 class="heading">Προσθέστε προϊόν</h1>
 
-   <form action="" method="post" enctype="multipart/form-data">
-      <div class="flex">
-         <div class="inputBox">
+        <form action="" method="post" enctype="multipart/form-data">
+    <div class="flex">
+        <div class="inputBox">
             <span>Όνομα προϊόντος (Υποχρεωτικό)</span>
             <input type="text" class="box" required maxlength="100" placeholder="Εισάγετε το όνομα του προϊόντος" name="name">
-         </div>
-         <div class="inputBox">
-            <span>Τιμή προϊόντος (Υποχρεωτικό)</span>
-            <input type="number" min="0" class="box" required max="9999999999" placeholder="Εισάγετε την τιμή του προϊόντος" onkeypress="if(this.value.length == 10) return false;" name="price">
-         </div>
+        </div>
         <div class="inputBox">
             <span>Είκονα (Μη υποχρεωτικό)</span>
             <input type="file" name="image_01" accept="image/jpg, image/jpeg, image/png, image/webp" class="box" required>
         </div>
-         <div class="inputBox">
-            <span>Περιγραφή προϊόντος (Υποχρεωτικό)</span>
-            <textarea name="product_description" placeholder="Εισάγετε την περιγραφή " class="box" required maxlength="500" cols="30" rows="10"></textarea>
-         </div>
-         <div class="inputBox">
-                <span>Κατηγορία</span>
-                <select name="category_select" id="category_select" class="box" required>
-                    <option selected disabled value='0'>Επιλέξτε Κατηγορία</option>
-                    <?php
-                            $stmt = $conn->prepare("SELECT * FROM category ORDER BY category_name");
-                            $stmt->execute();
-                            $categoriesList= $stmt->fetchAll();
+        <div class="inputBox">
+            <span>Κατηγορία</span>
+            <select name="category_select" id="category_select" class="box" required>
+                <option selected disabled value='0'>Επιλέξτε Κατηγορία</option>
+                <?php
+                $stmt = $conn->prepare('SELECT * FROM category ORDER BY category_name');
+$stmt->execute();
+$categoriesList = $stmt->fetchAll();
 
-                            foreach($categoriesList as $category){
-                                echo "<option value='".$category['category_id']."'>".$category['category_name']."</option>";
-                            }
-        
-                        ?>
-                </select>
-            </div>
-            <div class="inputBox">
-                <span>Υποκατηγορία</span>
-                <select name="subcategory_select" id="subcategory_select" class="box" required>
-                    <option selected disabled value='0'>Επιλέξτε Υποκατηγορία</option>
-                </select>
-            </div>
-      </div>
-      
-      <input type="submit" value="add product" class="btn" name="add_product">
-   </form>
+foreach ($categoriesList as $category) {
+    echo "<option value='".$category['category_id']."'>".$category['category_name'].'</option>';
+}
+?>
+            </select>
+        </div>
+        <div class="inputBox">
+            <span>Υποκατηγορία</span>
+            <select name="subcategory_select" id="subcategory_select" class="box" required>
+                <option selected disabled value='0'>Επιλέξτε Υποκατηγορία</option>
+            </select>
+        </div>
+    </div>
 
-</section>
+    <div class="inputBox">
+        <span>Περιγραφή προϊόντος (Υποχρεωτικό)</span>
+        <textarea name="product_description" placeholder="Εισάγετε την περιγραφή" class="box" required maxlength="500" cols="30" rows="10"></textarea>
+    </div>
 
-<section class="show-products">
+    <input type="submit" value="add product" class="btn" name="add_product">
+</form>
 
-    <h1 class="heading">Προϊόντα</h1>
 
-    <!-- Search bar -->
+    </section>
+
+    <section class="show-products">
+
+<h1 class="heading">Προϊόντα</h1>
+
+<!-- Search bar -->
 <div class="search-container">
-   <input type="text" id="searchInput" placeholder="Search by product name">
+    <input type="text" id="searchInput" placeholder="Search by product name">
 </div>
 
+<!-- Container for displaying products -->
 <div class="box-container" id="productContainer">
-   <?php
-   $select_products = $conn->prepare('SELECT * FROM `product`');
+    <?php
+    // Fetch products from the database
+    $select_products = $conn->prepare('SELECT * FROM `product`');
 $select_products->execute();
 $products = $select_products->fetchAll(PDO::FETCH_ASSOC);
+
+// Loop through products and display them
 foreach ($products as $product) {
     ?>
-      <div class="box">
-         <img src="../uploaded_img/<?php echo $product['product_image']; ?>" alt="Image about the product">
-         <div class="product_name"><?php echo $product['product_name']; ?></div>
-         <!-- <div class="price">$<span><?php // echo $fetch_products['price'];?></span>/-</div> -->
-         <div class="product_description"><span><?php echo $product['product_description']; ?></span></div>
-         <div class="flex-btn">
-            <a href="update_product.php" class="option-btn">Ενημέρωση</a>
-            <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Διαγραφή προϊόντος?');">Διαγραφή</a>
-         </div>
-      </div>
-      <?php
+        <div class="box">
+            <img src="../uploaded_img/<?php echo $product['product_image']; ?>" alt="Image about the product">
+            <div class="product_name"><?php echo $product['product_name']; ?></div>
+            <div class="product_description"><span><?php echo $product['product_description']; ?></span></div>
+            <div class="flex-btn">
+                <a href="update_product.php" class="option-btn">Ενημέρωση</a>
+                <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Διαγραφή προϊόντος?');">Διαγραφή</a>
+            </div>
+        </div>
+        <?php
 }
 ?>
 </div>
 
-<!-- Here the code is the js for the search bar: -->
+<script src="../js/admin_searchBar.js"></script>
+
 <script>
-   const products = <?php echo json_encode($products); ?>;
-   const searchInput = document.getElementById('searchInput');
-   const productContainer = document.getElementById('productContainer');
-
-   function filterProducts() {
-      const searchTerm = searchInput.value.trim().toLowerCase();
-      productContainer.innerHTML = '';
-
-      if (searchTerm === '') {
-         products.forEach(product => renderProduct(product));
-      } else {
-         products.forEach(product => {
-            const productName = product.product_name.toLowerCase();
-            if (productName.includes(searchTerm)) {
-               renderProduct(product);
-            }
-         });
-      }
-   }
-
-   // Event listener for the search input
-   searchInput.addEventListener('input', filterProducts);
+    filterProducts(<?php echo json_encode($products); ?>);
 </script>
 
+</section>
 
-
-
-<script src="../js/admin_script.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="../js/admin_ajax.js"  ></script>
+    <script src="../js/admin_script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../js/admin_ajax.js"></script>
 </body>
+
 </html>
