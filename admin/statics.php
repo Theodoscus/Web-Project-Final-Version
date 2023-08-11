@@ -33,16 +33,16 @@ if (!isset($admin_product_id)) {
     <section class="section-a">
         <?php
 
-// Get the selected year and month from the query parameter
-if (isset($_GET['date'])) {
-    $selected_date = $_GET['date'];
-} else {
-    // Default to the current year and month if not provided
-    $selected_date = date('Y-m');
-}
+        // Get the selected year and month from the query parameter
+        if (isset($_GET['date'])) {
+            $selected_date = $_GET['date'];
+        } else {
+            // Default to the current year and month if not provided
+            $selected_date = date('Y-m');
+        }
 
-// Get the first and last day of the selected month
-$first_day = date('Y-m-01', strtotime($selected_date));
+        // Get the first and last day of the selected month
+        $first_day = date('Y-m-01', strtotime($selected_date));
 $last_day = date('Y-m-t', strtotime($selected_date));
 
 // Fetch data from the database for the selected month
@@ -76,53 +76,9 @@ foreach ($offersData as $offer) {
         <div class="chart-container">
             <canvas id="offersChart"></canvas>
         </div>
+        <input type="hidden" id="chartData" value="<?php echo htmlentities(json_encode($chartData)); ?>">
+        <input type="hidden" id="datesArray" value="<?php echo htmlentities(json_encode($datesArray)); ?>">
 
-        <script>
-            // Chart data fetched from PHP
-            const offersData = <?php echo json_encode($chartData); ?>;
-
-            // Create the chart
-            new Chart('offersChart', {
-                type: 'line',
-                data: {
-                    labels: <?php echo json_encode($datesArray); ?>,
-                    datasets: [{
-                        label: 'Number of Offers',
-                        data: Object.values(offersData),
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false,
-                    }],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Day of Month',
-                            },
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Number of Offers',
-                            },
-                        },
-                    },
-                },
-            });
-
-            // Submit the form using JavaScript when the user clicks the "Submit" button
-            document.getElementById('dateForm').addEventListener('submit', (event) => {
-                event.preventDefault();
-                const formData = new FormData(event.target);
-                const urlParams = new URLSearchParams(formData).toString();
-                const currentUrl = window.location.href.split('?')[0];
-                window.location.href = `${currentUrl}?${urlParams}`;
-            });
-        </script>
     </section>
 
     <!-- -------------------------------------------------------------------------------------------------------------------------------- -->
@@ -174,50 +130,50 @@ if (isset($_POST['submit'])) {
 
         <h1 class="heading">Average Discount (%)</h1>
         <div class="selection-container">
-    <form method="post" action="">
-        <div class="inputBox">
-            <label for="category">Κατηγορία</label>
-            <select name="category_select" id="category_select" class="box" required>
-                <option selected disabled value="0">Επιλέξτε Κατηγορία</option>
-                <?php
-                            $stmt = $conn->prepare("SELECT * FROM category ORDER BY category_name");
-                            $stmt->execute();
-                            $categoriesList= $stmt->fetchAll();
+            <form method="post" action="">
+                <div class="inputBox">
+                    <label for="category">Κατηγορία</label>
+                    <select name="category_select" id="category_select" class="box" required>
+                        <option selected disabled value="0">Επιλέξτε Κατηγορία</option>
+                        <?php
+                $stmt = $conn->prepare('SELECT * FROM category ORDER BY category_name');
+$stmt->execute();
+$categoriesList = $stmt->fetchAll();
 
-                            foreach($categoriesList as $category){
-                                echo "<option value='".$category['category_id']."'>".$category['category_name']."</option>";
-                            }
-        
-                        ?>
-            </select>
+foreach ($categoriesList as $category) {
+    echo "<option value='".$category['category_id']."'>".$category['category_name'].'</option>';
+}
+
+?>
+                    </select>
+                </div>
+                <div class="inputBox">
+                    <label for="subcategory">Υποκατηγορία</label>
+                    <select name="subcategory_select" id="subcategory_select" class="box" required>
+                        <option selected disabled value="0">Επιλέξτε Υποκατηγορία</option>
+
+                    </select>
+                </div>
+                <div class="inputBox">
+                    <input type="submit" value="Submit" name="submit">
+                </div>
+            </form>
         </div>
-        <div class="inputBox">
-            <label for="subcategory">Υποκατηγορία</label>
-            <select name="subcategory_select" id="subcategory_select" class="box" required>
-                <option selected disabled value="0">Επιλέξτε Υποκατηγορία</option>
-                
-            </select>
-        </div>
-        <div class="inputBox">
-            <input type="submit" value="Submit" name="submit">
-        </div>
-    </form>
-</div>
-
-
-
-
 
         <!-- Add a container for the chart -->
         <div class="chart-container">
             <canvas id="discountChart"></canvas>
         </div>
+
+        <input type="hidden" id="chartDataB" value="<?php echo htmlentities(json_encode($discountData)); ?>">
+        <input type="hidden" id="datesArrayB" value="<?php echo htmlentities(json_encode($discountDatesArray)); ?>">
     </section>
 
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="../js/admin_ajax.js"  ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../js/admin_statics.js"></script>
+    <script src="../js/admin_ajax.js"></script>
 
 </body>
 
