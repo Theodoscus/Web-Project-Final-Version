@@ -232,47 +232,47 @@ foreach ($categoriesList as $category) {
 
     </section>
 
-    <section class="show-products">
+        <section class="show-products">
 
-<h1 class="heading">Προϊόντα</h1>
+    <h1 class="heading">Προϊόντα</h1>
 
-<!-- Search bar -->
-<div class="search-container">
-    <input type="text" id="searchInput" placeholder="Search by product name">
-</div>
+    <!-- Search bar -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search by product name">
+    </div>
 
-<!-- Container for displaying products -->
-<div class="box-container" id="productContainer">
-    <?php
-    // Fetch products from the database
-    $select_products = $conn->prepare('SELECT * FROM `product`');
+    <!-- Container for displaying products -->
+    <div class="box-container" id="productContainer">
+        <?php
+        // Fetch products from the database
+        $select_products = $conn->prepare('SELECT * FROM `product`');
 $select_products->execute();
 $products = $select_products->fetchAll(PDO::FETCH_ASSOC);
 
 // Loop through products and display them
 foreach ($products as $product) {
     ?>
-        <div class="box">
-            <img src="../uploaded_img/<?php echo $product['product_image']; ?>" alt="Image about the product">
-            <div class="product_name"><?php echo $product['product_name']; ?></div>
-            <div class="product_description"><span><?php echo $product['product_description']; ?></span></div>
-            <div class="flex-btn">
-                <a href="update_product.php" class="option-btn">Ενημέρωση</a>
-                <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Διαγραφή προϊόντος?');">Διαγραφή</a>
+            <div class="box">
+                <img src="../uploaded_img/<?php echo $product['product_image']; ?>" alt="Image about the product">
+                <div class="product_name"><?php echo $product['product_name']; ?></div>
+                <div class="product_description"><span><?php echo $product['product_description']; ?></span></div>
+                <div class="flex-btn">
+                    <a href="update_product.php" class="option-btn">Ενημέρωση</a>
+                    <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Διαγραφή προϊόντος?');">Διαγραφή</a>
+                </div>
             </div>
-        </div>
-        <?php
+            <?php
 }
 ?>
-</div>
+    </div>
 
-<script src="../js/admin_searchBar.js"></script>
+    <script src="../js/admin_searchBar.js"></script>
 
-<script>
-    filterProducts(<?php echo json_encode($products); ?>);
-</script>
+    <script>
+        filterProducts(<?php echo json_encode($products); ?>);
+    </script>
 
-</section>
+    </section>
 
     <script src="../js/admin_script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

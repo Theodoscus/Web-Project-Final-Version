@@ -83,9 +83,9 @@ foreach ($offersData as $offer) {
 
     <!-- -------------------------------------------------------------------------------------------------------------------------------- -->
     <section class="b-section">
-    <?php
-    // Retrieve today's date without hours and minutes
-    $today = date('Y-m-d');
+        <?php
+// Retrieve today's date without hours and minutes
+$today = date('Y-m-d');
 
 // Calculate the date 7 days before
 $seven_days_ago = date('Y-m-d', strtotime('-7 days', strtotime($today)));
@@ -139,14 +139,14 @@ if ($selectedSubcategoryId) {
 $offersData = $selected_offers->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-    <h1 class="heading">Average Discount (%)</h1>
-    <div class="selection-container">
-        <form method="post" action="">
-            <div class="inputBox">
-                <label for="category">Κατηγορία</label>
-                <select name="category_select" id="category_select" class="box" required>
-                    <option selected disabled value="0">Επιλέξτε Κατηγορία</option>
-                    <?php
+        <h1 class="heading">Average Discount (%)</h1>
+        <div class="selection-container">
+            <form method="post" action="">
+                <div class="inputBox">
+                    <label for="category">Κατηγορία</label>
+                    <select name="category_select" id="category_select" class="box" required>
+                        <option selected disabled value="0">Επιλέξτε Κατηγορία</option>
+                        <?php
                 $stmt = $conn->prepare('SELECT * FROM category ORDER BY category_name');
 $stmt->execute();
 $categoriesList = $stmt->fetchAll();
@@ -156,33 +156,35 @@ foreach ($categoriesList as $category) {
 }
 
 ?>
-                </select>
-            </div>
-            <div class="inputBox">
-                <label for="subcategory">Υποκατηγορία</label>
-                <select name="subcategory_select" id="subcategory_select" class="box" required>
-                    <option selected disabled value="0">Επιλέξτε Υποκατηγορία</option>
-                    <?php
+                    </select>
+                </div>
+                <div class="inputBox">
+                    <label for="subcategory">Υποκατηγορία</label>
+                    <select name="subcategory_select" id="subcategory_select" class="box" required>
+                        <option selected disabled value="0">Επιλέξτε Υποκατηγορία</option>
+                        <?php
 foreach ($subcategories as $subcategory) {
     echo "<option value='".$subcategory['subcategory_id']."'>".$subcategory['subcategory_name'].'</option>';
 }
 ?>
-                </select>
-            </div>
-            <div class="inputBox">
-                <input type="submit" value="Submit" name="submit">
-            </div>
-        </form>
-    </div>
+                    </select>
+                </div>
+                <div class="inputBox">
+                    <button type="button" id="previousWeekBtn">Previous Week</button>
+                    <button type="button" id="nextWeekBtn">Next Week</button>
+                    <input type="submit" value="Submit" name="submit">
+                </div>
+            </form>
+        </div>
 
-    <!-- Add a container for the chart -->
-    <div class="chart-container">
-        <canvas id="discountChart"></canvas>
-    </div>
+        <!-- Add a container for the chart -->
+        <div class="chart-container">
+            <canvas id="discountChart"></canvas>
+        </div>
 
-    <input type="hidden" id="chartDataB" value="<?php echo htmlentities(json_encode($offersData)); ?>">
-    <input type="hidden" id="datesArrayB" value="<?php echo htmlentities(json_encode($datesArray)); ?>">
-</section>
+        <input type="hidden" id="chartDataB" value="<?php echo htmlentities(json_encode($offersData)); ?>">
+        <input type="hidden" id="datesArrayB" value="<?php echo htmlentities(json_encode($datesArray)); ?>">
+    </section>
 
 
 
