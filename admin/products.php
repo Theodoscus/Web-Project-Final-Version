@@ -7,7 +7,7 @@ session_start();
 $admin_product_id = $_SESSION['user_id'];
 
 if (!isset($admin_product_id)) {
-    header('location:admin_home.php');
+    header('location:admin_login.php');
 }
 
 if (isset($_POST['add_product'])) {
@@ -246,12 +246,27 @@ foreach ($categoriesList as $category) {
         <?php
         // Fetch products from the database
         $select_products = $conn->prepare('SELECT * FROM `product`');
-$select_products->execute();
-$products = $select_products->fetchAll(PDO::FETCH_ASSOC);
+        $select_products->execute();
+        $products = $select_products->fetchAll(PDO::FETCH_ASSOC);
 
-// Loop through products and display them
-foreach ($products as $product) {
-    ?>
+        // Pagination settings
+        $itemsPerPage = 15;
+        $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+        // Calculate total pages and start/end indices
+        $totalItems = count($products);
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        $startIndex = ($currentPage - 1) * $itemsPerPage;
+        $endIndex = min($startIndex + $itemsPerPage, $totalItems);
+
+        // Loop through products and display them
+        for ($i = $startIndex; $i < $endIndex; $i++) {
+            if ($i >= $totalItems) {
+                break; // Break the loop if we've displayed all available products
+            }
+            $product = $products[$i];
+            ?>
+        
             <div class="box">
                 <img src="../uploaded_img/<?php echo $product['product_image']; ?>" alt="Image about the product">
                 <div class="product_name"><?php echo $product['product_name']; ?></div>
@@ -264,13 +279,35 @@ foreach ($products as $product) {
             <?php
 }
 ?>
+
+        <div class="pagination">
+            <?php
+             // Calculate the range of pages to display
+            $chunkSize = 20; // Number of page links to display at once
+            $startPage = max($currentPage - floor($chunkSize / 2), 1);
+            $endPage = min($startPage + $chunkSize - 1, $totalPages);
+            
+            // Display first page link
+            echo "<a href='?page=1' class='page-link'>1</a>";
+
+            for ($page = 1; $page <= $totalPages; $page++) {
+                $activeClass = ($page === $currentPage) ? 'active' : '';
+                
+                // Display only the page links within the calculated range
+                if ($page >= $startPage && $page <= $endPage) {
+                    echo "<a href='?page=$page' class='page-link $activeClass'>$page</a>";
+                }
+            }
+
+            // Display last page link
+            echo "<a href='?page=$totalPages' class='page-link'>$totalPages</a>";
+            ?>
+        </div>
+        
     </div>
 
     <script src="../js/admin_searchBar.js"></script>
 
-    <script>
-        filterProducts(<?php echo json_encode($products); ?>);
-    </script>
 
     </section>
 

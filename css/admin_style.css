@@ -664,6 +664,35 @@ section{
    background-color: #741c25;
 }
 
+.pagination {
+   margin-top: 20px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin: auto;
+}
+
+.page-link {
+   display: inline-block;
+   padding: 5px 10px;
+   margin: 0 5px;
+   border: 1px solid #ccc;
+   text-decoration: none;
+   color: #333;
+   border-radius: 3px;
+   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.page-link.active {
+   background-color: #007bff;
+   color: #fff;
+   border-color: #007bff;
+}
+
+.page-link:hover {
+   background-color: #f5f5f5;
+}
+
 
 
 @media (max-width:991px){
