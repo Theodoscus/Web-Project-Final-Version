@@ -109,7 +109,7 @@ if (isset($_POST['submit'])) {
         <div class="box">
             <div class="supermarket-info"> Όνομα καταστήματος: <?php echo $supermarket['supermarket_name']; ?></div>
             <div class="supermarket-info"> Διεύθυνση: <?php echo $supermarket['supermarket_address']; ?></div>
-            <div class="supermarket-info"> Συν/μενες:  Χ:<?php echo $supermarket['x_coord']; ?> Υ: <?php echo $supermarket['y_coord']; ?> </div>
+            <div class="supermarket-info"> Συντεταγμένες:  Χ:<?php echo $supermarket['x_coord']; ?> Υ: <?php echo $supermarket['y_coord']; ?> </div>
             <div class="supermarket-info"> Αριθμός προσφορών: <?php echo $supermarket['has_offers']; ?> </div>
             <div class="flex-btn">
             <a href="#" class="option-btn">Ενημέρωση</a>
