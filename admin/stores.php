@@ -35,7 +35,7 @@ if (!isset($admin_product_id)) {
             <label for="jsonFileInput" class="custom-file-upload">
                 Choose File
             </label>
-            <input type="file" id="jsonFileInput" name="jsonFileInput" accept=".json">
+            <input type="file" id="jsonFileInput" name="jsonFileInput" accept=".geojson">
             <button type="submit" name="submit" >Ανέβασμα JSON</button>
         </form>
 
@@ -54,12 +54,48 @@ if (!isset($admin_product_id)) {
    <?php
 if (isset($_POST['submit'])) {
     $jsonFileInput = $_FILES['jsonFileInput'];
-   // add code here
-}
+   
+    $stmt = $conn->prepare('INSERT INTO supermarket(supermarket_name,supermarket_address,x_coord,y_coord,has_offers) VALUES (?,?,?,?,0)');
+
+    if ($jsonFileInput['error'] === UPLOAD_ERR_OK) {
+        $jsonData = file_get_contents($jsonFileInput['tmp_name']);
+
+        if ($jsonData !== false) {
+            $parsedData = json_decode($jsonData, true);
+
+            if ($parsedData !== null) {               
+
+                foreach ($parsedData['features'] as $row) {
+                    $supermarket_name = isset($row['properties']['name']) ? $row['properties']['name'] : 'no name';
+                    $supermarket_addr = isset($row['properties']['addr:street']) ? $row['properties']['addr:street'] : 'no address';
+                    
+                    $supermarket_X = $row['geometry']['coordinates'][0];
+                    $supermarket_Y = $row['geometry']['coordinates'][1];
+                    
+                    $stmt->bindValue(1, $supermarket_name, PDO::PARAM_STR);
+                    $stmt->bindValue(2, $supermarket_addr, PDO::PARAM_STR);
+                    $stmt->bindValue(3, $supermarket_X, PDO::PARAM_STR);
+                    $stmt->bindValue(4, $supermarket_Y, PDO::PARAM_STR);
+                    $stmt->execute();
+                }
+
+                echo 'JSON data uploaded and processed successfully!';
+            } else {
+                echo 'Error parsing JSON data.';
+            }
+        } else {
+            echo 'Error reading JSON file.';
+        }
+    } else {
+        echo 'File upload error: '.$jsonFileInput['error'];
+        if ($jsonFileInput['error'] === UPLOAD_ERR_NO_FILE) {
+            echo ' No file was uploaded';
+        }
+    }
+    }
 ?>
 
 
-    <
 <section class="shop-display">
     <h1 class="heading">Καταστήματα</h1>
 
