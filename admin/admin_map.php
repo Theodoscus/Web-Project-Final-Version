@@ -1,8 +1,5 @@
 <?php
 include '../components/connect.php';
-// include '../components/calc_tokens.php';
-// include '../components/update_tokens.php';
-include '../components/update_offers.php';
 
 session_start();
 

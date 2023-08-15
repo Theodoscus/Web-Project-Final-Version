@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
         x: {
           title: {
             display: true,
-            text: "Day of Month",
+            text: "Day of Week",
           },
         },
         y: {
