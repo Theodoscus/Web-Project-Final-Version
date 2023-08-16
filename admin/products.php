@@ -13,8 +13,6 @@ if (!isset($admin_product_id)) {
 if (isset($_POST['add_product'])) {
     $product_name = $_POST['product_name'];
     $product_name = filter_var($product_name, FILTER_SANITIZE_STRING);
-    $price = $_POST['price'];
-    $price = filter_var($price, FILTER_SANITIZE_STRING);
     $product_description = $_POST['product_description'];
     $product_description = filter_var($product_description, FILTER_SANITIZE_STRING);
 
@@ -22,7 +20,7 @@ if (isset($_POST['add_product'])) {
     $image_01 = filter_var($image_01, FILTER_SANITIZE_STRING);
     $image_size_01 = $_FILES['image_01']['size'];
     $image_tmp_name_01 = $_FILES['image_01']['tmp_name'];
-    $image_folder_01 = '../uploaded_img/'.$image_01;
+    $image_folder_01 = '../uploaded_img/' . $image_01;
 
     $select_products = $conn->prepare('SELECT * FROM `product` WHERE product_name = ?');
     $select_products->execute([$product_name]);
@@ -30,8 +28,8 @@ if (isset($_POST['add_product'])) {
     if ($select_products->rowCount() > 0) {
         $message[] = 'product name already exist!';
     } else {
-        $insert_products = $conn->prepare('INSERT INTO `product`(product_name, product_description, price, image_01) VALUES(?,?,?,?)');
-        $insert_products->execute([$product_name, $product_description, $price, $image_01]);
+        $insert_products = $conn->prepare('INSERT INTO `product`(product_name, product_description, image_01) VALUES(?,?,?,?)');
+        $insert_products->execute([$product_name, $product_description, $image_01]);
 
         if ($insert_products) {
             if ($image_size_01 > 2000000) {
@@ -49,7 +47,7 @@ if (isset($_GET['delete'])) {
     $delete_product_image = $conn->prepare('SELECT * FROM `product` WHERE product_id = ?');
     $delete_product_image->execute([$delete_product_id]);
     $fetch_delete_image = $delete_product_image->fetch(PDO::FETCH_ASSOC);
-    unlink('../uploaded_img/'.$fetch_delete_image['image_01']);
+    unlink('../uploaded_img/' . $fetch_delete_image['image_01']);
     $delete_product = $conn->prepare('DELETE FROM `product` WHERE product_id = ?');
     $delete_product->execute([$delete_product_id]);
     // $delete_cart = $conn->prepare('DELETE FROM `cart` WHERE pproduct_id = ?');
@@ -71,7 +69,6 @@ if (isset($_GET['delete'])) {
     <title>products</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
     <link rel="stylesheet" href="../css/admin_style.css">
 
 </head>
@@ -97,7 +94,7 @@ if (isset($_GET['delete'])) {
                 // For example, delete a file or a database record
                 // You can add your own logic here
             }
-?>
+            ?>
             <button type="submit" name="delete" class="stores-delete-button">Διαγραφή όλων των προϊόντων</button>
         </div>
     </div>
@@ -176,142 +173,155 @@ if (isset($_GET['delete'])) {
                 echo 'Error reading JSON file.';
             }
         } else {
-            echo 'File upload error: '.$jsonFileInput['error'];
+            echo 'File upload error: ' . $jsonFileInput['error'];
             if ($jsonFileInput['error'] = 4) {
                 echo ' No file was uploaded';
             }
         }
     }
-?>
+    ?>
 
     <section class="add-products">
 
         <h1 class="heading">Προσθέστε προϊόν</h1>
 
         <form action="" method="post" enctype="multipart/form-data">
-    <div class="flex">
-        <div class="inputBox">
-            <span>Όνομα προϊόντος (Υποχρεωτικό)</span>
-            <input type="text" class="box" required maxlength="100" placeholder="Εισάγετε το όνομα του προϊόντος" name="name">
-        </div>
-        <div class="inputBox">
-            <span>Είκονα (Μη υποχρεωτικό)</span>
-            <input type="file" name="image_01" accept="image/jpg, image/jpeg, image/png, image/webp" class="box" required>
-        </div>
-        <div class="inputBox">
-            <span>Κατηγορία</span>
-            <select name="category_select" id="category_select" class="box" required>
-                <option selected disabled value='0'>Επιλέξτε Κατηγορία</option>
-                <?php
-                $stmt = $conn->prepare('SELECT * FROM category ORDER BY category_name');
-$stmt->execute();
-$categoriesList = $stmt->fetchAll();
+            <div class="flex">
+                <div class="inputBox">
+                    <span>Όνομα προϊόντος (Υποχρεωτικό)</span>
+                    <input type="text" class="box" required maxlength="100" placeholder="Εισάγετε το όνομα του προϊόντος" name="name">
+                </div>
+                <div class="inputBox">
+                    <span>Είκονα (Μη υποχρεωτικό)</span>
+                    <input type="file" name="image_01" accept="image/jpg, image/jpeg, image/png, image/webp" class="box" required>
+                </div>
+                <div class="inputBox">
+                    <span>Κατηγορία</span>
+                    <select name="category_select" id="category_select" class="box" required>
+                        <option selected disabled value='0'>Επιλέξτε Κατηγορία</option>
+                        <?php
+                        $stmt = $conn->prepare('SELECT * FROM category ORDER BY category_name');
+                        $stmt->execute();
+                        $categoriesList = $stmt->fetchAll();
 
-foreach ($categoriesList as $category) {
-    echo "<option value='".$category['category_id']."'>".$category['category_name'].'</option>';
-}
-?>
-            </select>
-        </div>
-        <div class="inputBox">
-            <span>Υποκατηγορία</span>
-            <select name="subcategory_select" id="subcategory_select" class="box" required>
-                <option selected disabled value='0'>Επιλέξτε Υποκατηγορία</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="inputBox">
-        <span>Περιγραφή προϊόντος (Υποχρεωτικό)</span>
-        <textarea name="product_description" placeholder="Εισάγετε την περιγραφή" class="box" required maxlength="500" cols="30" rows="10"></textarea>
-    </div>
-
-    <input type="submit" value="add product" class="btn" name="add_product">
-</form>
-
-
-    </section>
-
-        <section class="show-products">
-
-    <h1 class="heading">Προϊόντα</h1>
-
-    <!-- Search bar -->
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search by product name">
-    </div>
-
-    <!-- Container for displaying products -->
-    <div class="box-container" id="productContainer">
-        <?php
-        // Fetch products from the database
-        $select_products = $conn->prepare('SELECT * FROM `product`');
-        $select_products->execute();
-        $products = $select_products->fetchAll(PDO::FETCH_ASSOC);
-
-        // Pagination settings
-        $itemsPerPage = 15;
-        $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
-
-        // Calculate total pages and start/end indices
-        $totalItems = count($products);
-        $totalPages = ceil($totalItems / $itemsPerPage);
-        $startIndex = ($currentPage - 1) * $itemsPerPage;
-        $endIndex = min($startIndex + $itemsPerPage, $totalItems);
-
-        // Loop through products and display them
-        for ($i = $startIndex; $i < $endIndex; $i++) {
-            if ($i >= $totalItems) {
-                break; // Break the loop if we've displayed all available products
-            }
-            $product = $products[$i];
-            ?>
-        
-            <div class="box">
-                <img src="../uploaded_img/<?php echo $product['product_image']; ?>" alt="Image about the product">
-                <div class="product_name"><?php echo $product['product_name']; ?></div>
-                <div class="product_description"><span><?php echo $product['product_description']; ?></span></div>
-                <div class="flex-btn">
-                    <a href="update_product.php" class="option-btn">Ενημέρωση</a>
-                    <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Διαγραφή προϊόντος?');">Διαγραφή</a>
+                        foreach ($categoriesList as $category) {
+                            echo "<option value='" . $category['category_id'] . "'>" . $category['category_name'] . '</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="inputBox">
+                    <span>Υποκατηγορία</span>
+                    <select name="subcategory_select" id="subcategory_select" class="box" required>
+                        <option selected disabled value='0'>Επιλέξτε Υποκατηγορία</option>
+                    </select>
                 </div>
             </div>
-            <?php
-}
-?>
 
-        <div class="pagination">
-            <?php
-             // Calculate the range of pages to display
-            $chunkSize = 20; // Number of page links to display at once
-            $startPage = max($currentPage - floor($chunkSize / 2), 1);
-            $endPage = min($startPage + $chunkSize - 1, $totalPages);
-            
-            // Display first page link
-            echo "<a href='?page=1' class='page-link'>1</a>";
+            <div class="inputBox">
+                <span>Περιγραφή προϊόντος (Υποχρεωτικό)</span>
+                <textarea name="product_description" placeholder="Εισάγετε την περιγραφή" class="box" required maxlength="500" cols="30" rows="10"></textarea>
+            </div>
 
-            for ($page = 1; $page <= $totalPages; $page++) {
-                $activeClass = ($page === $currentPage) ? 'active' : '';
-                
-                // Display only the page links within the calculated range
-                if ($page >= $startPage && $page <= $endPage) {
-                    echo "<a href='?page=$page' class='page-link $activeClass'>$page</a>";
-                }
-            }
-
-            // Display last page link
-            echo "<a href='?page=$totalPages' class='page-link'>$totalPages</a>";
-            ?>
-        </div>
-        
-    </div>
-
-    <script src="../js/admin_searchBar.js"></script>
+            <input type="submit" value="add product" class="btn" name="add_product">
+        </form>
 
 
     </section>
 
-    <script src="../js/admin_script.js"></script>
+    <section class="show-products">
+
+        <h1 class="heading">Προϊόντα</h1>
+
+        <!-- Search bar -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search by product name">
+        </div>
+
+        <!-- Container for displaying products -->
+        <div class="box-container" id="productContainer">
+            <?php
+            // Retrieve the search term from the URL
+            $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+
+            // Modify the SQL query to include the search term
+            $select_products = $conn->prepare('SELECT * FROM `product` WHERE product_name LIKE ?');
+            $select_products->execute(["%$searchTerm%"]);
+            $products = $select_products->fetchAll(PDO::FETCH_ASSOC);
+
+            // Pagination settings
+            $itemsPerPage = 15;
+            $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+            // Calculate total pages and start/end indices
+            $totalItems = count($products);
+            $totalPages = ceil($totalItems / $itemsPerPage);
+            $startIndex = ($currentPage - 1) * $itemsPerPage;
+            $endIndex = min($startIndex + $itemsPerPage, $totalItems);
+
+            // Loop through products and display them
+            for ($i = $startIndex; $i < $endIndex; ++$i) {
+                if ($i >= $totalItems) {
+                    break; // Break the loop if we've displayed all available products
+                }
+                $product = $products[$i];
+            ?>
+
+                <div class="box">
+                    <img src="../uploaded_img/<?php echo $product['product_image']; ?>" alt="Image about the product">
+                    <div class="product_name"><?php echo $product['product_name']; ?></div>
+                    <div class="product_description"><span><?php echo $product['product_description']; ?></span></div>
+                    <div class="flex-btn">
+                        <a href="update_product.php" class="option-btn">Ενημέρωση</a>
+                        <a href="products.php?delete=<?php echo $product['product_id']; ?>" class="delete-btn" onclick="return confirm('Διαγραφή προϊόντος?');">Διαγραφή</a>
+                    </div>
+                </div>
+            <?php
+            }
+            ?>
+
+            <div class="pagination">
+                <?php
+                // Calculate the range of pages to display
+                $chunkSize = 20; // Number of page links to display at once
+                $startPage = max($currentPage - floor($chunkSize / 2), 1);
+                $endPage = min($startPage + $chunkSize - 1, $totalPages);
+
+                // Display first page link
+                echo "<a href='?page=1' class='page-link'>1</a>";
+
+                // ... Other code ...
+
+                for ($page = 1; $page <= $totalPages; ++$page) {
+                    $activeClass = ($page === $currentPage) ? 'active' : '';
+
+                    // Construct the correct URL by encoding the search term and page number
+                    $url = "?page=$page&search=" . rawurlencode($searchTerm);
+
+                    // Display only the page links within the calculated range
+                    if ($page >= $startPage && $page <= $endPage) {
+                        echo "<a href='$url' class='page-link $activeClass'>$page</a>";
+                    }
+                }
+
+                // Display last page link
+                echo "<a href='?page=$totalPages' class='page-link'>$totalPages</a>";
+                ?>
+
+
+            </div>
+        </div>
+
+    </section>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // Create a JavaScript variable with the products data
+        const productsData = <?php echo json_encode($products); ?>;
+    </script>
+
+    <script src="../js/admin_searchBar.js"></script>
+    <!-- <script src="../js/admin_script.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../js/admin_ajax.js"></script>
 </body>

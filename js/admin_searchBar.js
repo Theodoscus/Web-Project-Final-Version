@@ -1,7 +1,4 @@
-function filterProducts(products) {
-    const searchInput = document.getElementById('searchInput');
-    const productContainer = document.getElementById('productContainer');
-    let timeoutId;
+$(document).ready(function () {
 
     function renderProduct(product) {
         return `
@@ -16,32 +13,22 @@ function filterProducts(products) {
             </div>`;
     }
 
-    function performFilter(searchTerm) {
-        productContainer.innerHTML = '';
+    function filterProducts(searchTerm, productsData) {
+        const filteredProducts = productsData.filter((product) => {
+            const productName = product.product_name.toLowerCase();
+            return productName.includes(searchTerm);
+        });
 
-        if (searchTerm === '') {
-            const productElements = products.map(renderProduct).join('');
-            productContainer.innerHTML = productElements;
-        } else {
-            const filteredProducts = products.filter(product => {
-                const productName = product.product_name.toLowerCase();
-                return productName.includes(searchTerm);
-            });
-
-            const filteredProductElements = filteredProducts.map(renderProduct).join('');
-            productContainer.innerHTML = filteredProductElements;
-        }
+        const productElements = filteredProducts.map(renderProduct).join("");
+        $("#productContainer").html(productElements);
     }
 
-    searchInput.addEventListener('input', function () {
-        clearTimeout(timeoutId);
-        const searchTerm = searchInput.value.trim().toLowerCase();
-
-        timeoutId = setTimeout(() => {
-            performFilter(searchTerm);
-        }, 300); // Adjust the debounce delay as needed
+    // Handle search input changes
+    $("#searchInput").on("input", function () {
+        const searchTerm = $(this).val().trim().toLowerCase();
+        filterProducts(searchTerm, productsData);
     });
 
     // Initial rendering
-    performFilter('');
-}
+    filterProducts("", productsData);
+});
