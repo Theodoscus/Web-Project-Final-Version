@@ -21,6 +21,7 @@ if (!isset($admin_product_id)) {
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="../css/admin_style.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="../css/style.css">
@@ -36,7 +37,6 @@ if (!isset($admin_product_id)) {
 <body>
     <?php include '../components/admin_header.php'; ?>
 
-
     <section class="map-container">
 
         <form action="" method="post">
@@ -49,14 +49,10 @@ if (!isset($admin_product_id)) {
     </section>
 
 
-
-    </section>
-
-
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 
     <script src="../js/script.js"></script>
-    <script src="../js/map.js"></script>
+    <script src="../js/admin_map.js"></script>
 
 </body>
 

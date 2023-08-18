@@ -314,15 +314,15 @@ if (isset($_GET['delete'])) {
 
     </section>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- If i remove these lines the pagination works fine but not the search bar -->
     <script>
         // Create a JavaScript variable with the products data
         const productsData = <?php echo json_encode($products); ?>;
     </script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../js/admin_searchBar.js"></script>
     <!-- <script src="../js/admin_script.js"></script> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../js/admin_ajax.js"></script>
 </body>
 
