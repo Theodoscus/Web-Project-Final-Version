@@ -142,17 +142,6 @@ include '../components/like_dislike.php';
 
     </section>
 
-
-
-
-
-
-
-
-
-
-
-
     <script src="../js/admin_delete_offer.js"></script>
     <script src="../js/script.js"></script>
     <script src="../js/admin_map.js"></script>
