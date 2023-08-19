@@ -86,18 +86,24 @@ if (isset($_GET['delete'])) {
             <input type="file" id="jsonFileInput" name="jsonFileInput" accept=".json">
             <button type="submit" name="submit">Ανέβασμα JSON</button>
         </form>
-
-        <div class="delete-button-container">
-            <?php
-            if (isset($_POST['delete'])) {
-                // Perform the action you want to do when the button is pressed
-                // For example, delete a file or a database record
-                // You can add your own logic here
-            }
-            ?>
-            <button type="submit" name="delete" class="stores-delete-button">Διαγραφή όλων των προϊόντων</button>
-        </div>
+        
+        <form id="delete-button"  method="post">
+            <div class="delete-button-container">  
+                <button type="submit" name="delete" class="stores-delete-button">Διαγραφή όλων των προϊόντων</button>
+            </div>
+        </form>
     </div>
+
+    <?php
+            $stmt = $conn->prepare('SET SQL_SAFE_UPDATES = 0; DELETE FROM likeactivity; DELETE from offers; DELETE FROM product;');
+            if (isset($_POST['delete'])) {
+                $stmt->execute();
+                $stmt->closeCursor();
+                echo 'Επιτυχής Διαγραφή';
+                }
+            ?>
+
+
     <?php
     if (isset($_POST['submit'])) {
         $jsonFileInput = $_FILES['jsonFileInput'];
@@ -165,17 +171,17 @@ if (isset($_GET['delete'])) {
                         }
                     }
 
-                    echo 'JSON data uploaded and processed successfully!';
+                    echo 'Επιτυχία ανεβάσματος JSON αρχείου!';
                 } else {
-                    echo 'Error parsing JSON data.';
+                    echo 'Πρόβλημα ανεβάσματος JSON αρχείου.';
                 }
             } else {
-                echo 'Error reading JSON file.';
+                echo 'Πρόβλημα διαβάσματος JSON αρχείου.';
             }
         } else {
             echo 'File upload error: ' . $jsonFileInput['error'];
             if ($jsonFileInput['error'] = 4) {
-                echo ' No file was uploaded';
+                echo 'Δεν έχετε επιλέξει αρχείο';
             }
         }
     }

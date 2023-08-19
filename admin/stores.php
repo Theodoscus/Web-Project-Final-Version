@@ -39,17 +39,21 @@ if (!isset($admin_product_id)) {
             <button type="submit" name="submit" >Ανέβασμα JSON</button>
         </form>
 
-        <div class="delete-button-container">
-        <?php
+        <form id="delete-button"  method="post">
+            <div class="delete-button-container">
+                <button type="submit" name="delete" class="stores-delete-button">Διαγραφή όλων των καταστημάτων</button>
+            </div>
+        </form>
+   </div>
+
+   <?php
+            $stmt = $conn->prepare('SET SQL_SAFE_UPDATES = 0; DELETE FROM supermarket;');
             if (isset($_POST['delete'])) {
-                // Perform the action you want to do when the button is pressed
-                // For example, delete a file or a database record
-                // You can add your own logic here
+                $stmt->execute();
+                $stmt->closeCursor();
+                echo 'Επιτυχής Διαγραφή';
                 }
         ?>
-            <button type="submit" name="delete" class="stores-delete-button">Διαγραφή όλων των καταστημάτων</button>
-        </div>
-   </div>
 
    <?php
 if (isset($_POST['submit'])) {
@@ -79,17 +83,17 @@ if (isset($_POST['submit'])) {
                     $stmt->execute();
                 }
 
-                echo 'JSON data uploaded and processed successfully!';
+                echo 'Επιτυχία ανεβάσματος JSON αρχείου!';
             } else {
-                echo 'Error parsing JSON data.';
+                echo 'Πρόβλημα ανεβάσματος JSON αρχείου';
             }
         } else {
-            echo 'Error reading JSON file.';
+            echo 'Πρόβλημα ανάγνωσης JSON αρχείου';
         }
     } else {
         echo 'File upload error: '.$jsonFileInput['error'];
         if ($jsonFileInput['error'] === UPLOAD_ERR_NO_FILE) {
-            echo ' No file was uploaded';
+            echo ' Δεν έχετε επιλέξει αρχείο';
         }
     }
     }
@@ -101,10 +105,30 @@ if (isset($_POST['submit'])) {
 
     <div class="box-container">
         <?php
-        $select_shops = $conn->prepare('SELECT * FROM `supermarket`');
-        $select_shops->execute();
+        // Retrieve the search term from the URL
+        $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+
+
+        $select_shops = $conn->prepare('SELECT * FROM `supermarket` WHERE supermarket_name LIKE ?');
+        $select_shops->execute(["%$searchTerm%"]);
         $supermarkets = $select_shops->fetchALL(PDO::FETCH_ASSOC);
-        foreach ($supermarkets as $supermarket) {
+
+        // Pagination settings
+        $itemsPerPage = 15;
+        $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+        // Calculate total pages and start/end indices
+        $totalItems = count($supermarkets);
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        $startIndex = ($currentPage - 1) * $itemsPerPage;
+        $endIndex = min($startIndex + $itemsPerPage, $totalItems);
+
+        for ($i = $startIndex; $i < $endIndex; ++$i) {
+            if ($i >= $totalItems) {
+                break; // Break the loop if we've displayed all available products
+            }
+            $supermarket = $supermarkets[$i];
+
         ?>
         <div class="box">
             <div class="supermarket-info"> Όνομα καταστήματος: <?php echo $supermarket['supermarket_name']; ?></div>
@@ -119,7 +143,34 @@ if (isset($_POST['submit'])) {
         <?php
         }
         ?>
+        <div class="pagination">
+                <?php
+                // Calculate the range of pages to display
+                $chunkSize = 20; // Number of page links to display at once
+                $startPage = max($currentPage - floor($chunkSize / 2), 1);
+                $endPage = min($startPage + $chunkSize - 1, $totalPages);
+
+
+                for ($page = 1; $page <= $totalPages; ++$page) {
+                    $activeClass = ($page === $currentPage) ? 'active' : '';
+
+                    // Construct the correct URL by encoding the search term and page number
+                    $url = "?page=$page&search=" . rawurlencode($searchTerm);
+
+                    // Display only the page links within the calculated range
+                    if ($page >= $startPage && $page <= $endPage) {
+                        echo "<a href='$url' class='page-link $activeClass'>$page</a>";
+                    }
+                }
+
+                ?>
+
+
+            </div>
+
+    
     </div>
+
 </section>
 
 
