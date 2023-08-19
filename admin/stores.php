@@ -47,7 +47,7 @@ if (!isset($admin_product_id)) {
    </div>
 
    <?php
-            $stmt = $conn->prepare('SET SQL_SAFE_UPDATES = 0; DELETE FROM supermarket;');
+            $stmt = $conn->prepare('SET SQL_SAFE_UPDATES = 0; DELETE FROM likeactivity; DELETE from offers; DELETE FROM supermarket;');
             if (isset($_POST['delete'])) {
                 $stmt->execute();
                 $stmt->closeCursor();

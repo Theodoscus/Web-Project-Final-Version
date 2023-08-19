@@ -48,12 +48,18 @@ if (isset($_GET['delete'])) {
     $delete_product_image->execute([$delete_product_id]);
     $fetch_delete_image = $delete_product_image->fetch(PDO::FETCH_ASSOC);
     unlink('../uploaded_img/' . $fetch_delete_image['image_01']);
+    $select_offer_id = $conn->prepare('SELECT offer_id FROM `offers` WHERE  product_product_id = ?');
+    $select_offer_id->execute([$delete_product_id]);
+    $delete_offer_id = $select_offer_id->fetch();
+
     $delete_product = $conn->prepare('DELETE FROM `product` WHERE product_id = ?');
+    $delete_offer = $conn->prepare('DELETE FROM `offers` WHERE product_product_id = ?');
+    $delete_likeactivity = $conn->prepare('DELETE FROM `likeactivity` WHERE offers_offer_id = ?');
+
+    $delete_likeactivity->execute([$delete_offer_id]);
+    $delete_offer->execute([$delete_product_id]);
     $delete_product->execute([$delete_product_id]);
-    // $delete_cart = $conn->prepare('DELETE FROM `cart` WHERE pproduct_id = ?');
-    // $delete_cart->execute([$delete_product_id]);
-    // $delete_wishlist = $conn->prepare('DELETE FROM `wishlist` WHERE pproduct_id = ?');
-    // $delete_wishlist->execute([$delete_product_id]);
+    
     header('location:products.php');
 }
 
