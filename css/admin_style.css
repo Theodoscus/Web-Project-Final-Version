@@ -429,66 +429,104 @@ section{
    height: 40px;
 }
 
-.update-product form{
-   background-color: var(--white);
-   box-shadow: var(--box-shadow);
-   border-radius: .5rem;
-   border:var(--border);
-   padding:2rem;
-   max-width: 50rem;
-   margin:0 auto;
+/* Style for the update product section */
+.update-product {
+   margin-top: 30px;
+   padding: 20px;
+   
 }
 
-.update-product form .image-container{
-   margin-bottom: 2rem;
+/* Style for the heading */
+.update-product .heading {
+   font-size: 28px;
+   margin-bottom: 20px;
+   color: #202020;
 }
 
-.update-product form .image-container .main-image img{
-   height: 20rem;
-   width: 100%;
-   object-fit: contain;
+/* Style for the existing product box */
+.update-product .existing-product {
+   background-color: #ffffff;
+   border: 1px solid #ddd;
+   padding: 20px;
+   margin-top: 20px;
+   margin: auto;
+   width: 50%;
+   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.update-product form .image-container .sub-image{
-   display: flex;
-   gap:1rem;
-   justify-content: center;
-   margin:1rem 0;
+/* Style for the product image container */
+.update-product .product-image-container {
+   position: relative;
+   margin-bottom: 15px;
+   min-height: 12rem;
+   max-height: 12rem;
+   text-align: left;
 }
 
-.update-product form .image-container .sub-image img{
-   height: 5rem;
-   width: 7rem;
-   object-fit: contain;
-   padding:.5rem;
-   border:var(--border);
+/* Style for the image */
+.update-product .product-image-container img {
+   max-width: 100%;
+   height: auto;
+   border: 1px solid #ddd;
+   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the update image button */
+.update-product .update-image-button {
+   position: absolute;
+   right: 0;
+   background-color: #007bff;
+   color: #fff;
+   border: none;
+   padding: 5px 10px;
    cursor: pointer;
-   transition: .2s linear;
+   font-size: 14px;
+   border-radius: 4px;
 }
 
-.update-product form .image-container .sub-image img:hover{
-   transform: scale(1.1);
+/* Style for the product information and buttons */
+.update-product .product_info,
+.update-product .product_description {
+   margin-top: 15px;
+   text-align: left;
+   position: relative;
+   font-size: large;
 }
 
-.update-product form .box{
-   width: 100%;
-   border-radius: .5rem;
-   padding:1.4rem;
-   font-size: 1.8rem;
-   color:var(--black);
-   background-color: var(--light-bg);
-   margin:1rem 0;
+/* Style for the update buttons */
+.update-product .update-button {
+   position: absolute;
+   right: 0;
+   bottom:10%;
+   background-color: #007bff;
+   color: #fff;
+   border: none;
+   padding: 3px 6px;
+   cursor: pointer;
+   font-size: 12px;
+   border-radius: 4px;
 }
 
-.update-product form span{
-   font-size: 1.7rem;
-   color:var(--light-color);
+/* Styling for the confirm updates button */
+.update-product form {
+   margin-top: 20px;
+   text-align: center;
 }
 
-.update-product form textarea{
-   height: 15rem;
-   resize: none;
+.update-product button[name="confirm-updates"] {
+   background-color: rgb(255, 196, 0);
+   color: #080808;
+   border: none;
+   padding: 10px 15px;
+   cursor: pointer;
+   font-size: 18px;
+   border-radius: 4px;
 }
+
+.update-product button[name="confirm-updates"]:hover {
+   background-color: darkgoldenrod;
+}
+
 
 .orders .box-container{
    display: grid;
