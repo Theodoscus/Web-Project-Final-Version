@@ -59,7 +59,7 @@ if (isset($_GET['delete'])) {
     $delete_likeactivity->execute([$delete_offer_id]);
     $delete_offer->execute([$delete_product_id]);
     $delete_product->execute([$delete_product_id]);
-    
+
     header('location:products.php');
 }
 
@@ -92,22 +92,22 @@ if (isset($_GET['delete'])) {
             <input type="file" id="jsonFileInput" name="jsonFileInput" accept=".json">
             <button type="submit" name="submit">Ανέβασμα JSON</button>
         </form>
-        
-        <form id="delete-button"  method="post">
-            <div class="delete-button-container">  
+
+        <form id="delete-button" method="post">
+            <div class="delete-button-container">
                 <button type="submit" name="delete" class="stores-delete-button">Διαγραφή όλων των προϊόντων</button>
             </div>
         </form>
     </div>
 
     <?php
-            $stmt = $conn->prepare('SET SQL_SAFE_UPDATES = 0; DELETE FROM likeactivity; DELETE from offers; DELETE FROM product;');
-            if (isset($_POST['delete'])) {
-                $stmt->execute();
-                $stmt->closeCursor();
-                echo 'Επιτυχής Διαγραφή';
-                }
-            ?>
+    $stmt = $conn->prepare('SET SQL_SAFE_UPDATES = 0; DELETE FROM likeactivity; DELETE from offers; DELETE FROM product;');
+    if (isset($_POST['delete'])) {
+        $stmt->execute();
+        $stmt->closeCursor();
+        echo 'Επιτυχής Διαγραφή';
+    }
+    ?>
 
 
     <?php
@@ -301,8 +301,6 @@ if (isset($_GET['delete'])) {
 
                 // Display first page link
                 echo "<a href='?page=1' class='page-link'>1</a>";
-
-                // ... Other code ...
 
                 for ($page = 1; $page <= $totalPages; ++$page) {
                     $activeClass = ($page === $currentPage) ? 'active' : '';

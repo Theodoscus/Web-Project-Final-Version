@@ -29,7 +29,6 @@ if (!isset($user_id)) {
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/admin_style.css">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 </head>
@@ -123,11 +122,14 @@ if (!isset($user_id)) {
 
         </div>
 
-        <!-- custom js file link  -->
-        <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    </section>
 
-        <script src="../js/script.js"></script>
-        <script src="../js/admin_map.js"></script>
+    <!-- custom js file link  -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/admin_map.js"></script>
+    <script src="../js/admin_view_offers.js"></script>
 
 
 

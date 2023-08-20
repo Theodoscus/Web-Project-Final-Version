@@ -14,6 +14,26 @@ if (!isset($user_id)) {
 include '../components/wishlist_cart.php';
 include '../components/like_dislike.php';
 
+if (isset($_POST['delete_offer_id'])) {
+    $deleteOfferId = $_POST['delete_offer_id'];
+
+    // Delete from likeactivity table
+    $deleteLikeActivity = $conn->prepare("DELETE FROM likeactivity WHERE offers_offer_id = ?");
+    $deleteLikeActivity->execute([$deleteOfferId]);
+
+    // Delete from offers table
+    $deleteOffer = $conn->prepare("DELETE FROM offers WHERE offer_id = ?");
+    $deleteOffer->execute([$deleteOfferId]);
+
+    // Delete from score_activity table
+    $deleteScoreActivity = $conn->prepare("DELETE FROM score_activity WHERE offer_id = ?");
+    $deleteScoreActivity->execute([$deleteOfferId]);
+
+    // Respond with success status
+    http_response_code(200);
+    exit; // Terminate script execution
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -123,23 +143,32 @@ include '../components/like_dislike.php';
                                 </div>
                                 <div class="dislike-btn">
                                     <input class="option-btn" type="submit" name="dislike" id="quick_view_3" value="Dislike (<?= $fetch_product['total_dislikes']; ?>)">
-                            <?php
-                        }
-                    } else {
-                        echo '<p class="Η προσφορά που ψάχνετε δεν υπάρχει. Δοκιμάστε ξανά.</p>';
-                    }
-
-                            ?>
                                 </div>
                             </div>
                             <div class="flex-btn">
-                                <button class="delete-btn" id="deleteOfferBtn" data-offer-id="<?= $fetch_product['offer_id']; ?>">Delete Offer</button>
+                                <button class="delete-offer-btn" data-offer-id="<?= $fetch_product['offer_id']; ?>">Delete Offer</button>
                             </div>
-                        </div>
-                    </div>
-                </form>
+                    <?php
+                }
+            } else {
+                echo '<p class="Η προσφορά που ψάχνετε δεν υπάρχει. Δοκιμάστε ξανά.</p>';
+            }
 
+            if (isset($_POST['delete_offer_id'])) {
+                $deleteOfferId = $_POST['delete_offer_id'];
 
+                // Delete from likeactivity table
+                $deleteLikeActivity = $conn->prepare("DELETE FROM likeactivity WHERE offers_offer_id = ?");
+                $deleteLikeActivity->execute([$deleteOfferId]);
+
+                // Delete from offers table
+                $deleteOffer = $conn->prepare("DELETE FROM offers WHERE offer_id = ?");
+                $deleteOffer->execute([$deleteOfferId]);
+
+                // Respond with success status
+                http_response_code(200);
+            }
+                    ?>
     </section>
 
     <script src="../js/admin_delete_offer.js"></script>
