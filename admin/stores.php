@@ -10,6 +10,25 @@ if (!isset($admin_product_id)) {
     header('location:admin_login.php');
 }
 
+
+if (isset($_GET['delete'])) {
+    $delete_supermarket_id = $_GET['delete'];
+    $select_offer_id = $conn->prepare('SELECT offer_id FROM `offers` WHERE  supermarket_supermarket_id = ?');
+    $select_offer_id->execute([$delete_supermarket_id]);
+    $delete_offer_id = $select_offer_id->fetch();
+
+    $delete_supermarket = $conn->prepare('DELETE FROM `supermarket` WHERE supermarket_id = ?');
+    $delete_offer = $conn->prepare('DELETE FROM `offers` WHERE supermarket_supermarket_id = ?');
+    $delete_likeactivity = $conn->prepare('DELETE FROM `likeactivity` WHERE offers_offer_id = ?');
+
+    $delete_likeactivity->execute([$delete_offer_id]);
+    $delete_offer->execute([$delete_supermarket_id]);
+    $delete_supermarket->execute([$delete_supermarket_id]);
+    
+    header('location:stores.php');
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -136,8 +155,8 @@ if (isset($_POST['submit'])) {
             <div class="supermarket-info"> Συντεταγμένες:  Χ:<?php echo $supermarket['x_coord']; ?> Υ: <?php echo $supermarket['y_coord']; ?> </div>
             <div class="supermarket-info"> Αριθμός προσφορών: <?php echo $supermarket['has_offers']; ?> </div>
             <div class="flex-btn">
-            <a href="#" class="option-btn">Ενημέρωση</a>
-            <a href="#" class="delete-btn" onclick="return confirm('Διαγραφή καταστήματος?');">Διαγραφή</a>
+            <a href="update_store.php" class="option-btn">Ενημέρωση</a>
+            <a href="stores.php?delete=<?php echo $supermarket['supermarket_id']; ?>" class="delete-btn" onclick="return confirm('Διαγραφή καταστήματος?');">Διαγραφή</a>
             </div>
         </div>
         <?php
