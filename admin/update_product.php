@@ -63,18 +63,39 @@ if (isset($_POST['update-product'])) {
             <button class="update-image-button">Ενημέρωση Εικόνας</button>
         </div>
         
-        <div class="product_info">Όνομα: <span><?php echo $product['product_name']; ?></span> <button class="update-button">Ενημέρωση</button> </div>
-        <div class="product_description">Πληροφορίες: <span><?php echo $product['product_description']; ?></span><button class="update-button">Ενημέρωση</button></div>
-        <div class="product_info">Κατηγορία: <span><?php echo $product_category['category_name']; ?></span><button class="update-button">Ενημέρωση</button></div>
-        <div class="product_info">Υπόκατηγορία: <span><?php echo $product_subcategory['subcategory_name']; ?></span><button class="update-button">Ενημέρωση</button></div>
-    </div>
+        <div class="product_info">Όνομα: 
+            <input type="text" name="updated-name" value="<?php echo $product['product_name']; ?>">
+            <button class="update-button" type="submit" name="update-name">Επιβεβαίωση</button>
+        </div>
+        <div class="product_description">Πληροφορίες: 
+            <input type="text" name="updated-description" value="<?php echo $product['product_description']; ?>">
+            <button class="update-button" type="submit" name="update-description">Επιβεβαίωση</button>
+        </div>
+     <!--   <div class="product_info">Κατηγορία: <span><?php echo $product_category['category_name']; ?> </div>
+        <div class="product_info">Υπόκατηγορία: <span><?php echo $product_subcategory['subcategory_name']; ?> </div>
+    </div> -->
 
-        <button type="submit" name="confirm-updates">Επιβεβαίωση Ενημερώσεων</button>
+        <button type="submit" name="confirm-updates">Επιστροφή στα προϊόντα</button>
     </form>
 
-    <?php
-    if (isset($_POST['confirm-updates'])) {
-    }
+    <?php    
+        if (isset($_POST['update-name'])) {
+            $updatedName = $_POST['updated-name'];
+            
+            $updateQuery = $conn->prepare('UPDATE product SET product_name = ? WHERE product_id = ?');
+            $updateQuery->execute([$updatedName, $update_id]);
+        }
+
+        if (isset($_POST['update-description'])) {
+            $updatedDescription = $_POST['updated-description'];
+            
+            $updateQuery = $conn->prepare('UPDATE product SET product_description = ? WHERE product_id = ?');
+            $updateQuery->execute([$updatedDescription, $update_id]);
+        }
+
+        if (isset($_POST['confirm-updates'])) {
+            header('location:products.php');
+        }
     ?>
 </section>
 
