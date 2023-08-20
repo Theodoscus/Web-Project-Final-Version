@@ -11,29 +11,6 @@ if (!isset($user_id)) {
     header('location:user_login.php');
 }
 
-include '../components/wishlist_cart.php';
-include '../components/like_dislike.php';
-
-if (isset($_POST['delete_offer_id'])) {
-    $deleteOfferId = $_POST['delete_offer_id'];
-
-    // Delete from likeactivity table
-    $deleteLikeActivity = $conn->prepare("DELETE FROM likeactivity WHERE offers_offer_id = ?");
-    $deleteLikeActivity->execute([$deleteOfferId]);
-
-    // Delete from offers table
-    $deleteOffer = $conn->prepare("DELETE FROM offers WHERE offer_id = ?");
-    $deleteOffer->execute([$deleteOfferId]);
-
-    // Delete from score_activity table
-    $deleteScoreActivity = $conn->prepare("DELETE FROM score_activity WHERE offer_id = ?");
-    $deleteScoreActivity->execute([$deleteOfferId]);
-
-    // Respond with success status
-    http_response_code(200);
-    exit; // Terminate script execution
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -145,8 +122,8 @@ if (isset($_POST['delete_offer_id'])) {
                                     <input class="option-btn" type="submit" name="dislike" id="quick_view_3" value="Dislike (<?= $fetch_product['total_dislikes']; ?>)">
                                 </div>
                             </div>
-                            <div class="flex-btn">
-                                <button class="delete-offer-btn" data-offer-id="<?= $fetch_product['offer_id']; ?>">Delete Offer</button>
+                            <div class="delete-btn-container">
+                                <button class="delete-offer-warning-btn" data-offer-id="<?= $fetch_product['offer_id']; ?>">Delete Offer</button>
                             </div>
                     <?php
                 }
@@ -157,6 +134,11 @@ if (isset($_POST['delete_offer_id'])) {
             if (isset($_POST['delete_offer_id'])) {
                 $deleteOfferId = $_POST['delete_offer_id'];
 
+                // Fetch supermarket_supermarket_id based on offer_id
+                $getSupermarketId = $conn->prepare("SELECT supermarket_supermarket_id FROM offers WHERE offer_id = ?");
+                $getSupermarketId->execute([$deleteOfferId]);
+                $supermarketId = $getSupermarketId->fetchColumn();
+
                 // Delete from likeactivity table
                 $deleteLikeActivity = $conn->prepare("DELETE FROM likeactivity WHERE offers_offer_id = ?");
                 $deleteLikeActivity->execute([$deleteOfferId]);
@@ -165,9 +147,15 @@ if (isset($_POST['delete_offer_id'])) {
                 $deleteOffer = $conn->prepare("DELETE FROM offers WHERE offer_id = ?");
                 $deleteOffer->execute([$deleteOfferId]);
 
-                // Respond with success status
-                http_response_code(200);
+                // Delete from score_activity table
+                $deleteScoreActivity = $conn->prepare("DELETE FROM score_activity WHERE offer_id = ?");
+                $deleteScoreActivity->execute([$deleteOfferId]);
+
+                // Respond with success status and supermarket ID
+                echo json_encode(array("status" => "success", "supermarket_id" => $supermarketId));
+                exit; // Terminate script execution
             }
+
                     ?>
     </section>
 
