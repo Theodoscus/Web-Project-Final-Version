@@ -460,15 +460,19 @@ section{
    margin-bottom: 15px;
    min-height: 12rem;
    max-height: 12rem;
-   text-align: left;
 }
 
 /* Style for the image */
 .update-product .product-image-container img {
+   position: relative;
    max-width: 100%;
+   min-height: 12rem;
+   max-height: 12rem;
+   max-width: 20rem;
    height: auto;
    border: 1px solid #ddd;
    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+   right: 20%;
 }
 
 /* Style for the update image button */
@@ -492,6 +496,14 @@ section{
    position: relative;
    font-size: large;
 }
+
+.product_info input[type="text"]{
+   width: 50%;
+}
+
+.product_description input[type="text"] {
+        width: 50%; 
+    }
 
 /* Style for the update buttons */
 .update-product .update-button {
@@ -521,12 +533,18 @@ section{
    cursor: pointer;
    font-size: 18px;
    border-radius: 4px;
+   margin-top: 16px;
 }
 
 .update-product button[name="confirm-updates"]:hover {
    background-color: darkgoldenrod;
 }
 
+.update-product .existing-product .product-image-container input[type="file"]{
+   position: absolute;
+   bottom:60%;
+   left: 62%;
+}
 
 .orders .box-container{
    display: grid;
