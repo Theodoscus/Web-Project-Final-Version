@@ -155,7 +155,7 @@ if (isset($_POST['submit'])) {
             <div class="supermarket-info"> Συντεταγμένες:  Χ:<?php echo $supermarket['x_coord']; ?> Υ: <?php echo $supermarket['y_coord']; ?> </div>
             <div class="supermarket-info"> Αριθμός προσφορών: <?php echo $supermarket['has_offers']; ?> </div>
             <div class="flex-btn">
-            <a href="update_store.php" class="option-btn">Ενημέρωση</a>
+            <a href="update_store.php?update=<?php echo $supermarket['supermarket_id']; ?>" class="option-btn">Ενημέρωση</a>
             <a href="stores.php?delete=<?php echo $supermarket['supermarket_id']; ?>" class="delete-btn" onclick="return confirm('Διαγραφή καταστήματος?');">Διαγραφή</a>
             </div>
         </div>

@@ -497,6 +497,8 @@ section{
    font-size: large;
 }
 
+
+
 .product_info input[type="text"]{
    width: 50%;
 }
@@ -545,6 +547,43 @@ section{
    bottom:60%;
    left: 62%;
 }
+
+.update-store .existing-store {
+   background-color: #f0f0f0;
+   padding: 20px;
+   border-radius: 5px;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   width: 50%;
+   margin: auto;
+}
+
+.update-store .store-form {
+   margin: 0;
+}
+
+.update-store .store-info, .store-coord {
+   margin-bottom: 10px;
+}
+
+.update-store .update-button {
+   padding: 5px 10px;
+   background-color: #3498db;
+   color: #fff;
+   border: none;
+   border-radius: 3px;
+   cursor: pointer;
+   margin-left: 5px;
+}
+
+.update-store .confirm-button {
+   padding: 10px 20px;
+   background-color: #27ae60;
+   color: #fff;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+}
+
 
 .orders .box-container{
    display: grid;
