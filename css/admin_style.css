@@ -548,20 +548,47 @@ section{
    left: 62%;
 }
 
+.update-store {
+   margin-top: 2rem;
+}
+
+.update-store .heading{
+   font-size: 30px;
+   margin-bottom: 20px;
+   color: #202020;
+}
+
 .update-store .existing-store {
-   background-color: #f0f0f0;
+   background-color: #ffffff7a;
    padding: 20px;
    border-radius: 5px;
    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-   width: 50%;
+   width: 70%;
    margin: auto;
 }
 
-.update-store .store-form {
+.update-store form {
    margin: 0;
+   text-align: center;
 }
 
-.update-store .store-info, .store-coord {
+.update-store .store_info {
+   text-align: left;
+   position: relative;
+   font-size: 18px;
+   font-weight: 400;
+   margin-bottom: 10px;
+}
+
+.update-store .store_info input{
+   width: 40%;
+}
+
+.update-store .store_coord{
+   text-align: left;
+   position: relative;
+   font-size: 18px;
+   font-weight: 400;
    margin-bottom: 10px;
 }
 
@@ -575,15 +602,17 @@ section{
    margin-left: 5px;
 }
 
-.update-store .confirm-button {
+.update-store  .confirm-updates {
    padding: 10px 20px;
-   background-color: #27ae60;
-   color: #fff;
+   background-color: rgb(255, 196, 0);
+   color: black;
    border: none;
    border-radius: 5px;
    cursor: pointer;
 }
-
+.update-store  .confirm-updates:hover {
+   background-color: darkgoldenrod;
+}
 
 .orders .box-container{
    display: grid;

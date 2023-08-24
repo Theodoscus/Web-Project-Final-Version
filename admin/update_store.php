@@ -50,22 +50,42 @@ if (!isset($admin_id)) {
             <input type="text" id="updated-address" name="updated-address" value="<?php echo $store['supermarket_address']; ?>">
             <button class="update-button" type="button" name="update-address" onclick="updateStoreAddress()">Συνέχεια</button>
             </div> 
-            <div class="store_coord">Συντεταγμένες:  Χ: 
+            <div class="store_coord">Συντεταγμένες: &nbsp  &nbsp   Χ: 
             <input type="text" id="updated-Χ" name="updated-Χ" value="<?php echo $store['x_coord']; ?>"> 
             <button class="update-button" type="button" name="update-X" onclick="updateXcoord()">Συνέχεια</button>
-            Υ: <input type="text" id="updated-Υ" name="updated-Υ" value="<?php echo $store['y_coord']; ?>">
+            &nbsp &nbsp Υ: <input type="text" id="updated-Υ" name="updated-Υ" value="<?php echo $store['y_coord']; ?>">
             <button class="update-button" type="button" name="update-Y" onclick="updateYcoord()">Συνέχεια</button>
             </div>
             
-            <button type="submit" name="confirm-updates">Επιβεβαίωση και επιστροφή στα καταστήματα</button>
+            <button class="confirm-updates" type="submit" name="confirm-updates">Επιβεβαίωση και επιστροφή στα καταστήματα</button>
         </form>
     </div>
 
-    
-
-
 </section>
 
+<?php 
+if (isset($_POST['confirm-updates'])) {
+
+    $updatedName = $_POST['updated-name'];
+    $updateQuery = $conn->prepare('UPDATE supermarket SET supermarket_name = ? WHERE supermarket_id = ?');
+    $updateQuery->execute([$updatedName, $update_id]);
+
+    $updatedAddress = $_POST['updated-address'];
+    $updateQuery = $conn->prepare('UPDATE supermarket SET supermarket_address = ? WHERE supermarket_id = ?');
+    $updateQuery->execute([$updatedAddress, $update_id]);
+
+    $updatedX = $_POST['updated-Χ'];
+    $updateQuery = $conn->prepare('UPDATE supermarket SET x_coord = ? WHERE supermarket_id = ?');
+    $updateQuery->execute([$updatedX, $update_id]);
+
+    $updatedY = $_POST['updated-Υ'];
+    $updateQuery = $conn->prepare('UPDATE supermarket SET y_coord = ? WHERE supermarket_id = ?');
+    $updateQuery->execute([$updatedY, $update_id]);
+
+    header('location:stores.php');
+}
+
+?>
 
 </body>
 </html>
