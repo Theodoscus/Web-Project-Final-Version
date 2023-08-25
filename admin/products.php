@@ -11,16 +11,21 @@ if (!isset($admin_product_id)) {
 }
 
 if (isset($_POST['add_product'])) {
-    $product_name = $_POST['product_name'];
+    $product_name = $_POST['product-name'];
     $product_name = filter_var($product_name, FILTER_SANITIZE_STRING);
-    $product_description = $_POST['product_description'];
+
+    $product_description = $_POST['product-description'];
     $product_description = filter_var($product_description, FILTER_SANITIZE_STRING);
 
-    $image_01 = $_FILES['image_01']['name'];
-    $image_01 = filter_var($image_01, FILTER_SANITIZE_STRING);
-    $image_size_01 = $_FILES['image_01']['size'];
-    $image_tmp_name_01 = $_FILES['image_01']['tmp_name'];
-    $image_folder_01 = '../uploaded_img/' . $image_01;
+    $product_subcategory = $_POST['subcategory_select'];
+
+    $target_dir = "../uploaded_img/";
+    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+
+
 
     $select_products = $conn->prepare('SELECT * FROM `product` WHERE product_name = ?');
     $select_products->execute([$product_name]);
@@ -28,18 +33,41 @@ if (isset($_POST['add_product'])) {
     if ($select_products->rowCount() > 0) {
         $message[] = 'product name already exist!';
     } else {
-        $insert_products = $conn->prepare('INSERT INTO `product`(product_name, product_description, image_01) VALUES(?,?,?,?)');
-        $insert_products->execute([$product_name, $product_description, $image_01]);
 
-        if ($insert_products) {
-            if ($image_size_01 > 2000000) {
-                $message[] = 'image size is too large!';
-            } else {
-                move_uploaded_file($image_tmp_name_01, $image_folder_01);
-                $message[] = 'new product added!';
-            }
+    if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+      } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+      }
+
+    // Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" ) {
+        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $uploadOk = 0;
         }
+    
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+            echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
+            
+            $uploadedFileName = htmlspecialchars(basename($_FILES["fileToUpload"]["name"]));
+            
+            $insert_products = $conn->prepare('INSERT INTO `product`(product_name, product_description,subcategory_subcategory_id,product_image) VALUES(?,?,?,?)');
+            $insert_products->execute([$product_name, $product_description,$product_subcategory,$uploadedFileName]);
+            
+            } else {
+            echo "Sorry, there was an error uploading your file.";
+            }
+        }     
+
     }
+    
 }
 
 if (isset($_GET['delete'])) {
@@ -201,11 +229,11 @@ if (isset($_GET['delete'])) {
             <div class="flex">
                 <div class="inputBox">
                     <span>Όνομα προϊόντος (Υποχρεωτικό)</span>
-                    <input type="text" class="box" required maxlength="100" placeholder="Εισάγετε το όνομα του προϊόντος" name="name">
+                    <input type="text" class="box" required maxlength="100" placeholder="Εισάγετε το όνομα του προϊόντος" name="product-name">
                 </div>
                 <div class="inputBox">
                     <span>Είκονα (Μη υποχρεωτικό)</span>
-                    <input type="file" name="image_01" accept="image/jpg, image/jpeg, image/png, image/webp" class="box" required>
+                    <input type="file" name="fileToUpload" id="fileToUpload"  class="box" >
                 </div>
                 <div class="inputBox">
                     <span>Κατηγορία</span>
@@ -232,7 +260,7 @@ if (isset($_GET['delete'])) {
 
             <div class="inputBox">
                 <span>Περιγραφή προϊόντος (Υποχρεωτικό)</span>
-                <textarea name="product_description" placeholder="Εισάγετε την περιγραφή" class="box" required maxlength="500" cols="30" rows="10"></textarea>
+                <textarea name="product-description" placeholder="Εισάγετε την περιγραφή" class="box" required maxlength="500" cols="30" rows="10"></textarea>
             </div>
 
             <input type="submit" value="add product" class="btn" name="add_product">
