@@ -86,7 +86,7 @@ if (!isset($admin_id)) {
         $updateQuery = $conn->prepare('UPDATE product SET product_description = ? WHERE product_id = ?');
         $updateQuery->execute([$updatedDescription, $update_id]);
 
-
+        if (!empty($_FILES['fileToUpload']['name'])){
         $target_dir = "../uploaded_img/";
         $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
         $uploadOk = 1;
@@ -123,7 +123,7 @@ if (!isset($admin_id)) {
             echo "Sorry, there was an error uploading your file.";
             }
         }     
-        
+        }
 
         header('location:products.php');
     }

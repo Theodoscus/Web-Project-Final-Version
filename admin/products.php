@@ -111,6 +111,7 @@ if (isset($_GET['delete'])) {
 
     <?php include '../components/admin_header.php'; ?>
 
+    <div class="empty-space"> </div>
     <div class="upload-container">
         <h2>Εισάγετε το αρχείο JSON για τα προϊόντα</h2>
         <form id="jsonUploadForm" method="post" enctype="multipart/form-data">
@@ -233,7 +234,7 @@ if (isset($_GET['delete'])) {
                 </div>
                 <div class="inputBox">
                     <span>Είκονα (Μη υποχρεωτικό)</span>
-                    <input type="file" name="fileToUpload" id="fileToUpload"  class="box" >
+                    <input type="file" name="fileToUpload" id="fileToUpload"  required class="box" >
                 </div>
                 <div class="inputBox">
                     <span>Κατηγορία</span>

@@ -48,6 +48,7 @@ if (isset($_GET['delete'])) {
 
 <?php include '../components/admin_header.php'; ?>
 
+<div class="empty-space"> </div>
 <div class="upload-container">
         <h2>Εισάγετε το αρχείο JSON για τα καταστήματα</h2>
         <form id="jsonUploadForm"  method="post" enctype="multipart/form-data">
