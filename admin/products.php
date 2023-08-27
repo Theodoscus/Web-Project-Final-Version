@@ -276,23 +276,34 @@ if (isset($_GET['delete'])) {
 
         <!-- Search bar -->
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search by product name">
+            <form action="products.php" method="GET"> <!-- Adjust 'products.php' to the appropriate file -->
+            <div class="search-bar">
+                <input type="text" name="search" id="searchInput" placeholder="Αναζητήστε το όνομα του προϊόντος">
+            </div>
+            <button type="button" id="cancelSearch" onclick="products.php">Ακύρωση</button>
+            <button type="submit" id="searchButton">Αναζήτηση</button>
+            </form>
         </div>
 
         <!-- Container for displaying products -->
         <div class="box-container" id="productContainer">
             <?php
+
+
             // Retrieve the search term from the URL
             $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+
+            // Pagination settings
+            $itemsPerPage = 15;
+            $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
+            
 
             // Modify the SQL query to include the search term
             $select_products = $conn->prepare('SELECT * FROM `product` WHERE product_name LIKE ?');
             $select_products->execute(["%$searchTerm%"]);
             $products = $select_products->fetchAll(PDO::FETCH_ASSOC);
 
-            // Pagination settings
-            $itemsPerPage = 15;
-            $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
+            
 
             // Calculate total pages and start/end indices
             $totalItems = count($products);
@@ -306,6 +317,7 @@ if (isset($_GET['delete'])) {
                     break; // Break the loop if we've displayed all available products
                 }
                 $product = $products[$i];
+
             ?>
 
                 <div class="box">
@@ -319,7 +331,10 @@ if (isset($_GET['delete'])) {
                 </div>
             <?php
             }
+
+        
             ?>
+
 
             <div class="pagination">
                 <?php
@@ -352,16 +367,39 @@ if (isset($_GET['delete'])) {
         </div>
 
     </section>
+    <?php
+// ... Database connection and other code ...
 
-    <!-- If i remove these lines the pagination works fine but not the search bar -->
-    <!-- <script>
-        // Create a JavaScript variable with the products data
-        const productsData = <?php echo json_encode($products); ?>;
-    </script> -->
+if (isset($_GET['search'])) {
+    $searchTerm = $_GET['search'];
+
+    // Pagination settings
+    $itemsPerPage = 15;
+    $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+    // Modify the SQL query to include the search term
+    $select_products = $conn->prepare('SELECT * FROM `product` WHERE product_name LIKE ?');
+    $select_products->execute(["%$searchTerm%"]);
+    $products = $select_products->fetchAll(PDO::FETCH_ASSOC);
+
+    // Calculate total pages and start/end indices
+    $totalItems = count($products);
+    $totalPages = ceil($totalItems / $itemsPerPage);
+    $startIndex = ($currentPage - 1) * $itemsPerPage;
+    $endIndex = min($startIndex + $itemsPerPage, $totalItems);
+} else {
+    // Default logic for displaying products without search
+    // This part might be similar to your original code
+    // You might want to set a default SQL query or display all products
+}
+
+// ... The rest of your code, including product display and pagination ...
+?>
+  
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../js/admin_searchBar.js"></script>
-    <!-- <script src="../js/admin_script.js"></script> -->
+    <!--<script src="../js/admin_script.js"></script> -->
     <script src="../js/admin_ajax.js"></script>
 </body>
 

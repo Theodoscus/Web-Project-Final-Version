@@ -1,4 +1,4 @@
-$(document).ready(function () {
+/* $(document).ready(function () {
 
     function renderProduct(product) {
         return `
@@ -21,6 +21,7 @@ $(document).ready(function () {
 
         const productElements = filteredProducts.map(renderProduct).join("");
         $("#productContainer").html(productElements);
+
     }
 
     // Handle search input changes
@@ -31,4 +32,12 @@ $(document).ready(function () {
 
     // Initial rendering
     filterProducts("", productsData);
-});
+}); */
+
+document.addEventListener("DOMContentLoaded", function() {
+    const cancelSearchButton = document.getElementById("cancelSearch");
+    
+    cancelSearchButton.addEventListener("click", function() {
+        window.location.href = "products.php";
+    });
+ });
