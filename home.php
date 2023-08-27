@@ -53,7 +53,7 @@ include 'components/wishlist_cart.php';
 <section class="map-container">
 
    <form action="" method="post">
-      <input type="text" name="search" id="searchInput" placeholder="Αναζήτηση supermarket..." class="box">
+      <input type="text" name="search" id="searchInput" placeholder="Αναζήτηση supermarket..." class="box" >
       <a href="#" class="btn" id="clear_filters">Καθαρισμός Φίλτρων</a>
    </form>
 

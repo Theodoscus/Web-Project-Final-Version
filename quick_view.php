@@ -78,6 +78,7 @@ include 'components/like_dislike.php';
    <form action="" method="post" class="box">
       <input type="hidden" name="oid" value="<?= $fetch_product['offer_id']; ?>">
       <input type="hidden" name="pid" value="<?=$fetch_product['product_id']; ?>">
+      <input type="hidden" name="uid" value="<?=$fetch_product['user_id']; ?>">
       <input type="hidden" name="name" value="<?= $fetch_product['product_name']; ?>">
       <input type="hidden" name="price" value="<?= $fetch_product['product_price']; ?>">
       <input type="hidden" name="image" value="<?= $fetch_product['product_image']; ?>">
@@ -132,10 +133,10 @@ include 'components/like_dislike.php';
             </div>
             <div class="like-dislike-btns">
                <div class="like-btn" >
-               <input class="option-btn"  type="submit" name="like" id="quick_view_2" value="Like (<?= $fetch_product['total_likes'];?>)">
+               <input class="option-btn"  type="submit" name="like" id="quick_view_2" value="Like (<?= $fetch_product['total_likes'];?>)" <?php if ($user_id == $fetch_product['user_id']) { echo "disabled"; } ?>>
                </div>
                <div class="dislike-btn">
-               <input class="option-btn"  type="submit" name="dislike" id="quick_view_3" value="Dislike (<?= $fetch_product['total_dislikes'];?>)">
+               <input class="option-btn"  type="submit" name="dislike" id="quick_view_3" value="Dislike (<?= $fetch_product['total_dislikes'];?>)" <?php if ($user_id == $fetch_product['user_id']) { echo "disabled"; } ?>>
                <?php
                   }
                   }
