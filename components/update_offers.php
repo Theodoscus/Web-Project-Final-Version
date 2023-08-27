@@ -69,12 +69,6 @@ function get_avg_week_price($product_id, $last_week)
     }
 }
 
-function update_offers_exp($oid, $exp_date)
-{
-    include 'components/connect.php';
-    $update_offer = $conn->prepare('UPDATE offers SET expiration_date=');
-    $insert_score->execute([$score, $user_id, $action_type, $oid]);
-}
 // Retrieve all the items
 $sql = 'SELECT * FROM offers';
 $result = $conn->query($sql);
@@ -94,10 +88,10 @@ if ($result->rowCount() > 0) {
         // Check if the item needs to be updated
         if ($current_date >= $expiration_date) {
             if ($price <= 0.8 * $avg_day_price) {
-                $update_offers_exp = $conn->prepare('UPDATE offers SET expiration_date=DATE_ADD(expiration_date, INTERVAL 7 DAY) WHERE offer_id=? ');
+                $update_offers_exp = $conn->prepare('UPDATE offers SET expiration_date=DATE_ADD(curdate(), INTERVAL 7 DAY) WHERE offer_id=? ');
                 $update_offers_exp->execute([$oid]);
             } elseif ($price <= 0.8 * $avg_week_price) {
-                $update_offers_exp = $conn->prepare('UPDATE offers SET expiration_date=DATE_ADD(expiration_date, INTERVAL 7 DAY) WHERE offer_id=? ');
+                $update_offers_exp = $conn->prepare('UPDATE offers SET expiration_date=DATE_ADD(curdate(), INTERVAL 7 DAY) WHERE offer_id=? ');
                 $update_offers_exp->execute([$oid]);
             }
         }
