@@ -153,7 +153,7 @@ if (!isset($user_id)) {
 
                 // Respond with success status and supermarket ID
                 echo json_encode(array("status" => "success", "supermarket_id" => $supermarketId));
-                exit; // Terminate script execution
+                header('location:admin_map.php');
             }
 
                     ?>
