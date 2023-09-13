@@ -602,6 +602,39 @@ section{
    left: 62%;
 }
 
+.category-select {
+   margin-top: 10px;
+   margin-bottom: 10px;
+   font-size: 18px;
+   text-align: left;
+}
+
+select#category_select {
+   width: 50%;
+   margin: 8px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   font-size: 14px;
+   background-color: #fff;
+   color: #333;
+}
+
+.subcategory-select {
+   margin-top: 8px;
+   margin-bottom: 10px;
+   font-size: 18px;
+   text-align: left;
+}
+
+select#subcategory_select {
+   width: 50%;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   font-size: 14px;
+   background-color: #fff;
+   color: #333;
+}
+
 .update-store {
    margin-top: 2rem;
 }

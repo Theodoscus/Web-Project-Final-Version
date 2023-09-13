@@ -66,8 +66,21 @@ if (!isset($admin_id)) {
             <input type="text" name="updated-description" value="<?php echo $product['product_description']; ?>">
             <button class="update-button" type="button" name="update-description" onclick="updateDescription()">Συνέχεια</button>
         </div>
-        <div class="product_info">Κατηγορία: <span><?php echo $product_category['category_name']; ?> </div>
-        <div class="product_info">Υπόκατηγορία: <span><?php echo $product_subcategory['subcategory_name']; ?> </div>
+        <div class="category-select"> Κατηγορία: <select name="category_select" id="category_select">
+             <option selected disabled><?php echo $product_category['category_name']; ?> </option>
+             <?php
+                $stmt = $conn->prepare("SELECT * FROM category ORDER BY category_name");
+                $stmt->execute();
+                $categoriesList= $stmt->fetchAll();
+
+                foreach($categoriesList as $category){
+                    echo "<option value='".$category['category_id']."'>".$category['category_name']."</option>";
+                    }
+                ?>
+        </select></div>
+        <div class="subcategory-select">Υπόκατηγορία: <select name="subcategory_select" id="subcategory_select">
+            <option selected disabled><?php echo $product_subcategory['subcategory_name']; ?> </option>                  
+        </select></div>
      
         <button type="submit" name="confirm-updates">Επιβεβαίωση και επιστροφή στα προϊόντα</button>
     </form>
@@ -85,6 +98,13 @@ if (!isset($admin_id)) {
         $updatedDescription = $_POST['updated-description'];  
         $updateQuery = $conn->prepare('UPDATE product SET product_description = ? WHERE product_id = ?');
         $updateQuery->execute([$updatedDescription, $update_id]);
+
+        if (isset($_POST['subcategory_select'])){
+        $updatedSubcategory = $_POST['subcategory_select'];
+        $updateQuery = $conn->prepare('UPDATE product SET subcategory_subcategory_id = ? WHERE product_id = ?');
+        $updateQuery->execute([$updatedSubcategory, $update_id]);
+        }
+
 
         if (!empty($_FILES['fileToUpload']['name'])){
         $target_dir = "../uploaded_img/";
@@ -137,7 +157,7 @@ if (!isset($admin_id)) {
 
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="../js/admin_ajax.js"></script>
 <script src="../js/admin_update_product.js"></script>
 
