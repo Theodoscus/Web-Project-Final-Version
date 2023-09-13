@@ -359,7 +359,9 @@ if (isset($_GET['delete'])) {
                 }
 
                 // Display last page link
+                if($totalPages>=15){
                 echo "... <a href='?page=$totalPages' class='page-link'>$totalPages</a>";
+                }
                 ?>
 
 
