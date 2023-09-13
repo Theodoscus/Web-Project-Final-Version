@@ -214,7 +214,6 @@ if (isset($_GET['delete'])) {
                 echo 'Πρόβλημα διαβάσματος JSON αρχείου.';
             }
         } else {
-            echo 'File upload error: ' . $jsonFileInput['error'];
             if ($jsonFileInput['error'] = 4) {
                 echo 'Δεν έχετε επιλέξει αρχείο';
             }
