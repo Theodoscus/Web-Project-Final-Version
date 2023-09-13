@@ -602,14 +602,14 @@ section{
    left: 62%;
 }
 
-.category-select {
+.update-product .category-select {
    margin-top: 10px;
    margin-bottom: 10px;
    font-size: 18px;
    text-align: left;
 }
 
-select#category_select {
+.update-product select#category_select {
    width: 50%;
    margin: 8px;
    border: 1px solid #ccc;
@@ -619,14 +619,14 @@ select#category_select {
    color: #333;
 }
 
-.subcategory-select {
+.update-product .subcategory-select {
    margin-top: 8px;
    margin-bottom: 10px;
    font-size: 18px;
    text-align: left;
 }
 
-select#subcategory_select {
+.update-product select#subcategory_select {
    width: 50%;
    border: 1px solid #ccc;
    border-radius: 5px;
