@@ -387,27 +387,27 @@ section{
    resize: none;
 }
 
-.show-products .search-container{
+.search-container{
     display: flex;
     justify-content:center; 
     align-items: center;
     margin-bottom: 20px; 
 }
 
-.show-products .search-container .search-bar {
+.search-container .search-bar {
    display: flex;
    align-items: center;
    width: 50rem;
    margin-right: 10px; 
 }
 
-.show-products .search-container #searchInput {
+.search-container #searchInput {
    width: 100%; 
    padding: 8px;
    border: 1px solid #ccc;
 }
 
-.show-products .search-container #cancelSearch {
+.search-container #cancelSearch {
    background-color:  rgb(230, 64, 35);
    border: none;
    padding: 6px 10px;
@@ -415,7 +415,15 @@ section{
    cursor: pointer;
 }
 
-.show-products .search-container #searchButton {
+.search-container #cancelSearchStores {
+   background-color:  rgb(230, 64, 35);
+   border: none;
+   padding: 6px 10px;
+   margin-right: 5px;
+   cursor: pointer;
+}
+
+.search-container #searchButton {
    background-color: #007bff;
    margin-left: 330px;
    border: none;
@@ -424,7 +432,7 @@ section{
    cursor: pointer;
 }
 
-.show-products .search-container input{
+.search-container input{
    width: 200%;
 }
 

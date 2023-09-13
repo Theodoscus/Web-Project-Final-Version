@@ -123,6 +123,17 @@ if (isset($_POST['submit'])) {
 <section class="shop-display">
     <h1 class="heading">Καταστήματα</h1>
 
+     <!-- Search bar -->
+     <div class="search-container">
+            <form action="stores.php" method="GET"> <!-- Adjust 'products.php' to the appropriate file -->
+            <div class="search-bar">
+                <input type="text" name="search" id="searchInput" placeholder="Αναζητήστε το όνομα του καταστήματος">
+            </div>
+            <button type="button" id="cancelSearchStores" >Ακύρωση</button>
+            <button type="submit" id="searchButton">Αναζήτηση</button>
+            </form>
+    </div>
+
     <div class="box-container">
         <?php
         // Retrieve the search term from the URL
@@ -195,7 +206,7 @@ if (isset($_POST['submit'])) {
 
 
 
-
+<script src="../js/admin_stores_search.js"></script>
    
 </body>
 </html>
