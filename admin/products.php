@@ -334,7 +334,7 @@ if (isset($_GET['delete'])) {
         
             ?>
 
-
+        </div>
             <div class="pagination">
                 <?php
                 // Calculate the range of pages to display
@@ -343,8 +343,9 @@ if (isset($_GET['delete'])) {
                 $endPage = min($startPage + $chunkSize - 1, $totalPages);
 
                 // Display first page link
-                echo "<a href='?page=1' class='page-link'>1</a> ... ";
-
+                if ($startPage > 1) {
+                    echo "<a href='?page=1' class='page-link'>1</a> ... ";
+                }
                 for ($page = 1; $page <= $totalPages; ++$page) {
                     $activeClass = ($page === $currentPage) ? 'active' : '';
 
@@ -358,14 +359,14 @@ if (isset($_GET['delete'])) {
                 }
 
                 // Display last page link
-                if($totalPages>=15){
+                if($totalPages>=15  && $endPage < $totalPages){
                 echo "... <a href='?page=$totalPages' class='page-link'>$totalPages</a>";
                 }
                 ?>
 
 
             </div>
-        </div>
+        
 
     </section>
     <?php
