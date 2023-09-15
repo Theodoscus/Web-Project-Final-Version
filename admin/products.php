@@ -155,6 +155,42 @@ if (isset($_GET['delete'])) {
                 $parsedData = json_decode($jsonData, true);
 
                 if ($parsedData !== null) {
+                    
+
+                    foreach ($parsedData['categories'] as $row) {
+                        $category_id = $row['id'];
+                        $category_name = $row['name'];
+
+                        foreach ($row['subcategories'] as $row2) {
+                            $subcategory_name = $row2['name'];
+                            $subcategory_id = $row2['uuid'];
+                            
+
+                            $existingCategoryQuery = $conn->prepare('SELECT COUNT(*) FROM category WHERE category_id = ?');
+                            $existingCategoryQuery->execute([$category_id]);
+                            $count = $existingCategoryQuery->fetchColumn();
+
+                        if ($count == 0) {
+                            $stmtCat->bindValue(1, $category_id, PDO::PARAM_STR);
+                            $stmtCat->bindValue(2, $category_name, PDO::PARAM_STR);
+
+                            $stmtCat->execute();
+                        }
+                            $existingSubcategoryQuery = $conn->prepare('SELECT COUNT(*) FROM subcategory WHERE subcategory_id = ?');
+                            $existingSubcategoryQuery->execute([$subcategory_id]);
+                            $count = $existingSubcategoryQuery->fetchColumn();
+
+                            if ($count == 0) {
+                                $stmtSub->bindValue(1, $subcategory_id, PDO::PARAM_STR);
+                                $stmtSub->bindValue(2, $subcategory_name, PDO::PARAM_STR);
+                                $stmtSub->bindValue(3, $category_id, PDO::PARAM_STR);
+
+                                $stmtSub->execute();
+                            }
+                        }
+
+                    }
+
                     foreach ($parsedData['products'] as $row) {
                         $product_id = $row['id'];
                         $product_name = $row['name'];
@@ -170,39 +206,6 @@ if (isset($_GET['delete'])) {
                             $stmt->bindValue(4, $subcategory_subcategory_id, PDO::PARAM_STR);
 
                             $stmt->execute();
-                        }
-                    }
-
-                    foreach ($parsedData['categories'] as $row) {
-                        $category_id = $row['id'];
-                        $category_name = $row['name'];
-
-                        foreach ($row['subcategories'] as $row2) {
-                            $subcategory_name = $row2['name'];
-                            $subcategory_id = $row2['uuid'];
-
-                            $existingSubcategoryQuery = $conn->prepare('SELECT COUNT(*) FROM subcategory WHERE subcategory_id = ?');
-                            $existingSubcategoryQuery->execute([$subcategory_id]);
-                            $count = $existingSubcategoryQuery->fetchColumn();
-
-                            if ($count == 0) {
-                                $stmtSub->bindValue(1, $subcategory_id, PDO::PARAM_STR);
-                                $stmtSub->bindValue(2, $subcategory_name, PDO::PARAM_STR);
-                                $stmtSub->bindValue(3, $category_id, PDO::PARAM_STR);
-
-                                $stmtSub->execute();
-                            }
-                        }
-
-                        $existingCategoryQuery = $conn->prepare('SELECT COUNT(*) FROM category WHERE category_id = ?');
-                        $existingCategoryQuery->execute([$category_id]);
-                        $count = $existingCategoryQuery->fetchColumn();
-
-                        if ($count == 0) {
-                            $stmtCat->bindValue(1, $category_id, PDO::PARAM_STR);
-                            $stmtCat->bindValue(2, $category_name, PDO::PARAM_STR);
-
-                            $stmtCat->execute();
                         }
                     }
 

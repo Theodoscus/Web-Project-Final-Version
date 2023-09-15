@@ -135,9 +135,9 @@ if (!isset($user_id)) {
                 $deleteOfferId = $_POST['delete_offer_id'];
 
                 // Fetch supermarket_supermarket_id based on offer_id
-                $getSupermarketId = $conn->prepare("SELECT supermarket_supermarket_id FROM offers WHERE offer_id = ?");
-                $getSupermarketId->execute([$deleteOfferId]);
-                $supermarketId = $getSupermarketId->fetchColumn();
+                // $getSupermarketId = $conn->prepare("SELECT supermarket_supermarket_id FROM offers WHERE offer_id = ? LIMIT 1");
+                // $getSupermarketId->execute([$deleteOfferId]);
+                // $supermarketId = $getSupermarketId->fetchColumn();
 
                 // Delete from likeactivity table
                 $deleteLikeActivity = $conn->prepare("DELETE FROM likeactivity WHERE offers_offer_id = ?");
@@ -148,21 +148,18 @@ if (!isset($user_id)) {
                 $deleteOffer->execute([$deleteOfferId]);
 
                 // Delete from score_activity table
-                $deleteScoreActivity = $conn->prepare("DELETE FROM score_activity WHERE offer_id = ?");
-                $deleteScoreActivity->execute([$deleteOfferId]);
+                $deleteWishlist = $conn->prepare("DELETE FROM wishlist WHERE offer_id = ?");
+                $deleteWishlist->execute([$deleteOfferId]);
 
-                // Respond with success status and supermarket ID
-                echo json_encode(array("status" => "success", "supermarket_id" => $supermarketId));
                 header('location:admin_map.php');
             }
 
                     ?>
     </section>
 
-    <script src="../js/admin_delete_offer.js"></script>
-    <script src="../js/script.js"></script>
+    <script src="../js/admin_script.js"></script>
     <script src="../js/admin_map.js"></script>
-    <script src="../js/getlocation.js"></script>
+
 
 </body>
 
