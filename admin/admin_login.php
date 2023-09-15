@@ -4,10 +4,10 @@ include '../components/connect.php';
 
 session_start();
 
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
+if (isset($_SESSION['admin_id'])) {
+    $admin_id = $_SESSION['admin_id'];
 } else {
-    $user_id = '';
+    $admin_id = '';
 }
 
 if (isset($_POST['submit'])) {
@@ -19,7 +19,7 @@ if (isset($_POST['submit'])) {
     $row = $select_admin->fetch(PDO::FETCH_ASSOC);
 
     if ($select_admin->rowCount() > 0) {
-        $_SESSION['user_id'] = $row['user_id'];
+        $_SESSION['admin_id'] = $row['user_id'];
         header('location: products.php'); 
     } else {
         $message[] = 'Incorrect email or password!';

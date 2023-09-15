@@ -85,7 +85,7 @@ foreach ($missingMonths as $missingMonth) {
                 $lastDayOfMonth = new DateTime("$missingMonth-01");
                 $lastDayOfMonth->modify('last day of this month');
                 $formattedDate = $lastDayOfMonth->format('Y-m-d');
-                $get_user_id = $conn->prepare("SELECT user_id from users where date(signup_date)<=?");
+                $get_user_id = $conn->prepare("SELECT user_id from users where date(signup_date)<=? AND user_type='user'");
                 $get_user_id->execute([$formattedDate]);
                 if($get_user_id->rowCount() > 0){
                     while($fetch_user_id= $get_user_id->fetch(PDO::FETCH_ASSOC)) {
@@ -138,7 +138,7 @@ foreach ($missingMonths as $missingMonth) {
             }
         
     } else {
-        $get_user_id = $conn->prepare("SELECT user_id from users where date(signup_date)<=?");
+        $get_user_id = $conn->prepare("SELECT user_id from users where date(signup_date)<=? AND user_type='user'");
         $lastDayOfMonth = new DateTime("$missingMonth-01");
         $lastDayOfMonth->modify('last day of this month');
         $formattedDate = $lastDayOfMonth->format('Y-m-d');
