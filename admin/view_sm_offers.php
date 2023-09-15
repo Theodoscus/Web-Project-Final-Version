@@ -3,9 +3,9 @@
 include '../components/connect.php';
 session_start();
 
-$user_id = $_SESSION['user_id'];
-if (!isset($user_id)) {
-    header('location:user_login.php');
+$user_id = $_SESSION['admin_id'];
+if (!isset($admin_id)) {
+    header('location:admin_login.php');
 }
 
 

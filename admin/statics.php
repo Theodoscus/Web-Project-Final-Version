@@ -3,7 +3,7 @@ include '../components/connect.php';
 
 session_start();
 
-$admin_product_id = $_SESSION['user_id'];
+$admin_product_id = $_SESSION['admin_id'];
 
 if (!isset($admin_product_id)) {
     header('location:admin_home.php');
