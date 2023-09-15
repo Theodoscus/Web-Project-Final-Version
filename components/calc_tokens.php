@@ -5,8 +5,11 @@ $get_min_date->execute();
 if($get_min_date->rowCount() > 0){
     while($fetch_min = $get_min_date->fetch(PDO::FETCH_ASSOC)) {
         $min_date = $fetch_min['min_date'];
+        
     }
-    
+    if ($min_date === NULL){
+        
+    } else{
 
 $currentDate = date('Y-m-d');
 $missingMonths = array();
@@ -74,6 +77,7 @@ foreach ($missingMonths as $missingMonth) {
             $insert_system_tokens = $conn->prepare("INSERT INTO system_tokens(amount,creation_date) VALUES (?, ?)"); 
             $insert_system_tokens->execute([$tokens, $fullDate]);
 
+}
 }
 }
 }
