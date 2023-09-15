@@ -18,11 +18,10 @@ USE `mydb` ;
 -- Table `mydb`.`category`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`category` (
-  `category_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `category_id` VARCHAR(45) NOT NULL,
   `category_name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`category_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 9
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -39,26 +38,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`users` (
   `total_score` INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`subcategory`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`subcategory` (
-  `subcategory_id` INT(11) NOT NULL AUTO_INCREMENT,
-  `subcategory_name` VARCHAR(45) NOT NULL,
-  `category_category_id` INT(11) NOT NULL,
-  PRIMARY KEY (`subcategory_id`, `category_category_id`),
-  INDEX `fk_subcategory_category1_idx` (`category_category_id` ASC) VISIBLE,
-  CONSTRAINT `fk_subcategory_category1`
-    FOREIGN KEY (`category_category_id`)
-    REFERENCES `mydb`.`category` (`category_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -67,19 +47,14 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`product` (
   `product_id` INT(11) NOT NULL AUTO_INCREMENT,
-  `product_name` VARCHAR(45) NOT NULL,
+  `product_name` VARCHAR(100) NOT NULL,
   `product_description` TEXT NULL DEFAULT NULL,
-  `subcategory_subcategory_id` INT(11) NOT NULL,
+  `subcategory_subcategory_id` VARCHAR(45) NOT NULL,
   `product_image` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`product_id`, `subcategory_subcategory_id`),
-  INDEX `fk_product_subcategory1_idx` (`subcategory_subcategory_id` ASC) VISIBLE,
-  CONSTRAINT `fk_product_subcategory1`
-    FOREIGN KEY (`subcategory_subcategory_id`)
-    REFERENCES `mydb`.`subcategory` (`subcategory_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  INDEX `fk_product_subcategory1_idx` (`subcategory_subcategory_id` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
+AUTO_INCREMENT = 1369
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -95,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`supermarket` (
   `has_offers` INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`supermarket_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
+AUTO_INCREMENT = 187
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -134,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`offers` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -161,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`likeactivity` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -184,7 +159,25 @@ CREATE TABLE IF NOT EXISTS `mydb`.`score_activity` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 9
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`subcategory`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`subcategory` (
+  `subcategory_id` VARCHAR(45) NOT NULL,
+  `subcategory_name` VARCHAR(45) NOT NULL,
+  `category_category_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`subcategory_id`),
+  INDEX `fk_subcategory_category1_idx` (`category_category_id` ASC) VISIBLE,
+  CONSTRAINT `fk_token_Category1`
+    FOREIGN KEY (`category_category_id`)
+    REFERENCES `mydb`.`category` (`category_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -197,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`system_tokens` (
   `creation_date` DATE NOT NULL,
   PRIMARY KEY (`system_tokens_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -217,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`user_tokens` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 19
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -249,9 +242,59 @@ CREATE TABLE IF NOT EXISTS `mydb`.`wishlist` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 15
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
+USE `mydb`;
+
+DELIMITER $$
+USE `mydb`$$
+CREATE
+DEFINER=`root`@`localhost`
+TRIGGER `mydb`.`offers_AFTER_DELETE`
+AFTER DELETE ON `mydb`.`offers`
+FOR EACH ROW
+BEGIN
+	declare supermarket_count int;
+    
+    set @supermarket_count=(select COUNT(supermarket_supermarket_id) FROM offers WHERE supermarket_supermarket_id=OLD.supermarket_supermarket_id);
+    if @supermarket_count=0 then 
+		update supermarket set has_offers=0 where supermarket_id=old.supermarket_supermarket_id;
+	elseif @supermarket_count>0 then
+		update supermarket set has_offers=1 where supermarket_id=old.supermarket_supermarket_id;
+        end if;
+END$$
+
+USE `mydb`$$
+CREATE
+DEFINER=`root`@`localhost`
+TRIGGER `mydb`.`offers_AFTER_INSERT`
+AFTER INSERT ON `mydb`.`offers`
+FOR EACH ROW
+BEGIN
+	UPDATE supermarket SET has_offers=1 WHERE supermarket_id=NEW.supermarket_supermarket_id;
+    
+END$$
+
+USE `mydb`$$
+CREATE
+DEFINER=`root`@`localhost`
+TRIGGER `mydb`.`offers_AFTER_UPDATE`
+AFTER UPDATE ON `mydb`.`offers`
+FOR EACH ROW
+BEGIN
+	declare supermarket_count int;
+    
+    set @supermarket_count=(select COUNT(supermarket_supermarket_id) FROM offers WHERE supermarket_supermarket_id=NEW.supermarket_supermarket_id);
+    if @supermarket_count=0 then 
+		update supermarket set has_offers=0 where supermarket_id=new.supermarket_supermarket_id;
+	elseif @supermarket_count>0 then
+		update supermarket set has_offers=1 where supermarket_id=new.supermarket_supermarket_id;
+        end if;
+END$$
+
+
+DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
