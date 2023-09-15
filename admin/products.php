@@ -376,7 +376,6 @@ if (isset($_GET['delete'])) {
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../js/admin_searchBar.js"></script>
-    <!--<script src="../js/admin_script.js"></script> -->
     <script src="../js/admin_ajax.js"></script>
 </body>
 
