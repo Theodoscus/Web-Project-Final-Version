@@ -1,6 +1,6 @@
 <?php
 include 'components/connect.php';
-$get_min_date = $conn->prepare("SELECT MIN(DATE_FORMAT(signup_date, '%Y-%m')) AS min_date FROM users"); 
+$get_min_date = $conn->prepare("SELECT MIN(DATE_FORMAT(signup_date, '%Y-%m')) AS min_date FROM users WHERE user_type='user'"); 
 $get_min_date->execute();
 if($get_min_date->rowCount() > 0){
     while($fetch_min = $get_min_date->fetch(PDO::FETCH_ASSOC)) {
@@ -43,7 +43,7 @@ foreach ($missingMonths as $missingMonth) {
     
        
         if (!$exists) {
-            $get_users = $conn->prepare("SELECT COUNT(user_id) FROM users WHERE DATE_FORMAT(signup_date, '%Y-%m')<?"); 
+            $get_users = $conn->prepare("SELECT COUNT(user_id) FROM users WHERE DATE_FORMAT(signup_date, '%Y-%m')<? AND user_type='user'"); 
             $get_users->execute([$missingMonth]);
             if($get_users->rowCount() > 0){
             while($fetch_users = $get_users->fetch(PDO::FETCH_ASSOC)) {
@@ -60,7 +60,7 @@ foreach ($missingMonths as $missingMonth) {
     }
 } else {
     foreach ($missingMonths as $missingMonth) {
-        $get_users = $conn->prepare("SELECT COUNT(user_id) FROM users WHERE DATE_FORMAT(signup_date, '%Y-%m')<?"); 
+        $get_users = $conn->prepare("SELECT COUNT(user_id) FROM users WHERE DATE_FORMAT(signup_date, '%Y-%m')<? AND user_type='user'"); 
             $get_users->execute([$missingMonth]);
             if($get_users->rowCount() > 0){
             while($fetch_users = $get_users->fetch(PDO::FETCH_ASSOC)) {
