@@ -35,7 +35,6 @@ if (isset($_POST['add_product'])) {
     } else {
 
     if($check !== false) {
-        echo "File is an image - " . $check["mime"] . ".";
         $uploadOk = 1;
       } else {
         echo "File is not an image.";
@@ -54,7 +53,6 @@ if (isset($_POST['add_product'])) {
             // if everything is ok, try to upload file
         } else {
             if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-            echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
             
             $uploadedFileName = htmlspecialchars(basename($_FILES["fileToUpload"]["name"]));
             
