@@ -24,6 +24,10 @@ if (!isset($admin_product_id)) {
 
     <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Include Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 </head>
 
 
@@ -83,62 +87,6 @@ if (!isset($admin_product_id)) {
 
     <!-- -------------------------------------------------------------------------------------------------------------------------------- -->
     <section class="b-section">
-        <?php
-        // Retrieve today's date without hours and minutes
-        $today = date('Y-m-d');
-
-        // Calculate the date 7 days before
-        $seven_days_ago = date('Y-m-d', strtotime('-7 days', strtotime($today)));
-
-        // Fetch categories from the database
-        $select_categories = $conn->prepare('SELECT * FROM category');
-        $select_categories->execute();
-        $categories = $select_categories->fetchAll(PDO::FETCH_ASSOC);
-
-        // Fetch subcategories based on the selected category
-        $selectedCategoryId = isset($_POST['category_select']) ? $_POST['category_select'] : (isset($_GET['category']) ? $_GET['category'] : 0);
-
-        $select_subcategories = $conn->prepare('SELECT subcategory_id, subcategory_name, category_category_id FROM subcategory WHERE category_category_id = ?');
-        $select_subcategories->execute([$selectedCategoryId]);
-        $subcategories = $select_subcategories->fetchAll(PDO::FETCH_ASSOC);
-
-        // Fetch data for the graph based on the selected category and subcategory
-        $selectedSubcategoryId = isset($_POST['subcategory_select']) ? $_POST['subcategory_select'] : 0;
-
-        // Adjusted query based on user selection
-        if ($selectedSubcategoryId) {
-            $selected_offers = $conn->prepare('SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
-                                        FROM offers
-                                        JOIN product ON offers.product_product_id = product.product_id
-                                        JOIN subcategory ON product.subcategory_subcategory_id = subcategory.subcategory_id
-                                        WHERE subcategory.category_category_id = :category 
-                                        AND product.subcategory_subcategory_id = :subcategory
-                                        AND DATE(offers.creation_date) >= :seven_days_ago AND DATE(offers.creation_date) <= :today
-                                        GROUP BY product.product_id');
-            $selected_offers->execute([
-                'category' => $selectedCategoryId,
-                'subcategory' => $selectedSubcategoryId,
-                'seven_days_ago' => $seven_days_ago,
-                'today' => $today,
-            ]);
-        } else {
-            $selected_offers = $conn->prepare('SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
-                                        FROM offers
-                                        JOIN product ON offers.product_product_id = product.product_id
-                                        JOIN subcategory ON product.subcategory_subcategory_id = subcategory.subcategory_id
-                                        WHERE subcategory.category_category_id = :category 
-                                        AND DATE(offers.creation_date) >= :seven_days_ago AND DATE(offers.creation_date) <= :today
-                                        GROUP BY product.product_id');
-            $selected_offers->execute([
-                'category' => $selectedCategoryId,
-                'seven_days_ago' => $seven_days_ago,
-                'today' => $today,
-            ]);
-        }
-
-        $offersData = $selected_offers->fetchAll(PDO::FETCH_ASSOC);
-        ?>
-
         <h1 class="heading">Average Discount (%)</h1>
         <div class="selection-container">
             <form method="post" action="">
@@ -152,9 +100,9 @@ if (!isset($admin_product_id)) {
                         $categoriesList = $stmt->fetchAll();
 
                         foreach ($categoriesList as $category) {
-                            echo "<option value='" . $category['category_id'] . "'>" . $category['category_name'] . '</option>';
+                            $selected = ($selectedCategoryId == $category['category_id']) ? 'selected' : '';
+                            echo "<option value='" . $category['category_id'] . "' $selected>" . $category['category_name'] . '</option>';
                         }
-
                         ?>
                     </select>
                 </div>
@@ -164,33 +112,196 @@ if (!isset($admin_product_id)) {
                         <option selected disabled value="0">Επιλέξτε Υποκατηγορία</option>
                         <?php
                         foreach ($subcategories as $subcategory) {
-                            echo "<option value='" . $subcategory['subcategory_id'] . "'>" . $subcategory['subcategory_name'] . '</option>';
+                            $selected = ($selectedSubcategoryId == $subcategory['subcategory_id']) ? 'selected' : '';
+                            echo "<option value='" . $subcategory['subcategory_id'] . "' $selected>" . $subcategory['subcategory_name'] . '</option>';
                         }
                         ?>
                     </select>
                 </div>
                 <div class="inputBox">
-                    <button type="button" id="previousWeekBtn">Previous Week</button>
-                    <button type="button" id="nextWeekBtn">Current Week</button>
-                    <input type="submit" value="Submit" name="submit">
+                    <button type="submit" name="submit">Submit</button>
                 </div>
             </form>
         </div>
 
-        <!-- Add a container for the chart -->
+        <?php
+
+        function get_avg_week_priceSubcategory($selectedSubcategoryId, $last_week, $today)
+        {
+            include '../components/connect.php';
+            $select_product_avg_week_price = $conn->prepare('SELECT offers.product_price 
+        FROM offers
+        JOIN product ON offers.product_product_id = product.product_id
+        WHERE product.subcategory_subcategory_id = ? AND DATE(offers.creation_date) >= ? AND DATE(offers.creation_date) <= ?');
+            $select_product_avg_week_price->execute([$selectedSubcategoryId, $last_week, $today]);
+
+            $total_price = 0;
+            $total_prods = 0;
+
+            if ($select_product_avg_week_price->rowCount() > 0) {
+                while ($fetch_product_avg_week_price = $select_product_avg_week_price->fetch(PDO::FETCH_ASSOC)) {
+                    $total_price += $fetch_product_avg_week_price['product_price'];
+                    ++$total_prods;
+                }
+
+                $avg_week_price = $total_price / $total_prods;
+                return $avg_week_price;
+            } else {
+                return INF;
+            }
+        }
+
+        function get_avg_week_priceCategory($selectedCategoryId, $last_week, $today)
+        {
+            include '../components/connect.php';
+            $select_product_avg_week_price = $conn->prepare('SELECT offers.product_price 
+        FROM offers
+        JOIN product ON offers.product_product_id = product.product_id
+        JOIN subcategory ON product.subcategory_subcategory_id = subcategory.subcategory_id
+        WHERE subcategory.category_category_id = ?
+        AND DATE(offers.creation_date) >= ? AND DATE(offers.creation_date) <= ?');
+            $select_product_avg_week_price->execute([$selectedCategoryId, $last_week, $today]);
+
+            $total_price = 0;
+            $total_prods = 0;
+
+            if ($select_product_avg_week_price->rowCount() > 0) {
+                while ($fetch_product_avg_week_price = $select_product_avg_week_price->fetch(PDO::FETCH_ASSOC)) {
+                    $total_price += $fetch_product_avg_week_price['product_price'];
+                    ++$total_prods;
+                }
+
+                $avg_week_price = $total_price / $total_prods;
+                return $avg_week_price;
+            } else {
+                return INF;
+            }
+        }
+
+
+        // Retrieve today's date without hours and minutes
+        $today = date('Y-m-d');
+
+        // Calculate the date 7 days before
+        $seven_days_ago = date('Y-m-d', strtotime('-7 days', strtotime($today)));
+
+        // Initialize variables for selected category and subcategory
+        $selectedCategoryId = $selectedSubcategoryId = '';
+
+        // Check if form is submitted and update selected IDs
+        if (isset($_POST['submit'])) {
+            $selectedCategoryId = $_POST['category_select'];
+            $selectedSubcategoryId = isset($_POST['subcategory_select']) ? $_POST['subcategory_select'] : '';
+
+            echo "Selected Category ID: $selectedCategoryId<br>";
+
+            // Only display Subcategory ID if it's selected
+            if (!empty($selectedSubcategoryId)) {
+                echo "Selected Subcategory ID: $selectedSubcategoryId<br>";
+            }
+
+            // Fetch subcategories based on the selected category
+            $select_subcategories = $conn->prepare('SELECT subcategory_id, subcategory_name, category_category_id FROM subcategory WHERE category_category_id = ?');
+            $select_subcategories->execute([$selectedCategoryId]);
+            $subcategories = $select_subcategories->fetchAll(PDO::FETCH_ASSOC);
+
+            // Fetch data for the graph based on the selected category and subcategory
+            if ($selectedSubcategoryId) {
+                $selected_offers = $conn->prepare('SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
+                FROM offers
+                JOIN product ON offers.product_product_id = product.product_id
+                JOIN subcategory ON product.subcategory_subcategory_id = subcategory.subcategory_id
+                WHERE product.subcategory_subcategory_id = :subcategoryID
+                -- AND DATE(offers.creation_date) >= :seven_days_ago AND DATE(offers.creation_date) <= :today
+                GROUP BY product.product_id');
+                $selected_offers->execute([
+                    'subcategoryID' => $selectedSubcategoryId,
+                    // 'seven_days_ago' => $seven_days_ago,
+                    // 'today' => $today,
+                ]);
+            } else {
+                $selected_offers = $conn->prepare('SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
+                FROM offers
+                JOIN product ON offers.product_product_id = product.product_id
+                JOIN subcategory ON product.subcategory_subcategory_id = subcategory.subcategory_id
+                WHERE subcategory.category_category_id = :categoryID
+                -- AND DATE(offers.creation_date) >= :seven_days_ago AND DATE(offers.creation_date) <= :today
+                GROUP BY product.product_id');
+                $selected_offers->execute([
+                    'categoryID' => $selectedCategoryId,
+                    // 'seven_days_ago' => $seven_days_ago,
+                    // 'today' => $today,
+                ]);
+            }
+
+            // Fetch offers data and calculate avg_discount
+            $offersData = $selected_offers->fetchAll(PDO::FETCH_ASSOC);
+
+            // Initialize selected offers sum for calculation
+            $selected_offers_sum = 0;
+
+            // Check if neither category nor subcategory is selected
+            if (empty($selectedCategoryId) && empty($selectedSubcategoryId)) {
+                echo "You must select a Category or a Subcategory, please!";
+            } else {
+                // Calculate average week price based on user's selection
+                if (!empty($selectedSubcategoryId)) {
+                    $avg_week_priceSub = get_avg_week_priceSubcategory($selectedSubcategoryId, $seven_days_ago, $today);
+
+                    // Echo the value of $avg_week_priceSub
+                    echo "Average Week Price (Subcategory): $avg_week_priceSub<br>";
+                }
+
+                if (empty($selectedSubcategoryId)) {
+                    $avg_week_priceCat = get_avg_week_priceCategory($selectedCategoryId, $seven_days_ago, $today);
+
+                    // Echo the value of $avg_week_priceCat
+                    echo "Average Week Price (Category): $avg_week_priceCat<br>";
+                }
+
+                // Calculate sum of selected offers
+                foreach ($offersData as $offer) {
+                    $selected_offers_sum += $offer['average_price'];
+                }
+
+                // Echo the value of $selected_offers_sum
+                echo "Sum of Selected Offers: $selected_offers_sum<br>";
+
+                // Calculate avg_discount
+                if (!empty($selectedSubcategoryId)) {
+                    $avg_discount = !empty($avg_week_priceSub) ? (($selected_offers_sum - $avg_week_priceSub) / $avg_week_priceSub) * 100 : 0;
+                } elseif (!empty($selectedCategoryId)) {
+                    $avg_discount = !empty($avg_week_priceCat) ? (($selected_offers_sum - $avg_week_priceCat) / $avg_week_priceCat) * 100 : 0;
+                } else {
+                    $avg_discount = 0;
+                }
+
+                // Echo the value of $avg_discount
+                echo "Average Discount: $avg_discount%";
+            }
+
+
+            // Debug: Print offersData and avg_discount to browser console
+            echo "<script>console.log(" . json_encode($offersData) . ");</script>";
+            echo "<script>console.log('Average Discount: $avg_discount%');</script>";
+        }
+        ?>
+
+        <!-- Google Charts script -->
         <div class="chart-container">
-            <canvas id="discountChart"></canvas>
+            <div id="discountChart"></div>
         </div>
 
         <input type="hidden" id="chartDataB" value="<?php echo htmlentities(json_encode($offersData)); ?>">
-        <input type="hidden" id="datesArrayB" value="<?php echo htmlentities(json_encode($datesArray)); ?>">
     </section>
+
 
 
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../js/admin_statics.js"></script>
+    <script src="../js/admin_statics2.js"></script>
     <script src="../js/admin_ajax.js"></script>
 
 </body>

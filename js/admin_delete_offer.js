@@ -12,10 +12,7 @@ $(document).ready(function () {
                 dataType: "json", // Expect JSON response
                 success: function (response) {
                     if (response.status === "success") {
-                        var supermarketId = response.supermarket_id;
-                        // Redirect to the appropriate URL with the manipulated query parameter
-                        // window.location.href = "view_sm_offers.php?sid=" + supermarketId;
-                        window.location.href = "admin_map.php";
+                        // window.location.href = "http://localhost/Web-Project-Final-Version/admin/admin_map.php";
                     } else {
                         alert("An error occurred while deleting the offer.");
                     }
