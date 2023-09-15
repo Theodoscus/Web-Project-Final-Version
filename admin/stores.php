@@ -93,8 +93,8 @@ if (isset($_POST['submit'])) {
                     $supermarket_name = isset($row['properties']['name']) ? $row['properties']['name'] : 'no name';
                     $supermarket_addr = isset($row['properties']['addr:street']) ? $row['properties']['addr:street'] : 'no address';
                     
-                    $supermarket_X = $row['geometry']['coordinates'][0];
-                    $supermarket_Y = $row['geometry']['coordinates'][1];
+                    $supermarket_X = $row['geometry']['coordinates'][1];
+                    $supermarket_Y = $row['geometry']['coordinates'][0];
                     
                     $stmt->bindValue(1, $supermarket_name, PDO::PARAM_STR);
                     $stmt->bindValue(2, $supermarket_addr, PDO::PARAM_STR);

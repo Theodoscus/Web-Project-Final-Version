@@ -18,12 +18,9 @@ if (isset($_POST['submit'])) {
     $select_admin->execute([$email, $pass]);
     $row = $select_admin->fetch(PDO::FETCH_ASSOC);
 
-    echo 'Email: '.$email.'<br>';
-    echo 'Password: '.$pass.'<br>';
-
     if ($select_admin->rowCount() > 0) {
         $_SESSION['user_id'] = $row['user_id'];
-        header('location: products.php'); // I think it's better to go to products.php instead of admin_home.php???
+        header('location: products.php'); 
     } else {
         $message[] = 'Incorrect email or password!';
     }

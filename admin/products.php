@@ -214,7 +214,6 @@ if (isset($_GET['delete'])) {
                 echo 'Πρόβλημα διαβάσματος JSON αρχείου.';
             }
         } else {
-            echo 'File upload error: ' . $jsonFileInput['error'];
             if ($jsonFileInput['error'] = 4) {
                 echo 'Δεν έχετε επιλέξει αρχείο';
             }
@@ -280,7 +279,7 @@ if (isset($_GET['delete'])) {
             <div class="search-bar">
                 <input type="text" name="search" id="searchInput" placeholder="Αναζητήστε το όνομα του προϊόντος">
             </div>
-            <button type="button" id="cancelSearch" onclick="products.php">Ακύρωση</button>
+            <button type="button" id="cancelSearch" >Ακύρωση</button>
             <button type="submit" id="searchButton">Αναζήτηση</button>
             </form>
         </div>
@@ -335,7 +334,7 @@ if (isset($_GET['delete'])) {
         
             ?>
 
-
+        </div>
             <div class="pagination">
                 <?php
                 // Calculate the range of pages to display
@@ -344,8 +343,9 @@ if (isset($_GET['delete'])) {
                 $endPage = min($startPage + $chunkSize - 1, $totalPages);
 
                 // Display first page link
-                echo "<a href='?page=1' class='page-link'>1</a>";
-
+                if ($startPage > 1) {
+                    echo "<a href='?page=1' class='page-link'>1</a> ... ";
+                }
                 for ($page = 1; $page <= $totalPages; ++$page) {
                     $activeClass = ($page === $currentPage) ? 'active' : '';
 
@@ -359,41 +359,18 @@ if (isset($_GET['delete'])) {
                 }
 
                 // Display last page link
-                echo "<a href='?page=$totalPages' class='page-link'>$totalPages</a>";
+                if($totalPages>=15  && $endPage < $totalPages){
+                echo "... <a href='?page=$totalPages' class='page-link'>$totalPages</a>";
+                }
                 ?>
 
 
             </div>
-        </div>
+        
 
     </section>
     <?php
-// ... Database connection and other code ...
 
-if (isset($_GET['search'])) {
-    $searchTerm = $_GET['search'];
-
-    // Pagination settings
-    $itemsPerPage = 15;
-    $currentPage = isset($_GET['page']) ? intval($_GET['page']) : 1;
-
-    // Modify the SQL query to include the search term
-    $select_products = $conn->prepare('SELECT * FROM `product` WHERE product_name LIKE ?');
-    $select_products->execute(["%$searchTerm%"]);
-    $products = $select_products->fetchAll(PDO::FETCH_ASSOC);
-
-    // Calculate total pages and start/end indices
-    $totalItems = count($products);
-    $totalPages = ceil($totalItems / $itemsPerPage);
-    $startIndex = ($currentPage - 1) * $itemsPerPage;
-    $endIndex = min($startIndex + $itemsPerPage, $totalItems);
-} else {
-    // Default logic for displaying products without search
-    // This part might be similar to your original code
-    // You might want to set a default SQL query or display all products
-}
-
-// ... The rest of your code, including product display and pagination ...
 ?>
   
 
