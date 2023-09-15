@@ -59,7 +59,7 @@ fetch("../components/get_supermarkets.php")
     var health = data[i].Health;
     var care = data[i].Care;
     var food = data[i].Food;
-    let button1 = "view_sm_offers.php?sid=";
+    let button1 = "../admin/view_sm_offers.php?sid=";
     let button2 = "../admin_create_offer.php?sid=";
     if (has_offers>=1){
       marker = new L.marker(location,{icon: greenIcon}).addTo(map);

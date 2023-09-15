@@ -132,7 +132,7 @@ if (isset($_POST['submit'])) {
         $avg_day_price = get_avg_day_price($product_id, $last_day);
         $avg_week_price = get_avg_week_price($product_id, $last_week);
 
-        $oid = insert_offer($offer_note, $user_id, $offer_price, $product_id, $sid);
+        $oid = insert_offer($offer_note, $admin_id, $offer_price, $product_id, $sid);
 
         $message[] = 'Επιτυχής δημοσίευση προσφοράς!';
         sleep(2);

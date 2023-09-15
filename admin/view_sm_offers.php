@@ -3,7 +3,7 @@
 include '../components/connect.php';
 session_start();
 
-$user_id = $_SESSION['admin_id'];
+$admin_id = $_SESSION['admin_id'];
 if (!isset($admin_id)) {
     header('location:admin_login.php');
 }
