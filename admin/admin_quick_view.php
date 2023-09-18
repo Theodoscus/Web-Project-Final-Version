@@ -7,7 +7,7 @@ session_start();
 
 $admin_id = $_SESSION['admin_id'];
 
-if (!isset($user_id)) {
+if (!isset($admin_id)) {
     header('location:admin_login.php');
 }
 
@@ -103,41 +103,23 @@ if (!isset($user_id)) {
                             </div>
                             <div class="details"><?= $fetch_product['product_description']; ?></div>
 
-                            <div class="flex-btn">
-                                <input class="option-btn" type="submit" name="out_of_stock" id="quick_view_1" value="η προσφορα έχει εξαντληθεί">
-                            </div>
-                            <div class="flex-btn">
-                                <input class="option-btn" type="submit" name="in_stock" id="quick_view_4" value="η προσφορα είναι διαθέσιμη">
-                            </div>
-                            <div class="flex-btn">
-
-                                <input class="option-btn" type="submit" name="add_to_wishlist" value="προσθέστε στα αγαπημένα">
-
-                            </div>
-                            <div class="like-dislike-btns">
-                                <div class="like-btn">
-                                    <input class="option-btn" type="submit" name="like" id="quick_view_2" value="Like (<?= $fetch_product['total_likes']; ?>)">
-                                </div>
-                                <div class="dislike-btn">
-                                    <input class="option-btn" type="submit" name="dislike" id="quick_view_3" value="Dislike (<?= $fetch_product['total_dislikes']; ?>)">
-                                </div>
-                            </div>
                             <div class="delete-btn-container">
-                                <button class="delete-offer-warning-btn" data-offer-id="<?= $fetch_product['offer_id']; ?>">Delete Offer</button>
+                                <a class="delete-offer-warning-btn" href="?delete_offer_id=<?= $fetch_product['offer_id']; ?>" onclick="return confirm('Delete Offer?')">Delete Offer</a>
                             </div>
+
                     <?php
                 }
             } else {
                 echo '<p class="Η προσφορά που ψάχνετε δεν υπάρχει. Δοκιμάστε ξανά.</p>';
             }
 
-            if (isset($_POST['delete_offer_id'])) {
-                $deleteOfferId = $_POST['delete_offer_id'];
+            if (isset($_GET['delete_offer_id'])) {
+                $deleteOfferId = $_GET['delete_offer_id'];
 
                 // Fetch supermarket_supermarket_id based on offer_id
-                // $getSupermarketId = $conn->prepare("SELECT supermarket_supermarket_id FROM offers WHERE offer_id = ? LIMIT 1");
-                // $getSupermarketId->execute([$deleteOfferId]);
-                // $supermarketId = $getSupermarketId->fetchColumn();
+                $getSupermarketId = $conn->prepare("SELECT supermarket_supermarket_id FROM offers WHERE offer_id = ? LIMIT 1");
+                $getSupermarketId->execute([$deleteOfferId]);
+                $supermarketId = $getSupermarketId->fetchColumn();
 
                 // Delete from likeactivity table
                 $deleteLikeActivity = $conn->prepare("DELETE FROM likeactivity WHERE offers_offer_id = ?");
@@ -152,6 +134,7 @@ if (!isset($user_id)) {
                 $deleteWishlist->execute([$deleteOfferId]);
 
                 header('location:admin_map.php');
+                exit; // Important to prevent further execution of the script
             }
 
                     ?>

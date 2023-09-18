@@ -1144,21 +1144,22 @@ canvas {
    background-color: #f2f2f2;
 }
 
-
-/* Style for warning button XARTI DELETE BUTTON */
+/* Style the delete button */
 .delete-offer-warning-btn {
-   background-color: red;
-   color: white;
+   background-color: #ff6347; /* Change to your desired background color */
+   color: #fff; /* Text color */
    border: none;
-   padding: 6px 12px; /* Adjust padding as needed */
+   padding: 10px 20px; /* Adjust padding as needed */
+   border-radius: 5px; /* Rounded corners */
    cursor: pointer;
-   transition: background-color 0.3s, color 0.3s;
-   width: 100%; /* Match the width of like and dislike buttons */
+   transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
+/* Hover effect for the delete button */
 .delete-offer-warning-btn:hover {
-   background-color: darkred;
+   background-color: #ff4500; /* Change to a slightly different color on hover */
 }
+
 
 /* Adjust position of the delete button */
 .delete-btn-container {
@@ -1167,5 +1168,3 @@ canvas {
    align-items: center;
    margin-top: 10px; /* Adjust this margin as needed */
 }
-
-
