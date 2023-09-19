@@ -14,7 +14,7 @@ if(isset($_SESSION['user_id'])){
 include 'components/wishlist_cart.php';
 
 if(isset($_POST['delete'])){
-   $wishlist_id = $_POST['pid'];
+   $wishlist_id = $_POST['oid'];
    $delete_wishlist_item = $conn->prepare("DELETE FROM `wishlist` WHERE offer_id = ?");
    $delete_wishlist_item->execute([$wishlist_id]);
 }
