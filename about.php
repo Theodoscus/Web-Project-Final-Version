@@ -98,7 +98,7 @@ if (isset($_POST['publish'])) {
   
                <div class="swiper-slide slide">
                   <!-- Display review content -->
-                  <img src="images/pic-1.png" alt="">
+                  <img src="images/avatar.jpg" alt="">
                   <p><?php echo $review['content']; ?></p>
                   <div class="stars">
                      <?php
