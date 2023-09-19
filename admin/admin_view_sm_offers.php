@@ -82,7 +82,6 @@ if (!isset($admin_id)) {
                                 <input type="hidden" name="supermarket_address" value="<?= $fetch_product['supermarket_address']; ?>">
                                 <input type="hidden" name="creation_date" value="<?= $fetch_product['creation_date']; ?>">
                                 <input type="hidden" name="stock" value="<?= $fetch_product['out_of_stock']; ?>">
-                                <button class="fas fa-heart" type="submit" name="add_to_wishlist"></button>
                                 <a href="admin_quick_view.php?oid=<?= $fetch_product['offer_id']; ?>" class="fas fa-eye"></a>
                                 <img src="../uploaded_img/<?= $fetch_product['product_image']; ?>" alt="">
                                 <div class="name"><?= $fetch_product['product_name']; ?></div>
