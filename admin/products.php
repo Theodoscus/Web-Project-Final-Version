@@ -72,17 +72,25 @@ if (isset($_GET['delete'])) {
     $delete_product_id = $_GET['delete'];
     $delete_product_image = $conn->prepare('SELECT * FROM `product` WHERE product_id = ?');
     $delete_product_image->execute([$delete_product_id]);
-    $fetch_delete_image = $delete_product_image->fetch(PDO::FETCH_ASSOC);
-    unlink('../uploaded_img/' . $fetch_delete_image['image_01']);
     $select_offer_id = $conn->prepare('SELECT offer_id FROM `offers` WHERE  product_product_id = ?');
     $select_offer_id->execute([$delete_product_id]);
-    $delete_offer_id = $select_offer_id->fetch();
+
+    $delete_likeactivity = $conn->prepare('DELETE FROM `likeactivity` WHERE offers_offer_id = ?');
+    
+
+    if($select_offer_id->rowCount() > 0){
+        while($fetch_offer_id = $select_offer_id->fetch(PDO::FETCH_ASSOC)){
+            $delete_offer_id = $fetch_offer_id['offer_id'];
+            $delete_likeactivity->execute([$delete_offer_id]);
+        }
+    }
 
     $delete_product = $conn->prepare('DELETE FROM `product` WHERE product_id = ?');
     $delete_offer = $conn->prepare('DELETE FROM `offers` WHERE product_product_id = ?');
-    $delete_likeactivity = $conn->prepare('DELETE FROM `likeactivity` WHERE offers_offer_id = ?');
+    $delete_wishlist = $conn->prepare('DELETE FROM `wishlist` WHERE product_id = ?');
 
-    $delete_likeactivity->execute([$delete_offer_id]);
+
+    $delete_wishlist->execute([$delete_product_id]);
     $delete_offer->execute([$delete_product_id]);
     $delete_product->execute([$delete_product_id]);
 
@@ -128,7 +136,7 @@ if (isset($_GET['delete'])) {
     </div>
 
     <?php
-    $stmt = $conn->prepare('SET SQL_SAFE_UPDATES = 0; DELETE FROM likeactivity; DELETE from offers; DELETE FROM product;');
+    $stmt = $conn->prepare('SET SQL_SAFE_UPDATES = 0; DELETE FROM wishlist; DELETE FROM likeactivity; DELETE from offers; DELETE FROM product;');
     if (isset($_POST['delete'])) {
         $stmt->execute();
         $stmt->closeCursor();
