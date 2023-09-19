@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`users` (
   `total_score` INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`product` (
   PRIMARY KEY (`product_id`, `subcategory_subcategory_id`),
   INDEX `fk_product_subcategory1_idx` (`subcategory_subcategory_id` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 1369
+AUTO_INCREMENT = 1372
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`supermarket` (
   `has_offers` INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`supermarket_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 187
+AUTO_INCREMENT = 365
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`offers` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
+AUTO_INCREMENT = 9
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -141,6 +141,26 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `mydb`.`review`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`review` (
+  `review_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `Users_user_id` INT(11) NOT NULL,
+  `content` LONGTEXT NULL DEFAULT NULL,
+  `stars` INT(11) NULL DEFAULT 0,
+  PRIMARY KEY (`review_id`),
+  INDEX `fk_review_Users1_idx` (`Users_user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_review_Users1`
+    FOREIGN KEY (`Users_user_id`)
+    REFERENCES `mydb`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `mydb`.`score_activity`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`score_activity` (
@@ -159,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`score_activity` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
+AUTO_INCREMENT = 16
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -190,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`system_tokens` (
   `creation_date` DATE NOT NULL,
   PRIMARY KEY (`system_tokens_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 2584
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -242,7 +262,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`wishlist` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 USE `mydb`;
