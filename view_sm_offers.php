@@ -2,6 +2,7 @@
 
 include 'components/connect.php';
 include 'components/update_offers.php';
+include 'components/wishlist_cart.php';
 session_start();
 
 $user_id = $_SESSION['user_id'];
