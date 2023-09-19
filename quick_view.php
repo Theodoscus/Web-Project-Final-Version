@@ -142,7 +142,7 @@ include 'components/like_dislike.php';
                   }
                
                else{
-               echo '<p class="Η προσφορά που ψάχνετε δεν υπάρχει. Δοκιμάστε ξανά.</p>';
+               echo '<p class="empty">Η προσφορά που ψάχνετε δεν υπάρχει. Δοκιμάστε ξανά.</p>';
                }
                
                ?>
