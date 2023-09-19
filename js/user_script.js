@@ -87,20 +87,13 @@ reviewInput.addEventListener("input", () => {
 });
 
 // Initialize the swiper
-const reviewsSlider = new Swiper(".reviews-slider", {
-  loop: true,
-  spaceBetween: 20,
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-});
+
 
 // Close review modal
 reviewModal.style.display = "none";
 
 var swiper = new Swiper(".reviews-slider", {
-  loop: true,
+  loop: false,
   spaceBetween: 20,
   pagination: {
      el: ".swiper-pagination",
