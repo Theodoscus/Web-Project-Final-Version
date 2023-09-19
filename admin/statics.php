@@ -301,14 +301,13 @@ if (!isset($admin_product_id)) {
                 echo "Sum of Selected Offers: $selected_offers_sum<br>";
 
                 // Calculate avg_discount
-                if (!empty($selectedSubcategoryId) && $avg_week_priceSub !== INF) {
-                    $avg_discount = (($selected_offers_sum - $avg_week_priceSub) / $avg_week_priceSub) * 100;
-                } elseif (!empty($selectedCategoryId) && $avg_week_priceCat !== INF) {
-                    $avg_discount = (($selected_offers_sum - $avg_week_priceCat) / $avg_week_priceCat) * 100;
+                if (!empty($selectedSubcategoryId)) {
+                    $avg_discount = !empty($avg_week_priceSub) ? (($selected_offers_sum - $avg_week_priceSub) / $avg_week_priceSub) * 100 : 0;
+                } elseif (!empty($selectedCategoryId)) {
+                    $avg_discount = !empty($avg_week_priceCat) ? (($selected_offers_sum - $avg_week_priceCat) / $avg_week_priceCat) * 100 : 0;
                 } else {
                     $avg_discount = 0;
                 }
-
 
                 // Echo the value of $avg_discount
                 echo "Average Discount: $avg_discount%";
