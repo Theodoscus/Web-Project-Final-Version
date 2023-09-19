@@ -10,6 +10,7 @@ if (isset($_SESSION['user_id'])) {
    $stmt = $conn->prepare("SELECT username FROM users WHERE user_id = :user_id");
    $stmt->bindParam(':user_id', $user_id);
    $stmt->execute();
+   
    $result = $stmt->fetch(PDO::FETCH_ASSOC);
    $username = $result['username'];
 } else {
@@ -94,7 +95,8 @@ if (isset($_POST['publish'])) {
       <h1 class="heading">Αξιολογησεις χρηστων</h1>
       <div class="swiper reviews-slider">
          <div class="swiper-wrapper">
-            <?php foreach ($reviewsData as $review) {?>
+
+            <?php if($reviewsStmt->rowCount() > 0){ foreach ($reviewsData as $review) {?>
   
                <div class="swiper-slide slide">
                   <!-- Display review content -->
@@ -112,7 +114,9 @@ if (isset($_POST['publish'])) {
                   <!-- Display username -->
                   <h3><?php echo $review['username']; ?></h3>
                </div>
-            <?php } ?>
+            <?php }} else {
+               $message[]='Δεν υπάρχουν διαθέσιμες αξιολογήσεις!';
+            } ?>
          </div>
 
 
