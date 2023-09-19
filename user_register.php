@@ -38,7 +38,7 @@ if(isset($_POST['submit'])){
    }else{
       if($pass != $cpass){
          $message[] = 'Οι κωδικοί δεν ταιριάζουν μεταξύ τους!';
-      }elseif(strlen($cpass) <= 8 || !$number || !$uppercase || !$lowercase || !$specialChars){
+      }elseif(strlen($cpass) < 8 || !$number || !$uppercase || !$lowercase || !$specialChars){
          $message[] = 'Ο κωδικός πρέπει να είναι τουλάχιστον 8 χαρακτήρες και να περιέχει τουλάχιστον ένα κεφαλαίο, ένα μικρό γράμμα,έναν αριθμό και έναν ειδικό χαρακτήρα ';
       }
       else{
