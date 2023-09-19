@@ -319,3 +319,6 @@ DELIMITER ;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO `mydb`.`users` (`user_id`, `username`, `password`, `email`, `signup_date`, `user_type`, `total_score`) VALUES ('1', 'admin', 'admin', 'admin@admin.gr', '2023-08-19 18:00:00', 'admin', '0');
+
