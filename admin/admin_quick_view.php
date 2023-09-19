@@ -104,7 +104,7 @@ if (!isset($admin_id)) {
                             <div class="details"><?= $fetch_product['product_description']; ?></div>
 
                             <div class="delete-btn-container">
-                                <a class="delete-offer-warning-btn" href="?delete_offer_id=<?= $fetch_product['offer_id']; ?>" onclick="return confirm('Delete Offer?')">Delete Offer</a>
+                                <a class="delete-offer-warning-btn" href="admin_quick_view.php?delete_offer_id=<?= $fetch_product['offer_id']; ?>" onclick="return confirm('Delete Offer?')">Delete Offer</a>
                             </div>
 
                     <?php
@@ -114,7 +114,7 @@ if (!isset($admin_id)) {
             }
 
             if (isset($_GET['delete_offer_id'])) {
-                
+                echo 'mpainei';
                 $deleteOfferId = $_GET['delete_offer_id'];
 
                 // Fetch supermarket_supermarket_id based on offer_id
