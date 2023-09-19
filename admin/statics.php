@@ -187,7 +187,6 @@ if (!isset($admin_product_id)) {
             }
         }
 
-
         // Retrieve today's date without hours and minutes
         $today = date('Y-m-d');
 
@@ -211,13 +210,6 @@ if (!isset($admin_product_id)) {
             $selectedCategoryId = $_POST['category_select'];
             $selectedSubcategoryId = isset($_POST['subcategory_select']) ? $_POST['subcategory_select'] : '';
 
-            echo "Selected Category ID: $selectedCategoryId<br>";
-
-            // Only display Subcategory ID if it's selected
-            if (!empty($selectedSubcategoryId)) {
-                echo "Selected Subcategory ID: $selectedSubcategoryId<br>";
-            }
-
             // Fetch subcategories based on the selected category
             $select_subcategories = $conn->prepare('SELECT subcategory_id, subcategory_name, category_category_id FROM subcategory WHERE category_category_id = ?');
             $select_subcategories->execute([$selectedCategoryId]);
@@ -234,8 +226,6 @@ if (!isset($admin_product_id)) {
                 GROUP BY product.product_id');
                 $selected_offers->execute([
                     'subcategoryID' => $selectedSubcategoryId,
-                    // 'seven_days_ago' => $seven_days_ago,
-                    // 'today' => $today,
                 ]);
             } else {
                 $selected_offers = $conn->prepare('SELECT product.product_id, ROUND(AVG(offers.product_price), 2) AS average_price
@@ -247,8 +237,6 @@ if (!isset($admin_product_id)) {
                 GROUP BY product.product_id');
                 $selected_offers->execute([
                     'categoryID' => $selectedCategoryId,
-                    // 'seven_days_ago' => $seven_days_ago,
-                    // 'today' => $today,
                 ]);
             }
 
@@ -273,8 +261,6 @@ if (!isset($admin_product_id)) {
                     } elseif ($_POST['week_select'] === 'three_weeks_ago') {
                         $avg_week_priceSub = get_avg_week_priceSubcategory($selectedSubcategoryId, $twentyeight_days_ago, $twentyone_days_ago);
                     }
-                    // Echo the value of $avg_week_priceSub
-                    echo "Average Week Price (Subcategory): $avg_week_priceSub<br>";
                 }
 
                 if (empty($selectedSubcategoryId)) {
@@ -287,8 +273,6 @@ if (!isset($admin_product_id)) {
                     } elseif ($_POST['week_select'] === 'three_weeks_ago') {
                         $avg_week_priceCat = get_avg_week_priceCategory($selectedCategoryId, $twentyeight_days_ago, $twentyone_days_ago);
                     }
-                    // Echo the value of $avg_week_priceCat
-                    echo "Average Week Price (Category): $avg_week_priceCat<br>";
                 }
 
 
@@ -297,20 +281,15 @@ if (!isset($admin_product_id)) {
                     $selected_offers_sum += $offer['average_price'];
                 }
 
-                // Echo the value of $selected_offers_sum
-                echo "Sum of Selected Offers: $selected_offers_sum<br>";
-
                 // Calculate avg_discount
-                if (!empty($selectedSubcategoryId)) {
+                if (!empty($selectedSubcategoryId) && $avg_week_priceSub !== INF) {
                     $avg_discount = !empty($avg_week_priceSub) ? (($selected_offers_sum - $avg_week_priceSub) / $avg_week_priceSub) * 100 : 0;
-                } elseif (!empty($selectedCategoryId)) {
+                } elseif (!empty($selectedCategoryId) && $avg_week_priceCat !== INF) {
                     $avg_discount = !empty($avg_week_priceCat) ? (($selected_offers_sum - $avg_week_priceCat) / $avg_week_priceCat) * 100 : 0;
                 } else {
                     $avg_discount = 0;
+                    $offersData = 0;
                 }
-
-                // Echo the value of $avg_discount
-                echo "Average Discount: $avg_discount%";
             }
 
 
