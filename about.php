@@ -60,7 +60,6 @@ if (isset($_POST['publish'])) {
 
    <!-- Required CSS -->
    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-   <link rel="stylesheet" href="node_modules/swiper/swiper.min.css">
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
@@ -95,7 +94,8 @@ if (isset($_POST['publish'])) {
       <h1 class="heading">Αξιολογησεις χρηστων</h1>
       <div class="swiper reviews-slider">
          <div class="swiper-wrapper">
-            <?php foreach ($reviewsData as $review) { ?>
+            <?php foreach ($reviewsData as $review) {?>
+  
                <div class="swiper-slide slide">
                   <!-- Display review content -->
                   <img src="images/pic-1.png" alt="">
@@ -149,8 +149,7 @@ if (isset($_POST['publish'])) {
 
    <script src="js/script.js"></script>
    <script src="js/user_script.js"></script>
-   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-   <script src="node_modules/swiper/swiper.min.js"></script>
+
 
 
 </body>
