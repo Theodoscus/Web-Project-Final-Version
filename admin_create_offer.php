@@ -165,7 +165,25 @@ if (isset($_POST['submit'])) {
 
 <body>
 
-    <?php include 'components/admin_header.php'; ?>
+<header class="header">
+
+<section class="flex">
+
+    <a href="../admin/products.php" class="logo">Admin<span>Panel</span></a>
+
+    <nav class="navbar">
+        <a href="admin/products.php">Προϊόντα</a>
+        <a href="admin/statics.php">Στατιστικά</a>
+        <a href="admin/leaderboard.php">Leaderboard</a>
+        <a href="admin/stores.php">Καταστήματα</a>
+        <a href="admin/admin_map.php">Χάρτης</a>
+    </nav>
+
+    <a href="components/admin_logout.php" class="admin-logout-button" onclick="return confirm('logout from the website?');">Αποσύνδεση</a>
+
+</section>
+
+</header>
     <section class="form-container">
         <?php
         $sid = 0;
