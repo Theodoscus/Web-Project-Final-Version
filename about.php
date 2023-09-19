@@ -119,7 +119,7 @@ if (isset($_POST['publish'])) {
          <div class="swiper-pagination"></div>
       </div>
       <p class="proverbial-text">If you want to share your thoughts about your experience using our website, click the button below</p>
-      <button id="review-button">Add Review</button>
+      <button id="review-button" <?php if(isset($_SESSION['user_id'])){}else{echo "disabled";};  ?>>Add Review</button>
       <div id="reviews-container"></div>
       <div id="review-modal" class="modal">
          <div class="modal-content">
