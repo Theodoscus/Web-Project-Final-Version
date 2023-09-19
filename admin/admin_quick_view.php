@@ -114,6 +114,7 @@ if (!isset($admin_id)) {
             }
 
             if (isset($_GET['delete_offer_id'])) {
+                
                 $deleteOfferId = $_GET['delete_offer_id'];
 
                 // Fetch supermarket_supermarket_id based on offer_id

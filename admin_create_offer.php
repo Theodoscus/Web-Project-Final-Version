@@ -19,8 +19,9 @@ function select_product_id($product_name)
         while ($fetch_product_id = $select_product_id->fetch(PDO::FETCH_ASSOC)) {
             $product_id = $fetch_product_id['product_id'];
         }
+        return $product_id;
     }
-    return $product_id;
+   
 }
 
 function select_product_price($product_id, $sid)
@@ -136,7 +137,7 @@ if (isset($_POST['submit'])) {
 
         $message[] = 'Επιτυχής δημοσίευση προσφοράς!';
         sleep(2);
-        header('location:admin_map.php');
+        header('location:admin/admin_map.php');
     } else {
         $message[] = 'Υπάρχει ήδη προσφορά για το συγκεκριμένο προιόν με παραπλήσια τιμή!';
     }
