@@ -91,8 +91,8 @@ if (!isset($admin_product_id)) {
         <div class="selection-container">
             <form method="post" action="">
                 <div class="inputBox">
-                    <label for="category">Κατηγορία</label>
-                    <select name="category_select" id="category_select" class="box" required>
+                    <label for="category" class="custom-label">Κατηγορία</label>
+                    <select name="category_select" id="category_select" class="custom-select" required>
                         <option selected disabled value="0">Επιλέξτε Κατηγορία</option>
                         <?php
                         $stmt = $conn->prepare('SELECT * FROM category ORDER BY category_name');
@@ -107,8 +107,8 @@ if (!isset($admin_product_id)) {
                     </select>
                 </div>
                 <div class="inputBox">
-                    <label for="subcategory">Υποκατηγορία</label>
-                    <select name="subcategory_select" id="subcategory_select" class="box" required>
+                    <label for="subcategory" class="custom-label">Υποκατηγορία</label>
+                    <select name="subcategory_select" id="subcategory_select" class="custom-select" required>
                         <option selected disabled value="0">Επιλέξτε Υποκατηγορία</option>
                         <?php
                         foreach ($subcategories as $subcategory) {
@@ -119,8 +119,8 @@ if (!isset($admin_product_id)) {
                     </select>
                 </div>
                 <div class="inputBox">
-                    <label for="week_select">Choose the week you want:</label>
-                    <select name="week_select" id="week_select" class="box" required>
+                    <label for="week_select" class="custom-label">Choose the week you want:</label>
+                    <select name="week_select" id="week_select" class="custom-select" required>
                         <option value="current_week">Current Week</option>
                         <option value="one_week_ago">1 Week Ago</option>
                         <option value="two_weeks_ago">2 Weeks Ago</option>
@@ -128,7 +128,7 @@ if (!isset($admin_product_id)) {
                     </select>
                 </div>
                 <div class="inputBox">
-                    <button type="submit" name="submit">Submit</button>
+                    <button type="submit" name="submit" class="custom-button">Submit</button>
                 </div>
             </form>
         </div>

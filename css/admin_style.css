@@ -1144,6 +1144,43 @@ canvas {
    background-color: #f2f2f2;
 }
 
+/* Style for custom labels */
+.inputBox .custom-label {
+   font-size: 16px;
+   font-weight: bold;
+   color: #333;
+   font-family: Arial, sans-serif; /* Specify the desired font family here */
+}
+
+/* Style for custom select elements */
+.inputBox .custom-select {
+   width: 100%;
+   padding: 10px;
+   font-size: 14px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   color: #555;
+   background-color: #f8f8f8;
+   font-family: Arial, sans-serif; /* Specify the desired font family here */
+}
+
+/* Style for the custom button */
+.inputBox .custom-button {
+   background-color: #007bff;
+   color: #fff;
+   padding: 10px 20px;
+   font-size: 16px;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   font-family: Arial, sans-serif; /* Specify the desired font family here */
+}
+
+.custom-button:hover {
+   background-color: #0056b3;
+}
+
+
 /* Style the delete button */
 .delete-offer-warning-btn {
    background-color: #ff6347; /* Change to your desired background color */
@@ -1168,3 +1205,5 @@ canvas {
    align-items: center;
    margin-top: 10px; /* Adjust this margin as needed */
 }
+
+

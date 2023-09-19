@@ -17,6 +17,31 @@ if (isset($_SESSION['user_id'])) {
    $username = '';
 }
 
+// Query the database to get reviews data
+$reviewsStmt = $conn->prepare("SELECT review.content, review.stars, users.username 
+                               FROM review 
+                               INNER JOIN users ON review.Users_user_id = users.user_id");
+$reviewsStmt->execute();
+$reviewsData = $reviewsStmt->fetchAll(PDO::FETCH_ASSOC);
+
+if (isset($_POST['publish'])) {
+   // Get the values from the form
+   $content = $_POST['review_input'];
+   $stars = $_POST['star_input'];
+
+   // Insert the new review into the database
+   $insertStmt = $conn->prepare("INSERT INTO review (Users_user_id, content, stars) VALUES (:user_id, :content, :stars)");
+   $insertStmt->bindParam(':user_id', $user_id);
+   $insertStmt->bindParam(':content', $content);
+   $insertStmt->bindParam(':stars', $stars);
+
+   if ($insertStmt->execute()) {
+      // Refresh the page to display the updated reviews
+      header('location: about.php');
+      exit();
+   }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -67,36 +92,30 @@ if (isset($_SESSION['user_id'])) {
 
 
    <section class="reviews">
-      <h1 class="heading">Αξιολογήσεις χρηστών</h1>
+      <h1 class="heading">Αξιολογησεις χρηστων</h1>
       <div class="swiper reviews-slider">
          <div class="swiper-wrapper">
-            <!-- List of reviews -->
-            <ul id="review-list"></ul>
-            <div class="swiper-slide slide">
-               <img src="images/pic-1.png" alt="">
-               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia tempore distinctio hic, iusto adipisci a rerum nemo perspiciatis fugiat sapiente.</p>
-               <div class="stars">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star-half-alt"></i>
+            <?php foreach ($reviewsData as $review) { ?>
+               <div class="swiper-slide slide">
+                  <!-- Display review content -->
+                  <img src="images/pic-1.png" alt="">
+                  <p><?php echo $review['content']; ?></p>
+                  <div class="stars">
+                     <?php
+                     // Display stars based on review.stars
+                     $starsCount = intval($review['stars']);
+                     for ($i = 0; $i < $starsCount; $i++) {
+                        echo '<i class="fas fa-star"></i>';
+                     }
+                     ?>
+                  </div>
+                  <!-- Display username -->
+                  <h3><?php echo $review['username']; ?></h3>
                </div>
-               <h3>john deo</h3>
-            </div>
-            <div class="swiper-slide slide">
-               <img src="images/pic-1.png" alt="">
-               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia tempore distinctio hic, iusto adipisci a rerum nemo perspiciatis fugiat sapiente.</p>
-               <div class="stars">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star-half-alt"></i>
-               </div>
-               <h3>john deo</h3>
-            </div>
+            <?php } ?>
          </div>
+
+
          <div class="swiper-pagination"></div>
       </div>
       <p class="proverbial-text">If you want to share your thoughts about your experience using our website, click the button below</p>
@@ -105,15 +124,19 @@ if (isset($_SESSION['user_id'])) {
       <div id="review-modal" class="modal">
          <div class="modal-content">
             <span class="close">&times;</span>
-            <label for="review-input">Enter your review:</label>
-            <textarea id="review-input" rows="10"></textarea>
-            <label for="name-input">Name:</label>
-            <input type="text" id="name-input" value="<?php echo $username ?>">
-            <div class="button-container">
-               <button id="publish-button">Publish</button>
-               <button id="cancel-button">Cancel</button>
-            </div>
-            <span id="review-error" class="error-message"></span>
+            <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+               <label for="review-input">Enter your review:</label>
+               <textarea id="review-input" name="review_input" rows="10"></textarea>
+               <label for="star-input">From 0 to 5 how good was your experience?</label>
+               <input type="number" id="star-input" name="star_input" min="0" max="5" step="1">
+               <label for="name-input">Name:</label>
+               <input type="text" id="name-input" value="<?php echo $username ?>">
+               <div class="button-container">
+                  <button id="publish-button" type="submit" name="publish">Publish</button>
+                  <button id="cancel-button">Cancel</button>
+               </div>
+               <span id="review-error" class="error-message"></span>
+            </form>
          </div>
       </div>
    </section>
