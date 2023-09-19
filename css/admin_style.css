@@ -176,6 +176,20 @@ section{
    color:var(--black);
 }
 
+
+.success-display{
+   padding:0.5rem;
+   margin: auto;
+   background-color: white;
+   width: 50%;
+   border: var(--border);
+   box-shadow: var(--box-shadow);
+   text-align: center;
+   color:var(--black);
+   border-radius: .5rem;
+   font-size: 1.5rem;
+}
+
 .empty{
    padding:1.5rem;
    background-color: var(--white);

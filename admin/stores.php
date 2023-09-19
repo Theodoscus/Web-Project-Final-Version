@@ -71,7 +71,7 @@ if (isset($_GET['delete'])) {
             if (isset($_POST['delete'])) {
                 $stmt->execute();
                 $stmt->closeCursor();
-                echo 'Επιτυχής Διαγραφή';
+                echo '<p class="success-display">Επιτυχής Διαγραφή</p>';
                 }
         ?>
 
@@ -103,17 +103,17 @@ if (isset($_POST['submit'])) {
                     $stmt->execute();
                 }
 
-                echo 'Επιτυχία ανεβάσματος JSON αρχείου!';
+                echo '<p class="success-display">Επιτυχία ανεβάσματος JSON αρχείου!</p>';
             } else {
-                echo 'Πρόβλημα ανεβάσματος JSON αρχείου';
+                echo '<p class="success-display">Πρόβλημα ανεβάσματος JSON αρχείου</p>';
             }
         } else {
-            echo 'Πρόβλημα ανάγνωσης JSON αρχείου';
+            echo '<p class="success-display">Πρόβλημα ανάγνωσης JSON αρχείου</p>';
         }
     } else {
         echo 'File upload error: '.$jsonFileInput['error'];
         if ($jsonFileInput['error'] === UPLOAD_ERR_NO_FILE) {
-            echo ' Δεν έχετε επιλέξει αρχείο';
+            echo '<p class="success-display"> Δεν έχετε επιλέξει αρχείο</p>';
         }
     }
     }
