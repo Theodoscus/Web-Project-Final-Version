@@ -205,10 +205,21 @@ if (!isset($admin_product_id)) {
         // Initialize variables for selected category and subcategory
         $selectedCategoryId = $selectedSubcategoryId = '';
 
-        // Check if form is submitted and update selected IDs
+        // Check if form is submitted
         if (isset($_POST['submit'])) {
-            $selectedCategoryId = $_POST['category_select'];
-            $selectedSubcategoryId = isset($_POST['subcategory_select']) ? $_POST['subcategory_select'] : '';
+            // Initialize selected category and subcategory variables
+            $selectedCategoryId = '';
+            $selectedSubcategoryId = '';
+
+            // Check if 'category_select' key exists in $_POST
+            if (isset($_POST['category_select'])) {
+                $selectedCategoryId = $_POST['category_select'];
+            }
+
+            // Check if 'subcategory_select' key exists in $_POST
+            if (isset($_POST['subcategory_select'])) {
+                $selectedSubcategoryId = $_POST['subcategory_select'];
+            }
 
             // Fetch subcategories based on the selected category
             $select_subcategories = $conn->prepare('SELECT subcategory_id, subcategory_name, category_category_id FROM subcategory WHERE category_category_id = ?');
