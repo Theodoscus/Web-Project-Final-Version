@@ -8,18 +8,21 @@ function drawChart() {
 
     // Create a data table with the necessary columns
     var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Product ID');
-    data.addColumn('number', 'Average Price');
+    data.addColumn('string', 'Category');
+    data.addColumn('number', 'Average Discount (%)'); 
 
     // Add data to the data table
     for (var i = 0; i < offersData.length; i++) {
         data.addRow([offersData[i].product_id.toString(), parseFloat(offersData[i].average_price)]);
     }
 
-    // Set chart options
+    // Get the average discount from the hidden input field
+    var avgDiscount = parseFloat(document.getElementById('avgDiscount').value);
+
+    // Set chart options, including the average discount in the title
     var options = {
         chart: {
-            title: 'Average Discount (%)',
+            title: 'Average Discount (%) is ' + avgDiscount + '%', // Include the average discount in the title
         }
     };
 

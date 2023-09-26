@@ -6,7 +6,7 @@ session_start();
 $admin_product_id = $_SESSION['admin_id'];
 
 if (!isset($admin_product_id)) {
-    header('location:admin_home.php');
+    header('location:admin_login.php');
 }
 ?>
 
@@ -17,7 +17,7 @@ if (!isset($admin_product_id)) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products</title>
+    <title>Statics</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="../css/admin_style.css">
@@ -222,7 +222,6 @@ if (!isset($admin_product_id)) {
                 JOIN product ON offers.product_product_id = product.product_id
                 JOIN subcategory ON product.subcategory_subcategory_id = subcategory.subcategory_id
                 WHERE product.subcategory_subcategory_id = :subcategoryID
-                -- AND DATE(offers.creation_date) >= :seven_days_ago AND DATE(offers.creation_date) <= :today
                 GROUP BY product.product_id');
                 $selected_offers->execute([
                     'subcategoryID' => $selectedSubcategoryId,
@@ -233,7 +232,6 @@ if (!isset($admin_product_id)) {
                 JOIN product ON offers.product_product_id = product.product_id
                 JOIN subcategory ON product.subcategory_subcategory_id = subcategory.subcategory_id
                 WHERE subcategory.category_category_id = :categoryID
-                -- AND DATE(offers.creation_date) >= :seven_days_ago AND DATE(offers.creation_date) <= :today
                 GROUP BY product.product_id');
                 $selected_offers->execute([
                     'categoryID' => $selectedCategoryId,
@@ -261,6 +259,8 @@ if (!isset($admin_product_id)) {
                     } elseif ($_POST['week_select'] === 'three_weeks_ago') {
                         $avg_week_priceSub = get_avg_week_priceSubcategory($selectedSubcategoryId, $twentyeight_days_ago, $twentyone_days_ago);
                     }
+                    // Echo the value of $avg_week_priceCat
+                    echo "Average Week Price (Subcategory): $avg_week_priceSub<br>";
                 }
 
                 if (empty($selectedSubcategoryId)) {
@@ -273,6 +273,8 @@ if (!isset($admin_product_id)) {
                     } elseif ($_POST['week_select'] === 'three_weeks_ago') {
                         $avg_week_priceCat = get_avg_week_priceCategory($selectedCategoryId, $twentyeight_days_ago, $twentyone_days_ago);
                     }
+                    // Echo the value of $avg_week_priceCat
+                    echo "Average Week Price (Category): $avg_week_priceCat<br>";
                 }
 
 
@@ -290,12 +292,13 @@ if (!isset($admin_product_id)) {
                     $avg_discount = 0;
                     $offersData = 0;
                 }
+
+                echo "Selected Offers Sum: $selected_offers_sum<br>";
+                echo "Average Week Price for Sub: $avg_week_priceSub <br>";
+                echo "Average Week Price for Cat: $avg_week_priceCat <br>";
+                // Echo the value of $avg_discount
+                echo "Average Discount: $avg_discount%";
             }
-
-
-            // Debug: Print offersData and avg_discount to browser console
-            echo "<script>console.log(" . json_encode($offersData) . ");</script>";
-            echo "<script>console.log('Average Discount: $avg_discount%');</script>";
         }
         ?>
 
@@ -305,6 +308,8 @@ if (!isset($admin_product_id)) {
         </div>
 
         <input type="hidden" id="chartDataB" value="<?php echo htmlentities(json_encode($offersData)); ?>">
+        <input type="hidden" id="avgDiscount" value="<?php echo $avg_discount; ?>">
+
     </section>
 
 

@@ -21,7 +21,6 @@ function select_product_id($product_name)
         }
         return $product_id;
     }
-   
 }
 
 function select_product_price($product_id, $sid)
@@ -152,7 +151,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>home</title>
+    <title>create offer</title>
     <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
@@ -165,25 +164,25 @@ if (isset($_POST['submit'])) {
 
 <body>
 
-<header class="header">
+    <header class="header">
 
-<section class="flex">
+        <section class="flex">
 
-    <a href="../admin/products.php" class="logo">Admin<span>Panel</span></a>
+            <a href="../admin/products.php" class="logo">Admin<span>Panel</span></a>
 
-    <nav class="navbar">
-        <a href="admin/products.php">Προϊόντα</a>
-        <a href="admin/statics.php">Στατιστικά</a>
-        <a href="admin/leaderboard.php">Leaderboard</a>
-        <a href="admin/stores.php">Καταστήματα</a>
-        <a href="admin/admin_map.php">Χάρτης</a>
-    </nav>
+            <nav class="navbar">
+                <a href="admin/products.php">Προϊόντα</a>
+                <a href="admin/statics.php">Στατιστικά</a>
+                <a href="admin/leaderboard.php">Leaderboard</a>
+                <a href="admin/stores.php">Καταστήματα</a>
+                <a href="admin/admin_map.php">Χάρτης</a>
+            </nav>
 
-    <a href="components/admin_logout.php" class="admin-logout-button" onclick="return confirm('logout from the website?');">Αποσύνδεση</a>
+            <a href="components/admin_logout.php" class="admin-logout-button" onclick="return confirm('logout from the website?');">Αποσύνδεση</a>
 
-</section>
+        </section>
 
-</header>
+    </header>
     <section class="form-container">
         <?php
         $sid = 0;

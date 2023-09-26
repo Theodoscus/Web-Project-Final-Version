@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           label: "Number of Offers",
           data: Object.values(offersData),
-          backgroundColor: "rgba(41, 128, 185, 0.7)", // Change the color to a shade of blue
+          backgroundColor: "rgba(41, 128, 185, 0.7)", 
           borderColor: "rgba(41, 128, 185, 1)",
           borderWidth: 1,
           fill: false,
