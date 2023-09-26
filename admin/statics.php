@@ -246,8 +246,10 @@ if (!isset($admin_product_id)) {
 
             // Check if neither category nor subcategory is selected
             if (empty($selectedCategoryId) && empty($selectedSubcategoryId)) {
-                echo "You must select a Category or a Subcategory, please!";
+                echo '<div class="error-message">You must select a Category or a Subcategory, please!</div>';
             } else {
+                $avg_week_priceCat = 0; // Initialize the variable with a default value
+
                 // Calculate average week price based on user's selection
                 if (!empty($selectedSubcategoryId)) {
                     if ($_POST['week_select'] === 'current_week') {
@@ -259,8 +261,6 @@ if (!isset($admin_product_id)) {
                     } elseif ($_POST['week_select'] === 'three_weeks_ago') {
                         $avg_week_priceSub = get_avg_week_priceSubcategory($selectedSubcategoryId, $twentyeight_days_ago, $twentyone_days_ago);
                     }
-                    // Echo the value of $avg_week_priceCat
-                    echo "Average Week Price (Subcategory): $avg_week_priceSub<br>";
                 }
 
                 if (empty($selectedSubcategoryId)) {
@@ -273,8 +273,6 @@ if (!isset($admin_product_id)) {
                     } elseif ($_POST['week_select'] === 'three_weeks_ago') {
                         $avg_week_priceCat = get_avg_week_priceCategory($selectedCategoryId, $twentyeight_days_ago, $twentyone_days_ago);
                     }
-                    // Echo the value of $avg_week_priceCat
-                    echo "Average Week Price (Category): $avg_week_priceCat<br>";
                 }
 
 
@@ -293,11 +291,10 @@ if (!isset($admin_product_id)) {
                     $offersData = 0;
                 }
 
-                echo "Selected Offers Sum: $selected_offers_sum<br>";
-                echo "Average Week Price for Sub: $avg_week_priceSub <br>";
-                echo "Average Week Price for Cat: $avg_week_priceCat <br>";
-                // Echo the value of $avg_discount
-                echo "Average Discount: $avg_discount%";
+                // echo "Selected Offers Sum: $selected_offers_sum<br>";
+                // echo "Average Week Price for Sub: $avg_week_priceSub <br>";
+                // echo "Average Week Price for Cat: $avg_week_priceCat <br>";
+                // echo "Average Discount: $avg_discount%";
             }
         }
         ?>

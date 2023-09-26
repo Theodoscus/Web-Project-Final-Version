@@ -22,8 +22,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 18, 
 
 
 // Add the search bar control to the map
-
-
 function onLocationFound(e) {
 var radius = 1000;
 var marker = new L.marker(e.latlng).addTo(map)
