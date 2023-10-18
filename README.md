@@ -1,0 +1,3 @@
+# Web-Project-Final-Version
+
+Web-Project-Final-Version is your go-to platform for discovering and sharing the best supermarket offers. Built using a powerful blend of PHP, JavaScript, CSS, HTML, and SQL, this collaborative system empowers users to register, search, and evaluate supermarket deals. It's more than a conventional listing; it allows users to verify offer validity, show their approval (like), report issues (dislike or out-of-stock), and even indicate when an offer ends. Plus, active users are rewarded with 'points' for their contributions, creating a dynamic and engaging community. Join us on WebProject for smarter shopping!
